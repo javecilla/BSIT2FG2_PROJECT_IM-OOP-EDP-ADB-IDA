@@ -17,7 +17,7 @@ public class Category {
         return categoryId;
     }
 
-    public void setCategory(int categoryId) {
+    public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
 

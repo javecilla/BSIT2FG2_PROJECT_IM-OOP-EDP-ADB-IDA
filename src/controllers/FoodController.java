@@ -4,11 +4,11 @@ import models.Food;
 import models.Category;
 import services.FoodService;
 import helpers.Response;
-import interfaces.IOperatorsValidators;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Collections;
+import interfaces.IOperatorsValidators;
 
 public class FoodController implements IOperatorsValidators<Food> {
     protected final FoodService foodService;
@@ -25,7 +25,7 @@ public class FoodController implements IOperatorsValidators<Food> {
         newFood.setPrice(price);
         
         Category category = new Category();
-        category.setCategory(categoryId);
+        category.setCategoryId(categoryId);
         newFood.setCategory(category);
         
         // Validate Food data
@@ -57,7 +57,7 @@ public class FoodController implements IOperatorsValidators<Food> {
             
             return Response.success("Foods retrieved successfully", foods);
         } catch(SQLException e) {
-            return Response.error("Failed to retrieve foods: " + e.getMessage());
+            return Response.error("Something went wrong: " + e.getMessage());
         }
     }
     
@@ -71,7 +71,7 @@ public class FoodController implements IOperatorsValidators<Food> {
             
             return Response.success("Foods retrieved successfully", foods);
         } catch(SQLException e) {
-            return Response.error("Failed to retrieve foods: " + e.getMessage());
+            return Response.error("Something went wrong: " + e.getMessage());
         }
     }
     
@@ -86,7 +86,7 @@ public class FoodController implements IOperatorsValidators<Food> {
             
             return Response.success("Food retrieved successfully", food);
         } catch(SQLException e) {
-            return Response.error("Failed to retrieve food: " + e.getMessage());
+            return Response.error("Something went wrong: " + e.getMessage());
         }
     }
     
@@ -115,7 +115,7 @@ public class FoodController implements IOperatorsValidators<Food> {
                 return Response.error("Failed to update food");
             }
         } catch (SQLException e) {
-            return Response.error("Database error while updating food: " + e.getMessage());
+            return Response.error("Something went wrong: " + e.getMessage());
         }
     }
     
@@ -140,7 +140,7 @@ public class FoodController implements IOperatorsValidators<Food> {
                 return Response.error("Failed to delete food");
             }
         } catch(SQLException e) {
-            return Response.error("Database error while deleting food: " + e.getMessage());
+            return Response.error("Something went wrong: " + e.getMessage());
         }
     }
     
@@ -166,9 +166,13 @@ public class FoodController implements IOperatorsValidators<Food> {
         if(food.getFoodName() == null || food.getFoodName().trim().isEmpty()) {
             return Response.error("Food name cannot be empty");
         }
-
+        
         if(food.getPrice() <= 0) {
             return Response.error("Price must be greater than 0");
+        }
+        
+        if(food.getFoodId() <= 0) {
+            return Response.error("Invalid ID!");
         }
         
         return Response.success("Validation passed", food);

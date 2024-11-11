@@ -3,13 +3,14 @@ package services;
 
 import models.Category;
 import config.DBConnection;
+import interfaces.IDatabaseOperators;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import interfaces.IDatabaseOperators;
 
 public class CategoryService implements IDatabaseOperators<Category> {
     
@@ -134,7 +135,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             pst = conn.prepareStatement(query);
             
             pst.setString(1, category.getCategoryName());
-            pst.setInt(4, category.getCategoryId());
+            pst.setInt(2, category.getCategoryId());
             
             return pst.executeUpdate() > 0;
         } finally {
