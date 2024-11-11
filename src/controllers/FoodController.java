@@ -20,13 +20,7 @@ public class FoodController implements IOperatorsValidators<Food> {
     // Create a new food item
     public Response<Food> addFood(String foodName, double price, int categoryId) {
         // Create a Food object and assign values
-        Food newFood = new Food();
-        newFood.setFoodName(foodName.trim());
-        newFood.setPrice(price);
-        
-        Category category = new Category();
-        category.setCategoryId(categoryId);
-        newFood.setCategory(category);
+        Food newFood = new Food(0, foodName.trim(), price, new Category(categoryId, null));
         
         // Validate Food data
         Response<Food> validationResponse = validateCreate(newFood);
@@ -93,8 +87,7 @@ public class FoodController implements IOperatorsValidators<Food> {
     // Update food
     public Response<Food> updateFood(int foodId, String foodName, double price, int categoryId) {
         // Create a new Food object with updated details
-        Category category = new Category(categoryId, null);
-        Food updatedFood = new Food(foodId, foodName.trim(), price, category);
+        Food updatedFood = new Food(foodId, foodName.trim(), price, new Category(categoryId, null));
         
         // Validate Food data for update
         Response<Food> validationResponse = validateUpdate(updatedFood);
@@ -154,7 +147,7 @@ public class FoodController implements IOperatorsValidators<Food> {
             return Response.error("Price must be greater than 0!");
         }
         
-        if(food.getCategory() == null || food.getCategory().getCategoryId() <= 0) {
+        if(food.getCategoryId() <= 0) {
             return Response.error("Category ID must be valid!");
         }
         
@@ -175,6 +168,10 @@ public class FoodController implements IOperatorsValidators<Food> {
             return Response.error("Invalid ID!");
         }
         
+        if(food.getCategoryId() <= 0) {
+            return Response.error("Category ID must be valid!");
+        }
+        
         return Response.success("Validation passed", food);
     }
     
@@ -186,7 +183,7 @@ public class FoodController implements IOperatorsValidators<Food> {
         return Response.success("Validation passed", true);
     }
     
-    /*** SAMPLE USAGE IN EACH METHOD IN THIS FOOD CONTROLLER (Jerson) ***/
+       /*** SAMPLE USAGE IN EACH METHOD IN THIS FOOD CONTROLLER (Jerson) ***/
     public static void main(String[] args) {
 //        FoodController controller = new FoodController();
 
@@ -226,7 +223,7 @@ public class FoodController implements IOperatorsValidators<Food> {
 //        }
 
         // 5. GET FOOD BY ID
-//        Response<Food> getFoodByIdResponse = controller.getFoodById(9);
+//        Response<Food> getFoodByIdResponse = controller.getFoodById(10);
 //        if (getFoodByIdResponse.isSuccess()) {
 //            Food food = getFoodByIdResponse.getData();
 //            System.out.println("Food retrieved: " + food.getFoodName());
@@ -235,7 +232,7 @@ public class FoodController implements IOperatorsValidators<Food> {
 //        }
 
         // 6. UPDATE FOOD
-//        Response<Food> updateFoodResponse = controller.updateFood(9, "Updated Test", 10.99, 2);
+//        Response<Food> updateFoodResponse = controller.updateFood(10, "Updated Test", 10.99, 2);
 //        if (updateFoodResponse.isSuccess()) {
 //            System.out.println("Food updated: " + updateFoodResponse.getData().getFoodName());
 //        } else {
@@ -243,7 +240,7 @@ public class FoodController implements IOperatorsValidators<Food> {
 //        }
 
         // 7. DELETE FOOD
-//        Response<String> deleteFoodResponse = controller.deleteFood(9);
+//        Response<String> deleteFoodResponse = controller.deleteFood(10);
 //        if (deleteFoodResponse.isSuccess()) {
 //            System.out.println("Food deleted successfully");
 //        } else {

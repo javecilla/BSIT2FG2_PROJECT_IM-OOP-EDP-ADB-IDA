@@ -150,6 +150,7 @@ public class CategoryController implements IOperatorsValidators<Category> {
         return Response.success("Validation passed", true);
     }
     
+     /*** SAMPLE USAGE IN EACH METHOD IN THIS CATEGORY CONTROLLER (Jerson) ***/
     public static void main(String[] args) {
 //        CategoryController controller = new CategoryController();
 

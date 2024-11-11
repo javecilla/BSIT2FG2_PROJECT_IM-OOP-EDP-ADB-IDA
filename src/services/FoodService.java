@@ -48,7 +48,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             pst = conn.prepareStatement(query);
             pst.setString(1, food.getFoodName());
             pst.setDouble(2, food.getPrice());
-            pst.setInt(3, food.getCategory().getCategoryId()); 
+            pst.setInt(3, food.getCategoryId());
             
             success = pst.executeUpdate() > 0;
             
@@ -87,17 +87,15 @@ public class FoodService implements IDatabaseOperators<Food> {
             pst.setInt(1, id);
             rs = pst.executeQuery();
             
-            if (rs.next()) {
-                Category category = new Category(
-                    rs.getInt("Category_ID"), 
-                    rs.getString("Category_Name")
-                );
-                
+            if (rs.next()) {             
                 return new Food(
                     rs.getInt("Food_ID"), 
                     rs.getString("Food_Name"), 
                     rs.getDouble("Price"), 
-                    category
+                    new Category(
+                        rs.getInt("Category_ID"), 
+                        rs.getString("Category_Name")
+                    )
                 );
             }
             return null;
@@ -124,17 +122,15 @@ public class FoodService implements IDatabaseOperators<Food> {
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
             
-            while (rs.next()) {
-                Category category = new Category(
-                    rs.getInt("Category_ID"),
-                    rs.getString("Category_Name")
-                );
-                
+            while (rs.next()) {            
                 Food food = new Food(
                     rs.getInt("Food_ID"), 
                     rs.getString("Food_Name"), 
                     rs.getDouble("Price"), 
-                    category
+                    new Category(
+                        rs.getInt("Category_ID"),
+                        rs.getString("Category_Name")
+                    )   
                 );
                 
                 foods.add(food);
@@ -165,16 +161,14 @@ public class FoodService implements IDatabaseOperators<Food> {
             rs = pst.executeQuery();
             
             while (rs.next()) {
-                Category category = new Category(
-                    rs.getInt("Category_ID"),
-                    rs.getString("Category_Name")
-                );
-                
                 Food food = new Food(
                     rs.getInt("Food_ID"), 
                     rs.getString("Food_Name"), 
                     rs.getDouble("Price"), 
-                    category
+                    new Category(
+                        rs.getInt("Category_ID"),
+                        rs.getString("Category_Name")
+                    )   
                 );
                 
                 foods.add(food);
@@ -198,7 +192,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             
             pst.setString(1, food.getFoodName());
             pst.setDouble(2, food.getPrice());
-            pst.setInt(3, food.getCategory().getCategoryId());
+            pst.setInt(3, food.getCategoryId());
             pst.setInt(4, food.getFoodId());
             
             return pst.executeUpdate() > 0;
