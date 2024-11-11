@@ -19,7 +19,7 @@ The application is organized into logical packages, each serving a distinct purp
     Stores predefined constant values, such as specific status codes or categories, which are used throughout the application to maintain consistency and readability.
 
   - **`interfaces`**  
-    Houses all interface definitions, promoting polymorphism and abstraction. Interfaces define a common contract for various classes to implement, enhancing the applicationís extensibility.
+    Houses all interface definitions, promoting polymorphism and abstraction. Interfaces define a common contract for various classes to implement, enhancing the application‚Äôs extensibility.
 
   - **`exceptions`**  
     Contains custom exception classes that handle specific application errors, allowing for more granular error control and improved error reporting to users.
@@ -28,13 +28,13 @@ The application is organized into logical packages, each serving a distinct purp
     A collection of utility or helper methods that provide reusable code snippets. These methods simplify common tasks across the application, such as data formatting or input validation.
 
   - **`views`**  
-    This package contains the user interface (UI) logic and presentation elements. It handles displaying information to the user and capturing their inputs, following the MVC patternís View component.
+    This package contains the user interface (UI) logic and presentation elements. It handles displaying information to the user and capturing their inputs, following the MVC pattern‚Äôs View component.
 
   - **`controllers`**  
-    Controllers manage the application's workflow by processing user requests, managing application logic, and returning responses. Each controller is responsible for interacting with the appropriate services and models to handle specific requests. This package serves as the ìControllerî layer in MVC.
+    Controllers manage the application's workflow by processing user requests, managing application logic, and returning responses. Each controller is responsible for interacting with the appropriate services and models to handle specific requests. This package serves as the ‚ÄúController‚Äù layer in MVC.
 
   - **`models`**  
-    Models represent the applicationís data structure, encapsulating database tables and providing a structure for managing data. Each model corresponds to a table and includes fields and methods to retrieve and manipulate data. This package is the ìModelî component in MVC, promoting encapsulation.
+    Models represent the application‚Äôs data structure, encapsulating database tables and providing a structure for managing data. Each model corresponds to a table and includes fields and methods to retrieve and manipulate data. This package is the ‚ÄúModel‚Äù component in MVC, promoting encapsulation.
 
   - **`services`**  
     The Service Layer is responsible for handling complex business logic that goes beyond the responsibilities of controllers. It abstracts the business processes, which allows the controllers to focus on managing user input/output. This package supports the principles of abstraction and inheritance, offering reusable logic that various controllers can leverage.
@@ -51,7 +51,7 @@ To run and develop the application, please ensure the following tools are instal
 - [UCanAccess](https://ucanaccess.sourceforge.net/site.html) - A JDBC driver that allows Java applications to connect to Microsoft Access databases, enabling the application to perform database operations.
 
 ## Coding Standards
-To ensure consistency, please read the **Standards** in the repository: [README.STANDARDS.md](./README.STANDARDS.md).
+To ensure consistency, please read the **Standards** in the repository: [README.STANDARDS.md](./src/README.STANDARDS.md).
 
 ## Teams
 
@@ -73,7 +73,7 @@ The application was developed through the collaboration of two main teams: **Dev
 - **Gillian Bandiola Sioco**  
   - Role: Entity Relationship Diagram (ERD) Design  
 
-- **Raizen AcuÒa**  
+- **Raizen Acu√±a**  
   - Role: Enhanced Entity-Relationship Diagram (EERD) and Relational Data Model (RDM)  
 
 - **Francis Palma**  
