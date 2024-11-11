@@ -1,0 +1,79 @@
+Final Project Instructions: Object-Oriented System Development Using Java
+
+Objective: A group project to design and implement an object-oriented system using Java. This
+project focuses on applying the fundamental concepts of Object-Oriented Programming (OOP) to
+model real-world entities, emphasizing good software design practices.
+
+Key Focus Areas:
+    • Classes and Objects: Design classes that represent the entities in your system and create
+objects that interact with each other.
+    • Inheritance: Use inheritance to create hierarchies where appropriate, demonstrating code
+reuse and specialization.
+    • Encapsulation: Protect data within your objects using private fields and provide access
+through getter/setter methods.
+    • Polymorphism: Implement polymorphic behaviors where methods behave differently based
+on the object type, enhancing flexibility.
+    • Abstraction: Use abstract classes or interfaces to generalize functionality and separate
+common behaviors from specific implementations.
+
+Instructions:
+    1. Group Formation:
+        o Form groups of 5-6 members. Each group will be assigned one system from the
+provided list of project ideas. No group will have the same system.
+    2. System Design:
+        o Step 1: Define the problem: Understand the real-world system you are modeling.
+Identify the key entities (e.g., students, books, customers) and their interactions.
+        o Step 2: Class Diagram: Design a class diagram representing the system. Identify key
+classes, attributes, methods, and relationships (e.g., inheritance, association).
+        o Step 3: Object Interaction: Define how objects will interact within your system. Clearly
+shows the interactions between different classes.
+    3. Object-Oriented Principles Application:
+        o Classes and Objects: Design appropriate classes that represent real-world entities.
+Ensure they have meaningful attributes and methods.
+        o Inheritance: Identify and implement common properties and behaviors through a
+class hierarchy. Avoid redundant code by using inheritance effectively.
+        o Encapsulation: Ensure that your class attributes are private and provide controlled
+access using methods (getters/setters).
+        o Polymorphism: Use method overriding or interfaces to implement polymorphic
+behavior.
+        o Abstraction: Abstract shared functionality using interfaces or abstract classes.
+    4. Implementation in Java:
+        o Write the Java code that models the designed system. Each class should be
+implemented with its corresponding attributes, methods, and relationships.
+        o Error Handling: Ensure your program handles potential errors appropriately (e.g.,
+invalid input).
+    5. Basic User Interface:
+        o Your system may have a basic user interface (console-based or GUI) to allow users to
+interact with it (e.g., add students, book a room, or process payments).
+    6. Documentation:
+        o Include proper documentation in your code. Each class and method should have clear
+comments explaining its purpose and functionality.
+        o Write a short report (2-3 pages) explaining how OOP concepts were applied in your
+system design.
+    7. Database:
+        o While focusing on object-oriented principles, you may include a simple database to
+store data.
+    8. Submission and Presentation:
+        o Submit the following:
+            ▪ Java source code.
+            ▪ A class diagram and a short report explaining your design.
+            ▪ (Screenshots) Basic user interface and database integration.
+        o Each group will present their project, explaining how they applied object-oriented
+concepts and demonstrating the system functionality.
+
+Grading Criteria:
+    1. Application of OOP Concepts (50%):
+        o Appropriate use of classes, objects, inheritance, encapsulation, polymorphism, and
+abstraction.
+    2. System Design (25%):
+        o Quality of system design (class diagram, object interactions).
+    3. Code Implementation (15%):
+        o Quality of Java code, including proper documentation and error handling.
+    4. Creativity and Additional Features (10%):
+        o Any extra effort shown, such as a user interface or database integration.
+
+Timeline:
+    • Week 10: Group formation and project assignment.
+    • Week 11: System design (class diagram and object interactions).
+    • Week 12 - 14: Java code implementation and testing.
+    • Week 15: Submission and presentation. Nov. 18-22, 2024
