@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Food;
+import models.Category;
 import services.FoodService;
 import helpers.Response;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ public class FoodController {
     }
     
     // Create a new food item
-    public Response<Food> addFood(String foodName, double price, String categoryId) {
+    public Response<Food> addFood(String foodName, double price, int categoryId) {
         if(foodName == null || foodName.trim().isEmpty()) {
             return Response.error("Food name cannot be empty!");
         }
@@ -24,15 +25,16 @@ public class FoodController {
             return Response.error("Price must be greater than 0!");
         }
         
-        if(categoryId == null || categoryId.trim().isEmpty()) {
-            return Response.error("Category ID cannot be empty");
-        }
-        
         try {
+            // Create a Category object with the provided categoryId
+            Category category = new Category();
+            category.setCategory(categoryId);
+            
+            // Create a new Food object with the provided details
             Food newFood = new Food();
             newFood.setFoodName(foodName.trim());
             newFood.setPrice(price);
-            newFood.setCategoryId(categoryId.trim());
+            newFood.setCategory(category);
           
             if(foodService.create(newFood)) {
                 return Response.success("Food created successfully!", newFood);
@@ -59,14 +61,24 @@ public class FoodController {
         }
     }
     
-    // Get food by ID
-    public Response<Food> getFoodById(String id) {
-        if(id == null || id.trim().isEmpty()) {
-            return Response.error("Food ID cannot be empty");
-        }
-
+    public Response<List<Food>> getFoodsByCategory(String categoryName) {
         try {
-            Food food = foodService.getById(id);
+            List<Food> foods = foodService.getByCategory(categoryName);
+            
+            if(foods == null || foods.isEmpty()) {
+                return Response.success("No foods found", Collections.emptyList());
+            }
+            
+            return Response.success("Foods retrieved successfully", foods);
+        } catch(SQLException e) {
+            return Response.error("Failed to retrieve foods: " + e.getMessage());
+        }
+    }
+    
+    // Get food by ID
+    public Response<Food> getFoodById(int id) {
+        try {
+            Food food = foodService.getById(String.valueOf(id));
             
             if(food == null) {
                 return Response.error("Food not found with ID: " + id);
@@ -79,32 +91,28 @@ public class FoodController {
     }
     
     // Update food
-    public Response<Food> updateFood(Food food) {
-        if(food == null) {
-            return Response.error("Food object cannot be null");
-        }
-
-        if(food.getFoodId() == null || food.getFoodId().trim().isEmpty()) {
-            return Response.error("Food ID cannot be empty");
-        }
-
-        if(food.getFoodName() == null || food.getFoodName().trim().isEmpty()) {
+    public Response<Food> updateFood(int foodId, String foodName, double price, int categoryId) {
+        if(foodName == null || foodName.trim().isEmpty()) {
             return Response.error("Food name cannot be empty");
         }
 
-        if(food.getPrice() <= 0) {
+        if(price <= 0) {
             return Response.error("Price must be greater than 0");
         }
         
         try {
             // Check if the food exists
-            Food existingFood = foodService.getById(food.getFoodId());
+            Food existingFood = foodService.getById(String.valueOf(foodId));
             if(existingFood == null) {
-                return Response.error("Food not found with ID: " + food.getFoodId());
+                return Response.error("Food not found with ID: " + foodId);
             }
 
-            if(foodService.update(food)) {
-                return Response.success("Food updated successfully", food);
+            // Create a new Food object with updated details
+            Category category = new Category(categoryId, null);
+            Food updatedFood = new Food(foodId, foodName.trim(), price, category);
+            
+            if(foodService.update(updatedFood)) {
+                return Response.success("Food updated successfully", updatedFood);
             } else {
                 return Response.error("Failed to update food");
             }
@@ -114,19 +122,15 @@ public class FoodController {
     }
     
     // Delete food
-    public Response<String> deleteFood(String id) {
-        if(id == null || id.trim().isEmpty()) {
-            return Response.error("Food ID cannot be empty");
-        }
-        
+    public Response<String> deleteFood(int id) {
         try {
             // Check if the food exists
-            Food existingFood = foodService.getById(id);
+            Food existingFood = foodService.getById(String.valueOf(id));
             if (existingFood == null) {
                 return Response.error("Food not found with ID: " + id);
             }
 
-            if(foodService.delete(id)) {
+            if(foodService.delete(String.valueOf(id))) {
                 return Response.success("Food deleted successfully", null);
             } else {
                 return Response.error("Failed to delete food");
@@ -136,69 +140,66 @@ public class FoodController {
         }
     }
     
-    //ETO SAMPLE USAGE PER METHODS (Bahala kana pano mo iu use)
-        public static void main(String[] args) {
+    public static void main(String[] args) {
 //        FoodController controller = new FoodController();
-        
-        // GET ALL FOODS
+
+        // 1. ADD FOOD
+//        Response<Food> addFoodResponse = controller.addFood("Test", 12.99, 1);
+//        if (addFoodResponse.isSuccess()) {
+//            System.out.println("Food added successfully: " + addFoodResponse.getData().getFoodName());
+//        } else {
+//            System.out.println("Error adding food: " + addFoodResponse.getMessage());
+//        }
+
+        // 2. GET ALL FOODS
 //        Response<List<Food>> foodsResponse = controller.getAllFoods();
 //        if (foodsResponse.isSuccess()) {
 //            List<Food> foods = foodsResponse.getData();
-//            System.out.println("=======\n\nTotal foods found: " + foods.size());
+//            System.out.printf("\n\n%-10s %-30s %-10s %-20s%n", "Food ID", "Food Name", "Price", "Category");
 //            for (Food food : foods) {
-//                System.out.println(food.getFoodId() + ".\t" + food.getFoodName());
+//                //System.out.println(food.getFoodId() + ".\t" + food.getFoodName());
+//                food.displayInfo();
 //            }
+//            System.out.println("Total Records: " + foods.size());
 //        } else {
 //            System.out.println("Error: " + foodsResponse.getMessage());
 //        }
- 
-        // GET ONE FOOD BY ID
-//        Response<Food> foodResponse = controller.getFoodById("1");
-//        if (foodResponse.isSuccess()) {
-//            Food food = foodResponse.getData();
-//            System.out.println("Food Id: " + food.getFoodId());
-//            System.out.println("Food Name: " + food.getFoodName());
-//            System.out.println("Price: " + food.getPrice());
-//            System.out.println("Category: " + food.getCategoryName() + "\n\n=======");
-//        } else {
-//            System.out.println("Error: " + foodResponse.getMessage());
-//        }
-
-        // ADD NEW FOOD
-//        Response<Food> createResponse = controller.addFood("Turon", 20.00, "2");
-//        if (createResponse.isSuccess()) {
-//            System.out.println("Success: " + createResponse.getMessage());
-//            Food createdFood = createResponse.getData();
-//            if (createdFood != null) {
-//                System.out.println("Created food: " + createdFood.getFoodName());
-//            }
-//        } else {
-//            System.out.println("Error: " + createResponse.getMessage());
-//        }
         
-        // UPDATE FOOD
-//        Food foodToUpdate = new Food();
-//        foodToUpdate.setFoodId("4");
-//        foodToUpdate.setFoodName("Updated Pizza");
-//        foodToUpdate.setPrice(11.99);
-//        foodToUpdate.setCategoryId("2");
-//
-//        Response<Food> updateResponse = controller.updateFood(foodToUpdate);
-//        if (updateResponse.isSuccess()) {
-//            System.out.println("Update Success: " + updateResponse.getMessage());
-//            Food updatedFood = updateResponse.getData();
-//            System.out.println("Updated food name: " + updatedFood.getFoodName());
-//            System.out.println("Updated price: $" + updatedFood.getPrice());
+        //3.  GET ALL FOODS BY CATEGORY
+//        Response<List<Food>> foodsByCategoryResponse = controller.getFoodsByCategory("Sandwiches");
+//        if (foodsByCategoryResponse.isSuccess()) {
+//            List<Food> foods = foodsByCategoryResponse.getData();
+//            System.out.printf("\n\n%-10s %-30s %-10s %-20s%n", "Food ID", "Food Name", "Price", "Category");
+//            for (Food food : foods) {
+//                food.displayInfo();
+//            }
+//            System.out.println("Total Records: " + foods.size());
 //        } else {
-//            System.out.println("Update Error: " + updateResponse.getMessage());
+//            System.out.println("Error: " + foodsByCategoryResponse.getMessage());
 //        }
 
-        // DELETE FOOD
-//        Response<String> deleteResponse = controller.deleteFood("5");
-//        if (deleteResponse.isSuccess()) {
-//            System.out.println("Delete Success: " + deleteResponse.getMessage());
+        // 5. GET FOOD BY ID
+//        Response<Food> getFoodByIdResponse = controller.getFoodById(7);
+//        if (getFoodByIdResponse.isSuccess()) {
+//            System.out.println("Food retrieved: " + getFoodByIdResponse.getData().getFoodName());
 //        } else {
-//            System.out.println("Delete Error: " + deleteResponse.getMessage());
+//            System.out.println("Error retrieving food: " + getFoodByIdResponse.getMessage());
+//        }
+
+        // 6. UPDATE FOOD
+//        Response<Food> updateFoodResponse = controller.updateFood(4, "Spaghetti", 10.99, 2);
+//        if (updateFoodResponse.isSuccess()) {
+//            System.out.println("Food updated: " + updateFoodResponse.getData().getFoodName());
+//        } else {
+//            System.out.println("Error updating food: " + updateFoodResponse.getMessage());
+//        }
+
+        // 7. DELETE FOOD
+//        Response<String> deleteFoodResponse = controller.deleteFood(8);
+//        if (deleteFoodResponse.isSuccess()) {
+//            System.out.println("Food deleted successfully");
+//        } else {
+//            System.out.println("Error deleting food: " + deleteFoodResponse.getMessage());
 //        }
     }
 }
