@@ -4,11 +4,13 @@ import models.Food;
 import models.Category;
 import services.FoodService;
 import helpers.Response;
+import interfaces.IOperatorsValidators;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Collections;
 
-public class FoodController {
+public class FoodController implements IOperatorsValidators<Food> {
     protected final FoodService foodService;
     
     public FoodController() {
@@ -17,25 +19,23 @@ public class FoodController {
     
     // Create a new food item
     public Response<Food> addFood(String foodName, double price, int categoryId) {
-        if(foodName == null || foodName.trim().isEmpty()) {
-            return Response.error("Food name cannot be empty!");
+        // Create a Food object and assign values
+        Food newFood = new Food();
+        newFood.setFoodName(foodName.trim());
+        newFood.setPrice(price);
+        
+        Category category = new Category();
+        category.setCategory(categoryId);
+        newFood.setCategory(category);
+        
+        // Validate Food data
+        Response<Food> validationResponse = validateCreate(newFood);
+        if (!validationResponse.isSuccess()) {
+            return validationResponse;
         }
         
-        if(price <= 0) {
-            return Response.error("Price must be greater than 0!");
-        }
-        
-        try {
-            // Create a Category object with the provided categoryId
-            Category category = new Category();
-            category.setCategory(categoryId);
-            
-            // Create a new Food object with the provided details
-            Food newFood = new Food();
-            newFood.setFoodName(foodName.trim());
-            newFood.setPrice(price);
-            newFood.setCategory(category);
-          
+        // Proceed with creation if validation passes
+        try { 
             if(foodService.create(newFood)) {
                 return Response.success("Food created successfully!", newFood);
             } else {
@@ -78,7 +78,7 @@ public class FoodController {
     // Get food by ID
     public Response<Food> getFoodById(int id) {
         try {
-            Food food = foodService.getById(String.valueOf(id));
+            Food food = foodService.getById(id);
             
             if(food == null) {
                 return Response.error("Food not found with ID: " + id);
@@ -92,25 +92,23 @@ public class FoodController {
     
     // Update food
     public Response<Food> updateFood(int foodId, String foodName, double price, int categoryId) {
-        if(foodName == null || foodName.trim().isEmpty()) {
-            return Response.error("Food name cannot be empty");
-        }
-
-        if(price <= 0) {
-            return Response.error("Price must be greater than 0");
+        // Create a new Food object with updated details
+        Category category = new Category(categoryId, null);
+        Food updatedFood = new Food(foodId, foodName.trim(), price, category);
+        
+        // Validate Food data for update
+        Response<Food> validationResponse = validateUpdate(updatedFood);
+        if (!validationResponse.isSuccess()) {
+            return validationResponse;
         }
         
         try {
-            // Check if the food exists
-            Food existingFood = foodService.getById(String.valueOf(foodId));
+            // Check if the food exists 
+            Food existingFood = foodService.getById(foodId);
             if(existingFood == null) {
                 return Response.error("Food not found with ID: " + foodId);
             }
-
-            // Create a new Food object with updated details
-            Category category = new Category(categoryId, null);
-            Food updatedFood = new Food(foodId, foodName.trim(), price, category);
-            
+        
             if(foodService.update(updatedFood)) {
                 return Response.success("Food updated successfully", updatedFood);
             } else {
@@ -124,13 +122,19 @@ public class FoodController {
     // Delete food
     public Response<String> deleteFood(int id) {
         try {
+            // Validate delete operation
+            Response<Boolean> validationResponse = validateDelete(id);
+            if (!validationResponse.isSuccess()) {
+                return Response.error("Validation failed: " + validationResponse.getMessage());
+            }
+            
             // Check if the food exists
-            Food existingFood = foodService.getById(String.valueOf(id));
+            Food existingFood = foodService.getById(id);
             if (existingFood == null) {
                 return Response.error("Food not found with ID: " + id);
             }
 
-            if(foodService.delete(String.valueOf(id))) {
+            if(foodService.delete(id)) {
                 return Response.success("Food deleted successfully", null);
             } else {
                 return Response.error("Failed to delete food");
@@ -140,6 +144,45 @@ public class FoodController {
         }
     }
     
+    @Override
+    public Response<Food> validateCreate(Food food) {
+        if(food.getFoodName() == null || food.getFoodName().trim().isEmpty()) {
+            return Response.error("Food name cannot be empty!");
+        }
+        
+        if(food.getPrice() <= 0) {
+            return Response.error("Price must be greater than 0!");
+        }
+        
+        if(food.getCategory() == null || food.getCategory().getCategoryId() <= 0) {
+            return Response.error("Category ID must be valid!");
+        }
+        
+        return Response.success("Validation passed", food);
+    }
+    
+    @Override
+    public Response<Food> validateUpdate(Food food) {
+        if(food.getFoodName() == null || food.getFoodName().trim().isEmpty()) {
+            return Response.error("Food name cannot be empty");
+        }
+
+        if(food.getPrice() <= 0) {
+            return Response.error("Price must be greater than 0");
+        }
+        
+        return Response.success("Validation passed", food);
+    }
+    
+    @Override
+    public Response<Boolean> validateDelete(int id) {
+        if (id <= 0) {
+            return Response.error("Invalid ID!");
+        }
+        return Response.success("Validation passed", true);
+    }
+    
+    /*** SAMPLE USAGE IN EACH METHOD IN THIS FOOD CONTROLLER (Jerson) ***/
     public static void main(String[] args) {
 //        FoodController controller = new FoodController();
 
@@ -179,15 +222,16 @@ public class FoodController {
 //        }
 
         // 5. GET FOOD BY ID
-//        Response<Food> getFoodByIdResponse = controller.getFoodById(7);
+//        Response<Food> getFoodByIdResponse = controller.getFoodById(9);
 //        if (getFoodByIdResponse.isSuccess()) {
-//            System.out.println("Food retrieved: " + getFoodByIdResponse.getData().getFoodName());
+//            Food food = getFoodByIdResponse.getData();
+//            System.out.println("Food retrieved: " + food.getFoodName());
 //        } else {
 //            System.out.println("Error retrieving food: " + getFoodByIdResponse.getMessage());
 //        }
 
         // 6. UPDATE FOOD
-//        Response<Food> updateFoodResponse = controller.updateFood(4, "Spaghetti", 10.99, 2);
+//        Response<Food> updateFoodResponse = controller.updateFood(9, "Updated Test", 10.99, 2);
 //        if (updateFoodResponse.isSuccess()) {
 //            System.out.println("Food updated: " + updateFoodResponse.getData().getFoodName());
 //        } else {
@@ -195,7 +239,7 @@ public class FoodController {
 //        }
 
         // 7. DELETE FOOD
-//        Response<String> deleteFoodResponse = controller.deleteFood(8);
+//        Response<String> deleteFoodResponse = controller.deleteFood(9);
 //        if (deleteFoodResponse.isSuccess()) {
 //            System.out.println("Food deleted successfully");
 //        } else {

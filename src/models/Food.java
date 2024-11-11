@@ -59,7 +59,8 @@ public class Food {
                           foodId, 
                           foodName, 
                           price, 
-                          category.getCategoryName());
+                          category.getCategoryName()
+        );
     }
 
 }

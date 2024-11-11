@@ -3,15 +3,16 @@ package services;
 import models.Food;
 import models.Category;
 import config.DBConnection;
+import interfaces.IDatabaseOperators;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import interfaces.IOperators;
 
-public class FoodService implements IOperators<Food> {
+public class FoodService implements IDatabaseOperators<Food> {
 
     private boolean isFoodExists(Connection conn, String foodName) throws SQLException {
         PreparedStatement pst = null;
@@ -47,7 +48,7 @@ public class FoodService implements IOperators<Food> {
             pst = conn.prepareStatement(query);
             pst.setString(1, food.getFoodName());
             pst.setDouble(2, food.getPrice());
-            pst.setInt(3, food.getCategory().getCategoryId()); // Use getCategoryId() directly
+            pst.setInt(3, food.getCategory().getCategoryId()); 
             
             success = pst.executeUpdate() > 0;
             
@@ -69,7 +70,7 @@ public class FoodService implements IOperators<Food> {
     }
     
     @Override
-    public Food getById(String id) throws SQLException {
+    public Food getById(int id) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -80,10 +81,10 @@ public class FoodService implements IOperators<Food> {
                          + "c.Category_ID, c.Category_Name "
                          + "FROM FOOD f "
                          + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID "
-                         + "WHERE f.Food_ID = ?";
+                         + "WHERE f.Food_ID = ? LIMIT 1";
             
             pst = conn.prepareStatement(query);
-            pst.setInt(1, Integer.parseInt(id));
+            pst.setInt(1, id);
             rs = pst.executeQuery();
             
             if (rs.next()) {
@@ -192,7 +193,7 @@ public class FoodService implements IOperators<Food> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ?";
+            String query = "UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ? LIMIT 1";
             pst = conn.prepareStatement(query);
             
             pst.setString(1, food.getFoodName());
@@ -208,15 +209,15 @@ public class FoodService implements IOperators<Food> {
     }
     
     @Override
-    public boolean delete(String id) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
         
         try {
             conn = DBConnection.getConnection();
-            String query = "DELETE FROM FOOD WHERE Food_ID = ?";
+            String query = "DELETE FROM FOOD WHERE Food_ID = ? LIMIT 1";
             pst = conn.prepareStatement(query);
-            pst.setInt(1, Integer.parseInt(id));
+            pst.setInt(1, id);
             
             return pst.executeUpdate() > 0;
         } finally {
