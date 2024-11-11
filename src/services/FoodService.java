@@ -1,7 +1,7 @@
 package services;
 
 import models.Food;
-import interfaces.ICRUD;
+import models.Category;
 import config.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,8 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import interfaces.IOperators;
 
-public class FoodService implements ICRUD<Food> {
+public class FoodService implements IOperators<Food> {
+
     private boolean isFoodExists(Connection conn, String foodName) throws SQLException {
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -19,12 +21,8 @@ public class FoodService implements ICRUD<Food> {
             String query = "SELECT COUNT(*) FROM FOOD WHERE UPPER(Food_Name) = UPPER(?)";
             pst = conn.prepareStatement(query);
             pst.setString(1, foodName);
-            
             rs = pst.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-            return false;
+            return rs.next() && rs.getInt(1) > 0;
         } finally {
             DBConnection.closeResources(rs, pst);
         }
@@ -40,48 +38,31 @@ public class FoodService implements ICRUD<Food> {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
             
-            if(isFoodExists(conn, food.getFoodName())) {
+            if (isFoodExists(conn, food.getFoodName())) {
                 System.out.println("Error: Food '" + food.getFoodName() + "' already exists!");
                 return false;
             }
             
             String query = "INSERT INTO FOOD (Food_Name, Price, Category_ID) VALUES (?, ?, ?)";
             pst = conn.prepareStatement(query);
-            
             pst.setString(1, food.getFoodName());
             pst.setDouble(2, food.getPrice());
-            pst.setString(3, food.getCategoryId()); 
+            pst.setInt(3, food.getCategory().getCategoryId()); // Use getCategoryId() directly
             
             success = pst.executeUpdate() > 0;
             
             if (success) {
-                // If insert was successful, commit the transaction
                 conn.commit();
             } else {
-                // If insert failed, rollback
                 conn.rollback();
             }
             
             return success;
         } catch (SQLException e) {
-            // If there's any error, rollback
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    System.out.println("Error rolling back: " + ex.getMessage());
-                }
-            }
+            if (conn != null) conn.rollback();
             throw e;
         } finally {
-            if (conn != null) {
-                try {
-                    // Reset auto-commit to true before closing
-                    conn.setAutoCommit(true);
-                } catch (SQLException e) {
-                    System.out.println("Error resetting auto-commit: " + e.getMessage());
-                }
-            }
+            if (conn != null) conn.setAutoCommit(true);
             DBConnection.closeResources(null, pst);
             if (conn != null) conn.close();
         }
@@ -96,21 +77,26 @@ public class FoodService implements ICRUD<Food> {
         try {
             conn = DBConnection.getConnection();
             String query = "SELECT f.Food_ID, f.Food_Name, f.Price, "
-                    + "c.Category_ID, c.Category_Name "
-                    + "FROM FOOD f "
-                    + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID "
-                    + "WHERE f.Food_ID = ?";
+                         + "c.Category_ID, c.Category_Name "
+                         + "FROM FOOD f "
+                         + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID "
+                         + "WHERE f.Food_ID = ?";
             
             pst = conn.prepareStatement(query);
-            pst.setString(1, id);
+            pst.setInt(1, Integer.parseInt(id));
             rs = pst.executeQuery();
             
             if (rs.next()) {
-                return new Food(
-                    rs.getString("Food_ID"),
-                    rs.getString("Food_Name"),
-                    rs.getDouble("Price"),
+                Category category = new Category(
+                    rs.getInt("Category_ID"), 
                     rs.getString("Category_Name")
+                );
+                
+                return new Food(
+                    rs.getInt("Food_ID"), 
+                    rs.getString("Food_Name"), 
+                    rs.getDouble("Price"), 
+                    category
                 );
             }
             return null;
@@ -130,20 +116,66 @@ public class FoodService implements ICRUD<Food> {
         try {
             conn = DBConnection.getConnection();
             String query = "SELECT f.Food_ID, f.Food_Name, f.Price, "
-                    + "c.Category_ID, c.Category_Name "
-                    + "FROM FOOD f "
-                    + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID";
+                         + "c.Category_ID, c.Category_Name "
+                         + "FROM FOOD f "
+                         + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID";
             
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
             
             while (rs.next()) {
-                Food food = new Food(
-                    rs.getString("Food_ID"),
-                    rs.getString("Food_Name"),
-                    rs.getDouble("Price"),
+                Category category = new Category(
+                    rs.getInt("Category_ID"),
                     rs.getString("Category_Name")
                 );
+                
+                Food food = new Food(
+                    rs.getInt("Food_ID"), 
+                    rs.getString("Food_Name"), 
+                    rs.getDouble("Price"), 
+                    category
+                );
+                
+                foods.add(food);
+            }
+            return foods;
+        } finally {
+            DBConnection.closeResources(rs, pst);
+            if (conn != null) conn.close();
+        }
+    }
+    
+    public List<Food> getByCategory(String categoryName) throws SQLException { 
+        List<Food> foods = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = DBConnection.getConnection();
+            String query = "SELECT f.Food_ID, f.Food_Name, f.Price, "
+                         + "c.Category_ID, c.Category_Name "
+                         + "FROM FOOD f "
+                         + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID "
+                         + "WHERE c.Category_Name = ?";
+            
+            pst = conn.prepareStatement(query);
+            pst.setString(1, categoryName);
+            rs = pst.executeQuery();
+            
+            while (rs.next()) {
+                Category category = new Category(
+                    rs.getInt("Category_ID"),
+                    rs.getString("Category_Name")
+                );
+                
+                Food food = new Food(
+                    rs.getInt("Food_ID"), 
+                    rs.getString("Food_Name"), 
+                    rs.getDouble("Price"), 
+                    category
+                );
+                
                 foods.add(food);
             }
             return foods;
@@ -165,8 +197,8 @@ public class FoodService implements ICRUD<Food> {
             
             pst.setString(1, food.getFoodName());
             pst.setDouble(2, food.getPrice());
-            pst.setString(3, food.getCategoryId()); // Assuming you've added categoryId field
-            pst.setString(4, food.getFoodId());
+            pst.setInt(3, food.getCategory().getCategoryId());
+            pst.setInt(4, food.getFoodId());
             
             return pst.executeUpdate() > 0;
         } finally {
@@ -184,8 +216,7 @@ public class FoodService implements ICRUD<Food> {
             conn = DBConnection.getConnection();
             String query = "DELETE FROM FOOD WHERE Food_ID = ?";
             pst = conn.prepareStatement(query);
-            
-            pst.setString(1, id);
+            pst.setInt(1, Integer.parseInt(id));
             
             return pst.executeUpdate() > 0;
         } finally {

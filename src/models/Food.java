@@ -1,42 +1,32 @@
 package models;
 
 public class Food {
-    private String foodId;
+    private int foodId;
     private String foodName;
     private double price;
-    private String categoryId;  
-    
-    private String categoryName;  
+    private Category category;
     
     public Food() {}
     
-    public Food(String foodId, String foodName, double price) {
+    public Food(int foodId, String foodName, double price) {
         this.foodId = foodId;
         this.foodName = foodName;
         this.price = price;
     }
     
-    public Food(String foodId, String foodName, double price, String categoryName) {
+    public Food(int foodId, String foodName, double price, Category category) {
         this.foodId = foodId;
         this.foodName = foodName;
         this.price = price;
-        this.categoryName = categoryName;
+        this.category  = category ;
     }
-    
-    public Food(String foodId, String foodName, double price, String categoryId, String categoryName) {
-        this.foodId = foodId;
-        this.foodName = foodName;
-        this.price = price;
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
-    }
-    
+
     // Getters and setters for all fields
-    public String getFoodId() {
+    public int getFoodId() {
         return foodId;
     }
 
-    public void setFoodId(String foodId) {
+    public void setFoodId(int foodId) {
         this.foodId = foodId;
     }
 
@@ -56,19 +46,20 @@ public class Food {
         this.price = price;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
+    }
+    
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void displayInfo() {
+        System.out.printf("%-10d %-30s $%-9.2f %-20s%n", 
+                          foodId, 
+                          foodName, 
+                          price, 
+                          category.getCategoryName());
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
 }

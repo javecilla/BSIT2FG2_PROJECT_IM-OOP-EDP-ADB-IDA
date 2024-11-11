@@ -3,7 +3,7 @@ package interfaces;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface ICRUD<T> {
+public interface IOperators<T> {
     // Create
     boolean create(T entity) throws SQLException;
     
