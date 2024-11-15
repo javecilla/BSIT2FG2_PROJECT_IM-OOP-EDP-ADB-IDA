@@ -31,8 +31,8 @@ public class Category {
     
     public void displayInfo() {
         System.out.printf("%-10d %-30s%n", 
-                          categoryId, 
-                          categoryName
+                          getCategoryId(), 
+                          getCategoryName()
         );
     }
 }

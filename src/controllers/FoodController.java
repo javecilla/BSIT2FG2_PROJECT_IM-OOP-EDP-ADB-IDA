@@ -185,7 +185,7 @@ public class FoodController implements IOperatorsValidators<Food> {
     
        /*** SAMPLE USAGE IN EACH METHOD IN THIS FOOD CONTROLLER (Jerson) ***/
     public static void main(String[] args) {
-//        FoodController controller = new FoodController();
+        FoodController controller = new FoodController();
 
         // 1. ADD FOOD
 //        Response<Food> addFoodResponse = controller.addFood("Test", 12.99, 1);
@@ -210,17 +210,18 @@ public class FoodController implements IOperatorsValidators<Food> {
 //        }
         
         //3.  GET ALL FOODS BY CATEGORY
-//        Response<List<Food>> foodsByCategoryResponse = controller.getFoodsByCategory("Sandwiches");
-//        if (foodsByCategoryResponse.isSuccess()) {
-//            List<Food> foods = foodsByCategoryResponse.getData();
-//            System.out.printf("\n\n%-10s %-30s %-10s %-20s%n", "Food ID", "Food Name", "Price", "Category");
-//            for (Food food : foods) {
-//                food.displayInfo();
-//            }
-//            System.out.println("Total Records: " + foods.size());
-//        } else {
-//            System.out.println("Error: " + foodsByCategoryResponse.getMessage());
-//        }
+        Response<List<Food>> foodsByCategoryResponse = controller.getFoodsByCategory("Sandwiches");
+        if (foodsByCategoryResponse.isSuccess()) {
+            List<Food> foods = foodsByCategoryResponse.getData();
+            System.out.printf("\n\n%-10s %-30s %-10s %-20s%n", "Food ID", "Food Name", "Price", "Category");
+            for (Food food : foods) {
+                //System.out.println(food.getFoodId() + ".\t" + food.getFoodName());
+                food.displayInfo();
+            }
+            System.out.println("Total Records: " + foods.size());
+        } else {
+            System.out.println("Error: " + foodsByCategoryResponse.getMessage());
+        }
 
         // 5. GET FOOD BY ID
 //        Response<Food> getFoodByIdResponse = controller.getFoodById(10);
