@@ -152,7 +152,7 @@ public class CategoryController implements IOperatorsValidators<Category> {
     
      /*** SAMPLE USAGE IN EACH METHOD IN THIS CATEGORY CONTROLLER (Jerson) ***/
     public static void main(String[] args) {
-//        CategoryController controller = new CategoryController();
+        CategoryController controller = new CategoryController();
 
         // 1. ADD RECORD
 //        Response<Category> addCategoryResponse = controller.addCategory("Test1");
@@ -163,17 +163,17 @@ public class CategoryController implements IOperatorsValidators<Category> {
 //        }
 
         // 2. GET ALL RECORDS
-//        Response<List<Category>> categoriesResponse = controller.getAllCategories();
-//        if (categoriesResponse.isSuccess()) {
-//            List<Category> categories = categoriesResponse.getData();
-//            System.out.printf("\n\n%-10s %-30s%n", "Category ID", "Category Name");
-//            for (Category category : categories) {
-//                category.displayInfo();
-//            }
-//            System.out.println("Total Records: " + categories.size());
-//        } else {
-//            System.out.println("Error: " + categoriesResponse.getMessage());
-//        }
+        Response<List<Category>> categoriesResponse = controller.getAllCategories();
+        if (categoriesResponse.isSuccess()) {
+            List<Category> categories = categoriesResponse.getData();
+            System.out.printf("\n\n%-10s %-30s%n", "Category ID", "Category Name");
+            for (Category category : categories) {
+                category.displayInfo();
+            }
+            System.out.println("Total Records: " + categories.size());
+        } else {
+            System.out.println("Error: " + categoriesResponse.getMessage());
+        }
 
         // 3. GET ALL RECORDS BY FILTER
         

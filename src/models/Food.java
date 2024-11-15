@@ -1,4 +1,5 @@
 package models;
+
 public class Food extends Category {
     private int foodId;
     private String foodName;

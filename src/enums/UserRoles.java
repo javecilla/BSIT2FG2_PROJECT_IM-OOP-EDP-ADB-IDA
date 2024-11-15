@@ -1,6 +1,6 @@
 package enums;
 
-enum UserRoles {
+public enum UserRoles {
     ADMIN,
     USER
 }
