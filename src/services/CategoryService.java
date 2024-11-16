@@ -13,22 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryService implements IDatabaseOperators<Category> {
-    
-    private boolean isCategoryExists(Connection conn, String categoryName) throws SQLException {
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        
-        try {
-            String query = "SELECT COUNT(*) FROM CATEGORY WHERE UPPER(Category_Name) = UPPER(?)";
-            pst = conn.prepareStatement(query);
-            pst.setString(1, categoryName);
-            rs = pst.executeQuery();
-            return rs.next() && rs.getInt(1) > 0;
-        } finally {
-            DBConnection.closeResources(rs, pst);
-        }
-    }
-    
     @Override
     public boolean create(Category category) throws SQLException {
         Connection conn = null;
@@ -75,7 +59,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT * FROM CATEGORY WHERE Category_ID = ? LIMIT 1";
+            String query = "SELECT * FROM CATEGORY WHERE Category_ID = ?";
  
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
@@ -131,7 +115,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE CATEGORY SET Category_Name = ? WHERE Category_ID = ? LIMIT 1";
+            String query = "UPDATE CATEGORY SET Category_Name = ? WHERE Category_ID = ? ";
             pst = conn.prepareStatement(query);
             
             pst.setString(1, category.getCategoryName());
@@ -151,7 +135,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "DELETE FROM CATEGORY WHERE Category_ID = ? LIMIT 1";
+            String query = "DELETE FROM CATEGORY WHERE Category_ID = ? ";
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             
@@ -159,6 +143,21 @@ public class CategoryService implements IDatabaseOperators<Category> {
         } finally {
             DBConnection.closeResources(null, pst);
             if (conn != null) conn.close();
+        }
+    }
+    
+    protected boolean isCategoryExists(Connection conn, String categoryName) throws SQLException {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        
+        try {
+            String query = "SELECT COUNT(*) FROM CATEGORY WHERE UPPER(Category_Name) = UPPER(?)";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, categoryName);
+            rs = pst.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } finally {
+            DBConnection.closeResources(rs, pst);
         }
     }
 }

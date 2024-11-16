@@ -2,10 +2,10 @@
 package models;
 
 public class User extends UserInfo {
-    private int userId;
+    private int id;
     private String username;
     private String password;
-    private String userRole;
+    private String role;
     
     public User() {
       super();
@@ -15,15 +15,15 @@ public class User extends UserInfo {
         super();
         this.username = username;
         this.password = password;
-        this.userRole = userRole;
+        this.role = userRole;
     }
     
     public User(int userId, String username, String password, String userRole) {
         super();
-        this.userId = userId;
+        this.id = userId;
         this.username = username;
         this.password = password;
-        this.userRole = userRole;
+        this.role = userRole;
     }
     
     public User(int userId, String username, String password, UserInfo userInfo) {
@@ -38,18 +38,18 @@ public class User extends UserInfo {
             userInfo.getProvince(),
             userInfo.getMunicipality()
         );
-        this.userId = userId;
+        this.id = userId;
         this.username = username;
         this.password = password;
     }
     
     // Getters and setters for all fields
     public int getUserId() {
-        return userId;
+        return id;
     }
     
     public void setUserId(int userId) {
-        this.userId = userId;
+        this.id = userId;
     }
     
     public String getUsername() {
@@ -69,11 +69,11 @@ public class User extends UserInfo {
     }
     
     public String getUserRole() {
-        return userRole;
+        return role;
     }
     
     public void setUserRole(String userRole) {
-        this.userRole = userRole;
+        this.role = userRole;
     }
     
     @Override

@@ -6,8 +6,6 @@ import enums.UserRoles;
 import helpers.Response;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Collections;
 
 public class UserController {
     protected final UserService userService;
