@@ -152,7 +152,8 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                             + "SUPPLIER INNER JOIN INGREDIENT ON SUPPLIER.Supplier_ID = INGREDIENT.Supplier_ID "
                         + ") ON ADMIN.Admin_ID = INGREDIENT.Admin_ID"
                     + ") ON USER.User_ID = ADMIN.Admin_ID"
-                + ") ON USER_INFO.UserInfo_ID = USER.UserInfo_ID ";
+                + ") ON USER_INFO.UserInfo_ID = USER.UserInfo_ID "
+                + "ORDER BY INGREDIENT.Ingredient_ID ASC ";
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
 
@@ -209,7 +210,8 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                         + ") ON ADMIN.Admin_ID = INGREDIENT.Admin_ID"
                     + ") ON USER.User_ID = ADMIN.Admin_ID"
                 + ") ON USER_INFO.UserInfo_ID = USER.UserInfo_ID "
-                + " WHERE INGREDIENT.Ingredient_Quantity <= INGREDIENT.Reorder_Point";
+                + "WHERE INGREDIENT.Ingredient_Quantity <= INGREDIENT.Reorder_Point "
+                + "ORDER BY INGREDIENT.Ingredient_ID ASC ";
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
 
@@ -241,7 +243,9 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                 ingredient.setAdmin(admin);
                 ingredients.add(ingredient);
             }
-
+            
+            // Debugging log
+            System.out.println("Found " + ingredients.size() + " ingredients with low stock.");
             return ingredients;
         } finally {
             DBConnection.closeResources(rs, pst);

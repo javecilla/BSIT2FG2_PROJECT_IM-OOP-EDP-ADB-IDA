@@ -79,6 +79,7 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             List<Ingredient> ingredients = ingredientService.getAllLowStock();
 
             if (ingredients == null || ingredients.isEmpty()) {
+                System.out.println("No ingredients found or response is empty.");
                 return Response.success("No ingredients found", Collections.emptyList());
             }
 
@@ -87,6 +88,7 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             return Response.error("Something went wrong: " + e.getMessage());
         }
     }
+
 
     // Get ingredient by ID
     public Response<Ingredient> getIngredientById(int id) {

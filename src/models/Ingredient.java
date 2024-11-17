@@ -80,7 +80,7 @@ public class Ingredient extends Supplier {
         System.out.println("Ingredient Name: " + getIngredientName());
         System.out.println("Current Stock: " + getQuantity());
         System.out.println("Re-order Points: " + getReorderPoint());
-        System.out.println("Supplier Info: \n");
+        System.out.println("\nSupplier Info: ");
         super.display();
     }
 }
