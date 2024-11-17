@@ -1,8 +1,8 @@
 package models;
 
 public class Food extends Category {
-    private int foodId;
-    private String foodName;
+    private int id;
+    private String name;
     private double price;
     
     public Food() {
@@ -11,33 +11,33 @@ public class Food extends Category {
     
     public Food(int foodId, String foodName, double price) {
         super();
-        this.foodId = foodId;
-        this.foodName = foodName;
+        this.id = foodId;
+        this.name = foodName;
         this.price = price;
     }
     
     public Food(int foodId, String foodName, double price, Category category) {
         super(category.getCategoryId(), category.getCategoryName());
-        this.foodId = foodId;
-        this.foodName = foodName;
+        this.id = foodId;
+        this.name = foodName;
         this.price = price;
     }
      
     // Getters and setters for all fields
     public int getFoodId() {
-        return foodId;
+        return id;
     }
     
     public void setFoodId(int foodId) {
-        this.foodId = foodId;
+        this.id = foodId;
     }
     
     public String getFoodName() {
-        return foodName;
+        return name;
     }
     
     public void setFoodName(String foodName) {
-        this.foodName = foodName;
+        this.name = foodName;
     }
     
     public double getPrice() {
@@ -51,8 +51,8 @@ public class Food extends Category {
     @Override
     public void displayInfo() {
         System.out.printf("%-10d %-30s $%-9.2f %-20s%n", 
-                          foodId, 
-                          foodName, 
+                          id, 
+                          name, 
                           price, 
                           super.getCategoryName()
         );

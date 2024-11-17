@@ -18,12 +18,11 @@ public class UserService {
             conn = DBConnection.getConnection();
             
             String query = "SELECT u.User_ID, u.Username, u.Password, u.User_Role, "
-                    + "ui.UserInfo_ID, ui.First_Name, ui.Last_Name, ui.Barangay, ui.Street, "
-                    + "ui.House_Number, ui.Region, ui.Province, ui.Municipality "
-                    + "FROM USER u "
-                    + "INNER JOIN USER_INFO ui ON u.UserInfo_ID = ui.UserInfo_ID "
-                    + "WHERE u.Username = ? AND u.User_Role = ? "
-                    + "LIMIT 1";
+                + "ui.UserInfo_ID, ui.First_Name, ui.Last_Name, ui.Barangay, ui.Street, "
+                + "ui.House_Number, ui.Region, ui.Province, ui.Municipality "
+                + "FROM USER u "
+                + "INNER JOIN USER_INFO ui ON u.UserInfo_ID = ui.UserInfo_ID "
+                + "WHERE u.Username = ? AND u.User_Role = ? ";
             
             pst = conn.prepareStatement(query);
             pst.setString(1, user.getUsername());
@@ -60,6 +59,16 @@ public class UserService {
             throw new SQLException("Login failed due to database error.");
         } finally {
             DBConnection.closeResources(rs, pst); 
+        }
+    }
+    
+    protected boolean isAdminExists(Connection conn, int adminId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM ADMIN WHERE Admin_ID = ?";
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setInt(1, adminId);
+            try (ResultSet rs = pst.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
         }
     }
 }

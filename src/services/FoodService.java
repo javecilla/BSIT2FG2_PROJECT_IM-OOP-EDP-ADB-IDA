@@ -13,22 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FoodService implements IDatabaseOperators<Food> {
-
-    private boolean isFoodExists(Connection conn, String foodName) throws SQLException {
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        
-        try {
-            String query = "SELECT COUNT(*) FROM FOOD WHERE UPPER(Food_Name) = UPPER(?)";
-            pst = conn.prepareStatement(query);
-            pst.setString(1, foodName);
-            rs = pst.executeQuery();
-            return rs.next() && rs.getInt(1) > 0;
-        } finally {
-            DBConnection.closeResources(rs, pst);
-        }
-    }
-    
     @Override
     public boolean create(Food food) throws SQLException {
         Connection conn = null;
@@ -187,7 +171,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ? LIMIT 1";
+            String query = "UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ?";
             pst = conn.prepareStatement(query);
             
             pst.setString(1, food.getFoodName());
@@ -209,7 +193,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "DELETE FROM FOOD WHERE Food_ID = ? LIMIT 1";
+            String query = "DELETE FROM FOOD WHERE Food_ID = ?";
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             
@@ -217,6 +201,21 @@ public class FoodService implements IDatabaseOperators<Food> {
         } finally {
             DBConnection.closeResources(null, pst);
             if (conn != null) conn.close();
+        }
+    }
+    
+    protected boolean isFoodExists(Connection conn, String foodName) throws SQLException {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        
+        try {
+            String query = "SELECT COUNT(*) FROM FOOD WHERE UPPER(Food_Name) = UPPER(?)";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, foodName);
+            rs = pst.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } finally {
+            DBConnection.closeResources(rs, pst);
         }
     }
 }

@@ -2,7 +2,7 @@
 package models;
 
 public class UserInfo {
-    private int userInfoId;
+    private int id;
     private String firstName;
     private String lastName;
     private String barangay;
@@ -25,7 +25,7 @@ public class UserInfo {
        String province,
        String municipality
     ) {
-       this.userInfoId = userInfoId;
+       this.id = userInfoId;
        this.firstName = firstName;
        this.lastName = lastName;
        this.barangay = barangay;
@@ -38,11 +38,11 @@ public class UserInfo {
     
     // Getters and setters for all fields
     public int getUserInfoId() {
-        return userInfoId;
+        return id;
     }
 
     public void setUserInfoId(int userInfoId) {
-        this.userInfoId = userInfoId;
+        this.id = userInfoId;
     }
 
     public String getFirstName() {
