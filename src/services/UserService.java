@@ -17,13 +17,14 @@ public class UserService {
         try {
             conn = DBConnection.getConnection();
             
-            String query = "SELECT u.User_ID, u.Username, u.Password, u.User_Role, "
-                + "ui.UserInfo_ID, ui.First_Name, ui.Last_Name, ui.Barangay, ui.Street, "
-                + "ui.House_Number, ui.Region, ui.Province, ui.Municipality "
-                + "FROM USER u "
-                + "INNER JOIN USER_INFO ui ON u.UserInfo_ID = ui.UserInfo_ID "
-                + "WHERE u.Username = ? AND u.User_Role = ? ";
-                        
+            String query = """
+               SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role,
+                      USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, USER_INFO.Barangay, USER_INFO.Street,
+                      USER_INFO.House_Number, USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality
+                FROM USER
+                INNER JOIN USER_INFO ON USER.UserInfo_ID = USER_INFO.UserInfo_ID
+                WHERE USER.Username = ? AND USER.User_Role = ?
+            """;                        
             pst = conn.prepareStatement(query);
             pst.setString(1, user.getUsername());
             pst.setString(2, user.getUserRole());
@@ -63,7 +64,9 @@ public class UserService {
     
     public boolean isAdminExistsById(int adminId) throws SQLException {
         Connection conn = null;
-        String query = "SELECT COUNT(*) FROM ADMIN WHERE Admin_ID = ?";
+        String query = """
+            SELECT COUNT(*) FROM ADMIN WHERE Admin_ID = ?
+        """;
         try (PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setInt(1, adminId);
             try (ResultSet rs = pst.executeQuery()) {

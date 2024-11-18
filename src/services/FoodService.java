@@ -23,7 +23,9 @@ public class FoodService implements IDatabaseOperators<Food> {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
               
-            String query = "INSERT INTO FOOD (Food_Name, Price, Category_ID) VALUES (?, ?, ?)";
+            String query = """
+                INSERT INTO FOOD (Food_Name, Price, Category_ID) VALUES (?, ?, ?)
+            """;
             pst = conn.prepareStatement(query);
             pst.setString(1, food.getFoodName());
             pst.setDouble(2, food.getPrice());
@@ -56,12 +58,12 @@ public class FoodService implements IDatabaseOperators<Food> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT f.Food_ID, f.Food_Name, f.Price, "
-                         + "c.Category_ID, c.Category_Name "
-                         + "FROM FOOD f "
-                         + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID "
-                         + "WHERE f.Food_ID = ? LIMIT 1";
-            
+            String query = """
+               SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
+               FROM FOOD 
+               INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
+               WHERE FOOD.Food_ID = ?
+            """;            
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             rs = pst.executeQuery();
@@ -92,12 +94,13 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
-            String query = "SELECT f.Food_ID, f.Food_Name, f.Price, "
-                         + "c.Category_ID, c.Category_Name "
-                         + "FROM FOOD f "
-                         + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID";
-            
+            conn = DBConnection.getConnection();  
+            String query = """
+                SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
+                FROM FOOD 
+                INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
+            """;
+
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
             
@@ -129,11 +132,12 @@ public class FoodService implements IDatabaseOperators<Food> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT f.Food_ID, f.Food_Name, f.Price, "
-                         + "c.Category_ID, c.Category_Name "
-                         + "FROM FOOD f "
-                         + "INNER JOIN CATEGORY c ON f.Category_ID = c.Category_ID "
-                         + "WHERE c.Category_Name = ?";
+            String query = """
+               SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
+               FROM FOOD 
+               INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
+               WHERE CATEGORY.Category_Name = ?
+            """;
             
             pst = conn.prepareStatement(query);
             pst.setString(1, categoryName);
@@ -166,7 +170,9 @@ public class FoodService implements IDatabaseOperators<Food> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ?";
+            String query = """
+                UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ?
+            """;
             pst = conn.prepareStatement(query);
             
             pst.setString(1, food.getFoodName());
@@ -188,7 +194,9 @@ public class FoodService implements IDatabaseOperators<Food> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "DELETE FROM FOOD WHERE Food_ID = ?";
+            String query = """
+                DELETE FROM FOOD WHERE Food_ID = ?
+            """;
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             
@@ -205,7 +213,9 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            String query = "SELECT COUNT(*) FROM FOOD WHERE UPPER(Food_Name) = UPPER(?)";
+            String query = """
+                SELECT COUNT(*) FROM FOOD WHERE UPPER(Food_Name) = UPPER(?)
+            """;
             pst = conn.prepareStatement(query);
             pst.setString(1, foodName);
             rs = pst.executeQuery();

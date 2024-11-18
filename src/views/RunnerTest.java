@@ -225,7 +225,15 @@ private static void adminManageStock() {
         Response<Ingredient> ingredientsResponse = INGREDIENT_CONTROLLER.getIngredientById(Integer.parseInt(ingredientIDInput));
         if (ingredientsResponse.isSuccess()) {
             Ingredient ingredient = ingredientsResponse.getData();
-            ingredient.display();
+            System.out.println("Ingredient ID: " + ingredient.getIngredientId());
+            System.out.println("Ingredient Name: " + ingredient.getIngredientName());
+            System.out.println("Current Stock: " + ingredient.getQuantity());
+            System.out.println("Re-order Points: " + ingredient.getReorderPoint());
+            System.out.println("\nSupplier Info: ");
+            System.out.println("\tSupplier ID: " + ingredient.getSupplierId());
+            System.out.println("\tFull Name: " + ingredient.getSupplierName());
+            System.out.println("\tContact Number: " + ingredient.getContactNumber());
+            System.out.println("\tAddress: " + ingredient.getAddress());
         } else {
             System.out.println("Error retrieving ingredient: " + ingredientsResponse.getMessage());
         }
