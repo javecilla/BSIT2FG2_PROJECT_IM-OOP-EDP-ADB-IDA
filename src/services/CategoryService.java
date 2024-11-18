@@ -23,11 +23,6 @@ public class CategoryService implements IDatabaseOperators<Category> {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
             
-            if (isCategoryExists(conn, category.getCategoryName())) {
-                System.out.println("Error: Category '" + category.getCategoryName() + "' already exists!");
-                return false;
-            }
-            
             String query = "INSERT INTO CATEGORY (Category_Name) VALUES (?)";
             pst = conn.prepareStatement(query);
             pst.setString(1, category.getCategoryName());
@@ -146,7 +141,8 @@ public class CategoryService implements IDatabaseOperators<Category> {
         }
     }
     
-    protected boolean isCategoryExists(Connection conn, String categoryName) throws SQLException {
+    public boolean isCategoryExists(String categoryName) throws SQLException {
+        Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         

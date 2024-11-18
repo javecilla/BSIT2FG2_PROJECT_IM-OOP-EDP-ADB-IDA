@@ -1,11 +1,11 @@
 package services;
 
+import interfaces.IDatabaseOperators;
+import config.DBConnection;
 import models.Ingredient;
 import models.Supplier;
 import models.Admin;
 import models.User;
-import config.DBConnection;
-import interfaces.IDatabaseOperators;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientService implements IDatabaseOperators<Ingredient> {
-    protected final SupplierService supplierService = new SupplierService();
-    protected final UserService userService = new UserService();
     
     @Override
     public boolean create(Ingredient ingredient) throws SQLException {
@@ -27,20 +25,6 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
-
-            //validate if ingredient already exists
-            if(isIngredientExists(conn, ingredient.getIngredientName())) {
-                System.out.println("Error: Ingredient '" + ingredient.getIngredientName() + "' already exists!");
-                return false;
-            }
-            if(!supplierService.isSupplierExists(conn, ingredient.getSupplierId())) {
-                System.out.println("Error: Supplier with ID " + ingredient.getSupplierId() + " does not exist!");
-                return false;
-            }
-            if(!userService.isAdminExists(conn, ingredient.getAdmin().getAdminId())) {
-                System.out.println("Error: Admin with ID " + ingredient.getAdmin().getAdminId() + " does not exist!");
-                return false;
-            }
 
             String query = "INSERT INTO INGREDIENT (Ingredient_Name, Ingredient_Quantity, Reorder_Point, Supplier_ID, Admin_ID) "
                          + "VALUES (?, ?, ?, ?, ?)";
@@ -344,7 +328,8 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         }
     }
 
-    protected boolean isIngredientExists(Connection conn, String ingredientName) throws SQLException {
+    public boolean isIngredientExists(String ingredientName) throws SQLException {
+        Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         

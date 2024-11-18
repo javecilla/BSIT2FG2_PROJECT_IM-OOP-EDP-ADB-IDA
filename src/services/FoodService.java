@@ -23,10 +23,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
             
-            if (isFoodExists(conn, food.getFoodName())) {
-                System.out.println("Error: Food '" + food.getFoodName() + "' already exists!");
-                return false;
-            }
+            
             
             String query = "INSERT INTO FOOD (Food_Name, Price, Category_ID) VALUES (?, ?, ?)";
             pst = conn.prepareStatement(query);
@@ -204,7 +201,8 @@ public class FoodService implements IDatabaseOperators<Food> {
         }
     }
     
-    protected boolean isFoodExists(Connection conn, String foodName) throws SQLException {
+    public boolean isFoodExists(String foodName) throws SQLException {
+        Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         

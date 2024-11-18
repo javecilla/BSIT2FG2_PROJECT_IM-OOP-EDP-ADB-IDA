@@ -1,12 +1,14 @@
 package controllers;
 
+import interfaces.IOperatorsValidators;
 import models.Ingredient;
 import models.Supplier;
 import models.Admin;
 import models.User;
 import services.IngredientService;
+import services.SupplierService;
+import services.UserService;
 import helpers.Response;
-import interfaces.IOperatorsValidators;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,9 +16,13 @@ import java.util.Collections;
 
 public class IngredientController implements IOperatorsValidators<Ingredient> {
     protected final IngredientService ingredientService;
-
+    protected final SupplierService supplierService;
+    protected final UserService userService;
+    
     public IngredientController() {
         this.ingredientService = new IngredientService();
+        this.supplierService = new SupplierService();
+        this.userService = new UserService();
     }
 
     // Add a new ingredient
@@ -44,10 +50,18 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         }
 
         try {
-            // Create the ingredient
-            boolean isCreated = ingredientService.create(newIngredient);
-
-            if (isCreated) {
+            //validate if ingredient already exists
+            if(ingredientService.isIngredientExists(ingredientName)) {
+                return Response.error("Error: Ingredient '" + ingredientName + "' already exists!");
+            }            
+            if(!supplierService.isSupplierExists(supplierId)) {
+                return Response.error("Error: Supplier with ID " + supplierId + " does not exist!");
+            }
+            if(!userService.isAdminExists(adminId)) {
+                return Response.error("Error: Admin with ID " + adminId + " does not exist!");
+            }
+            
+            if (ingredientService.create(newIngredient)) {
                 return Response.success("Ingredient created successfully!", newIngredient);
             } else {
                 return Response.error("Failed to create ingredient. Check validation messages for more details.");
