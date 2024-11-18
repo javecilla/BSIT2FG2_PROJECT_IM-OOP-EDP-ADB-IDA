@@ -1,11 +1,12 @@
 package controllers;
 
+import java.sql.SQLException;
+
 import models.User;
 import services.UserService;
 import enums.UserRoles;
 import helpers.Response;
-
-import java.sql.SQLException;
+import helpers.Text;
 
 public class UserController {
     protected final UserService userService;
@@ -15,8 +16,8 @@ public class UserController {
     }
     
     // Create a new food item
-    public Response<User> loginUser(String username, String password, String userRole) {
-        User user = new User(username, password, userRole);
+    public Response<User> loginUser(String username, String password, String userRole) { 
+        User user = new User(username, password, Text.capitalizeFirstLetterInString(userRole));
         
         //validate login input
         Response<User> validationResponse = validateLogin(user);
@@ -26,11 +27,12 @@ public class UserController {
         
         // Proceed with login if validation passes
         try { 
-            if(userService.login(user)) {
-                 return Response.success("Login successfully!", user);
-            } else {
-                return Response.error("Failed to login! Invalid credentials");
-            }
+            boolean isLoggedIn = userService.login(user);
+            
+            return (isLoggedIn) 
+                ? Response.success("Login successfully!", user)
+                : Response.error("Failed to login! Invalid credentials");
+
         } catch(SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }    

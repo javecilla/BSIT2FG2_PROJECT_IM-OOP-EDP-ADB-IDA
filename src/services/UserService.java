@@ -1,12 +1,12 @@
 package services;
 
-import models.User;
-import config.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import models.User;
+import config.DBConnection;
 
 public class UserService {
     public boolean login(User user) throws SQLException {
@@ -23,21 +23,20 @@ public class UserService {
                 + "FROM USER u "
                 + "INNER JOIN USER_INFO ui ON u.UserInfo_ID = ui.UserInfo_ID "
                 + "WHERE u.Username = ? AND u.User_Role = ? ";
-            
+                        
             pst = conn.prepareStatement(query);
             pst.setString(1, user.getUsername());
             pst.setString(2, user.getUserRole());
             rs = pst.executeQuery();
-
+            
+           
             //check if user exists
-            if (!rs.next()) {
+            if(!rs.next()) {
                 return false;
             }
 
-            String dbUsername = rs.getString("Username");
-            String dbPassword = rs.getString("Password");
-            //check password
-            if(!dbUsername.equals(user.getUsername()) || !dbPassword.equals(user.getPassword())) {
+            //check input password if match sa db records
+            if(!rs.getString("Password").equals(user.getPassword())) {
                 return false;
             }
 
@@ -62,7 +61,8 @@ public class UserService {
         }
     }
     
-    protected boolean isAdminExists(Connection conn, int adminId) throws SQLException {
+    public boolean isAdminExistsById(int adminId) throws SQLException {
+        Connection conn = null;
         String query = "SELECT COUNT(*) FROM ADMIN WHERE Admin_ID = ?";
         try (PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setInt(1, adminId);
