@@ -1,14 +1,13 @@
-
 package controllers;
-
-import models.Category;
-import services.CategoryService;
-import helpers.Response;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Collections;
+
+import models.Category;
+import services.CategoryService;
 import interfaces.IOperatorsValidators;
+import helpers.Response;
 
 public class CategoryController implements IOperatorsValidators<Category> {
     protected final CategoryService categoryService;
@@ -28,11 +27,15 @@ public class CategoryController implements IOperatorsValidators<Category> {
         }
         
         try { 
-            if(categoryService.create(category)) {
-                return Response.success("Category created successfully!", category);
-            } else {
-                return Response.error("Failed to category food.");
+            if(categoryService.isCategoryExists(categoryName)) {
+              return Response.error("Error: Category '" + categoryName + "' already exists!");
             }
+            
+            boolean isCreated = categoryService.create(category);
+            
+            return (isCreated)
+                ? Response.success("Category created successfully!", category)
+                : Response.error("Failed to category food.");
         } catch(SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -84,12 +87,13 @@ public class CategoryController implements IOperatorsValidators<Category> {
             if(existingCategory == null) {
                 return Response.error("Category not found with ID: " + categoryId);
             }
-        
-            if(categoryService.update(updatedCategory)) {
-                return Response.success("Category updated successfully", updatedCategory);
-            } else {
-                return Response.error("Failed to update category");
-            }
+            
+            boolean isUpdated = categoryService.update(updatedCategory);
+            
+            return (isUpdated)
+                ? Response.success("Category updated successfully", updatedCategory)
+                : Response.error("Failed to update category");
+
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -109,12 +113,13 @@ public class CategoryController implements IOperatorsValidators<Category> {
             if (existingFood == null) {
                 return Response.error("Category not found with ID: " + id);
             }
+            
+            boolean isDeleted = categoryService.delete(id);
+            
+            return (isDeleted)
+                ? Response.success("Category deleted successfully", null)
+                : Response.error("Failed to delete category");
 
-            if(categoryService.delete(id)) {
-                return Response.success("Category deleted successfully", null);
-            } else {
-                return Response.error("Failed to delete category");
-            }
         } catch(SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }

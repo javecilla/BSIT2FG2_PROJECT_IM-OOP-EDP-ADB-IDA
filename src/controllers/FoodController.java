@@ -1,13 +1,13 @@
 package controllers;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Collections;
+
 import models.Food;
 import models.Category;
 import services.FoodService;
 import helpers.Response;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Collections;
 import interfaces.IOperatorsValidators;
 
 public class FoodController implements IOperatorsValidators<Food> {
@@ -30,11 +30,16 @@ public class FoodController implements IOperatorsValidators<Food> {
         
         // Proceed with creation if validation passes
         try { 
-            if(foodService.create(newFood)) {
-                return Response.success("Food created successfully!", newFood);
-            } else {
-                return Response.error("Failed to create food.");
+            if(foodService.isFoodExists(foodName)) {
+             return Response.error("Error: Food '" + foodName + "' already exists!");
             }
+            
+            boolean isCreated = foodService.create(newFood);
+            
+            return (isCreated) 
+                ? Response.success("Food created successfully!", newFood)
+                : Response.error("Failed to create food.");
+
         } catch(SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -101,12 +106,13 @@ public class FoodController implements IOperatorsValidators<Food> {
             if(existingFood == null) {
                 return Response.error("Food not found with ID: " + foodId);
             }
+            
+            boolean isUpdated = foodService.update(updatedFood);
+            
+            return (isUpdated) 
+                ? Response.success("Food updated successfully", updatedFood)
+                : Response.error("Failed to update food");
         
-            if(foodService.update(updatedFood)) {
-                return Response.success("Food updated successfully", updatedFood);
-            } else {
-                return Response.error("Failed to update food");
-            }
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -126,12 +132,13 @@ public class FoodController implements IOperatorsValidators<Food> {
             if (existingFood == null) {
                 return Response.error("Food not found with ID: " + id);
             }
+            
+            boolean isDeleted = foodService.delete(id);
+            
+            return (isDeleted) 
+                ? Response.success("Food deleted successfully", null)
+                : Response.error("Failed to delete food");
 
-            if(foodService.delete(id)) {
-                return Response.success("Food deleted successfully", null);
-            } else {
-                return Response.error("Failed to delete food");
-            }
         } catch(SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }

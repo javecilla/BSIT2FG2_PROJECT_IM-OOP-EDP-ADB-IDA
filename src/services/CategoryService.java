@@ -1,9 +1,4 @@
-
 package services;
-
-import models.Category;
-import config.DBConnection;
-import interfaces.IDatabaseOperators;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+
+import models.Category;
+import config.DBConnection;
+import interfaces.IDatabaseOperators;
 
 public class CategoryService implements IDatabaseOperators<Category> {
     @Override
@@ -23,13 +21,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
-            
-            if (isCategoryExists(conn, category.getCategoryName())) {
-                //System.out.println("Error: Category '" + category.getCategoryName() + "' already exists!");
-                JOptionPane.showMessageDialog(null, "Error: Category '" + category.getCategoryName() + "' already exists!", "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            
+           
             String query = "INSERT INTO CATEGORY (Category_Name) VALUES (?)";
             pst = conn.prepareStatement(query);
             pst.setString(1, category.getCategoryName());
@@ -148,7 +140,8 @@ public class CategoryService implements IDatabaseOperators<Category> {
         }
     }
     
-    protected boolean isCategoryExists(Connection conn, String categoryName) throws SQLException {
+    public boolean isCategoryExists(String categoryName) throws SQLException {
+        Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         

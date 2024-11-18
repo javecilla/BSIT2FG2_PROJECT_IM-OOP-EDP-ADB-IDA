@@ -6,7 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SupplierService {
-    protected boolean isSupplierExists(Connection conn, int supplierId) throws SQLException {
+    public boolean isSupplierExistsById(int supplierId) throws SQLException {
+        Connection conn = null;
         String query = "SELECT COUNT(*) FROM SUPPLIER WHERE Supplier_ID = ?";
         try (PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setInt(1, supplierId);

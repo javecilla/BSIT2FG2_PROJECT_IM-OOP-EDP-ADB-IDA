@@ -1,23 +1,29 @@
 package controllers;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Collections;
+
 import models.Ingredient;
 import models.Supplier;
 import models.Admin;
 import models.User;
 import services.IngredientService;
+import services.SupplierService;
+import services.UserService;
 import helpers.Response;
 import interfaces.IOperatorsValidators;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Collections;
-import javax.swing.JOptionPane;
-
 public class IngredientController implements IOperatorsValidators<Ingredient> {
     protected final IngredientService ingredientService;
+    protected final SupplierService supplierService;
+    protected final UserService userService;
 
     public IngredientController() {
         this.ingredientService = new IngredientService();
+        this.supplierService = new SupplierService();
+        this.userService = new UserService();
+        
     }
 
     // Add a new ingredient
@@ -45,14 +51,24 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         }
 
         try {
+            
+            //validate if ingredient already exists
+            if(ingredientService.isIngredientExistsByName(ingredientName)) {
+               return Response.error("Error: Ingredient '" + ingredientName + "' already exists!");
+            }
+            if(!supplierService.isSupplierExistsById(supplierId)) {
+                return Response.error("Error: Supplier with ID " + supplierId + " does not exist!");
+            }
+            if(!userService.isAdminExistsById(adminId)) {
+              return Response.error("Error: Admin with ID " + adminId + " does not exist!");
+            }
+
             // Create the ingredient
             boolean isCreated = ingredientService.create(newIngredient);
-
-            if (isCreated) {
-                return Response.success("Ingredient created successfully!", newIngredient);
-            } else {
-                return Response.error("Failed to create ingredient. Check validation messages for more details.");
-            }
+            
+            return (isCreated) 
+                ? Response.success("Ingredient created successfully!", newIngredient)
+                : Response.error("Failed to create ingredient. Check validation messages for more details.");
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -81,7 +97,7 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
 
             if (ingredients == null || ingredients.isEmpty()) {
                 //System.out.println("No ingredients found or response is empty.");
-                JOptionPane.showMessageDialog(null, "No ingredients found or response is empty.", "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(null, "No ingredients found or response is empty.", "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
                 return Response.success("No ingredients found", Collections.emptyList());
             }
 
@@ -122,12 +138,10 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             //check if the current stock is less than or nag equal sa reorder point
             if(currentQuantity <= reorderPoint) {
                 //if current stock is less than reorder point, notify that reorder is needed
-                return Response.success("Reorder needed: Current stock is below reorder point. Current stock: " 
-                                        + currentQuantity + ", Reorder point: " + reorderPoint);
+                return Response.success("Reorder needed: Current stock is below reorder point. Current stock: " + currentQuantity + ", Reorder point: " + reorderPoint);
             } else {
                 //if the stock is sufficient, notify that no reorder is needed
-                return Response.success("No reorder needed: Current stock is sufficient. Current stock: " 
-                                        + currentQuantity + ", Reorder point: " + reorderPoint);
+                return Response.success("No reorder needed: Current stock is sufficient. Current stock: " + currentQuantity + ", Reorder point: " + reorderPoint);
             }
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
@@ -167,12 +181,10 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             }
 
             boolean isUpdated = ingredientService.update(updatedIngredient);
-
-            if (isUpdated) {
-                return Response.success("Ingredient updated successfully", updatedIngredient);
-            } else {
-                return Response.error("Failed to update ingredient.");
-            }
+            
+            return (isUpdated)
+                ? Response.success("Ingredient updated successfully", updatedIngredient)
+                : Response.error("Failed to update ingredient.");
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -195,11 +207,9 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
 
             boolean isUpdated = ingredientService.updateQuantity(id, newQuantity);
 
-            if (isUpdated) {
-                return Response.success("Ingredient quantity updated successfully. New quantity: " + newQuantity);
-            } else {
-                return Response.error("Failed to update ingredient quantity.");
-            }
+            return (isUpdated)
+                ? Response.success("Ingredient quantity updated successfully. New quantity: " + newQuantity)
+                : Response.error("Failed to update ingredient quantity.");
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -221,12 +231,11 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             if (newReorderPoints < 0) return Response.error("New reorder points cannot be negative.");
 
             boolean isUpdated = ingredientService.updateReorderPoint(id, newReorderPoints);
+            
+            return (isUpdated)
+                ? Response.success("Ingredient reorder points updated successfully. New reorder points: " + newReorderPoints)
+                : Response.error("Failed to update ingredient reorder points.");
 
-            if (isUpdated) {
-                return Response.success("Ingredient reorder points updated successfully. New reorder points: " + newReorderPoints);
-            } else {
-                return Response.error("Failed to update ingredient reorder points.");
-            }
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
@@ -247,11 +256,9 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
 
             boolean isDeleted = ingredientService.delete(id);
 
-            if (isDeleted) {
-                return Response.success("Ingredient deleted successfully", true);
-            } else {
-                return Response.error("Failed to delete ingredient.");
-            }
+            return (isDeleted)
+                ? Response.success("Ingredient deleted successfully", true)
+                : Response.error("Failed to delete ingredient.");
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }
