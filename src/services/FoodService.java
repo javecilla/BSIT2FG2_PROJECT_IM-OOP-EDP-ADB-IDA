@@ -42,6 +42,8 @@ public class FoodService implements IDatabaseOperators<Food> {
             return success;
         } catch (SQLException e) {
             if (conn != null) conn.rollback();
+            //System.err.println("Error creating ingredient: " + e.getMessage());
+            //JOptionPane.showMessageDialog(null, "Error creating ingredient: " + e.getMessage(),"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
             throw e;
         } finally {
             if (conn != null) conn.setAutoCommit(true);
@@ -124,7 +126,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         }
     }
     
-    public List<Food> getByCategory(String categoryName) throws SQLException { 
+    public List<Food> getByCategory(int categoryId) throws SQLException { 
         List<Food> foods = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pst = null;
@@ -136,11 +138,11 @@ public class FoodService implements IDatabaseOperators<Food> {
                SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
                FROM FOOD 
                INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
-               WHERE CATEGORY.Category_Name = ?
+               WHERE CATEGORY.Category_ID = ?
             """;
             
             pst = conn.prepareStatement(query);
-            pst.setString(1, categoryName);
+            pst.setInt(1, categoryId);
             rs = pst.executeQuery();
             
             while (rs.next()) {

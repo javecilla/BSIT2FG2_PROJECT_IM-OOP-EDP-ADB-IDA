@@ -119,7 +119,7 @@ public class UserInfo {
         /*System.out.println("UserInfo ID: " + getUserInfoId());
         System.out.println("Full Name: " + getFullName());
         System.out.println("Address: " + getFullAddress());*/
-        JOptionPane.showMessageDialog(null, "UserInfo ID: " +  getUserInfoId() + "\nFull Name: " + getFullName() + "\nAddress: " + getFullAddress());
+        //JOptionPane.showMessageDialog(null, "UserInfo ID: " +  getUserInfoId() + "\nFull Name: " + getFullName() + "\nAddress: " + getFullAddress());
         return "UserInfo ID: " +  getUserInfoId() + "\nFull Name: " + getFullName() + "\nAddress: " + getFullAddress();
     }
 }

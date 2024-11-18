@@ -60,9 +60,9 @@ public class FoodController implements IOperatorsValidators<Food> {
         }
     }
     
-    public Response<List<Food>> getFoodsByCategory(String categoryName) {
+    public Response<List<Food>> getFoodsByCategory(int categoryId) {
         try {
-            List<Food> foods = foodService.getByCategory(categoryName);
+            List<Food> foods = foodService.getByCategory(categoryId);
             
             if(foods == null || foods.isEmpty()) {
                 return Response.success("No foods found", Collections.emptyList());

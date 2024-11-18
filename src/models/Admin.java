@@ -5,6 +5,8 @@ import javax.swing.JOptionPane;
 public class Admin extends User {
     private int id;
     private String type;
+    private User user;
+    private UserInfo userInfo;
     
     public Admin() {
         super();
@@ -41,6 +43,14 @@ public class Admin extends User {
     
     public void setAdminStatus(String type) {
         this.type = type;
+    }
+    
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+     
+     public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
     
     @Override

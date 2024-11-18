@@ -3,9 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FINALPROJECT/src/views/getAccessPoint.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FINALPROJECT/src/views/RunnerTest.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/FINALPROJECT/src/views/MommyVarietyStoreMain.java</file>
+            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/User.java</file>
+            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/controllers/RecipeController.java</file>
+            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/Admin.java</file>
+            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/services/RecipeService.java</file>
+            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/UserInfo.java</file>
+            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/Recipe.java</file>
         </group>
     </open-files>
 </project-private>
