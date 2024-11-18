@@ -4,22 +4,28 @@
  */
 package views;
 
-import helpers.Response;
-import java.util.List;
-import javax.swing.JOptionPane;
+import models.User;
 import models.Ingredient;
-import static views.RunnerTest.INGREDIENT_CONTROLLER;
-import static views.RunnerTest.SCANNER;
+import models.Category;
+import controllers.UserController;
+import controllers.IngredientController;
+import controllers.CategoryController;
+import helpers.Response;
+import enums.UserRoles;
+
+import javax.swing.*;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  *
  * @author Admin
  */
 public class getAccessPoint {
-    public static void main(String[] args) {
-        getAccessPoint access = new getAccessPoint();
-        access.showAllStocks();
-    }
+    protected static final UserController LOGIN_CONTROLLER = new UserController();
+    protected static final IngredientController INGREDIENT_CONTROLLER = new IngredientController();
+    protected static final CategoryController CATEGORY_CONTROLLER = new CategoryController();
+    
       void showLowStock() {
         // Fetch ingredients with low stock
         Response<List<Ingredient>> ingredientsWithLowStocksResponse = INGREDIENT_CONTROLLER.getAllIngredientsLowStocks();
@@ -33,17 +39,28 @@ public class getAccessPoint {
     }
 
       void showOneItemInformation() {
-        //System.out.print("Enter ingredient id: ");
-        String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
+        while(true){
+          try{
+              //System.out.print("Enter ingredient id: ");
+            String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
+        
+            if(ingredientIDInput == null){
+                return;
+            }
 
-        Response<Ingredient> ingredientsResponse = INGREDIENT_CONTROLLER.getIngredientById(Integer.parseInt(ingredientIDInput));
-        if (ingredientsResponse.isSuccess()) {
-            Ingredient ingredient = ingredientsResponse.getData();
-            //ingredient.display();
-            JOptionPane.showMessageDialog(null, ingredient.display());
-        } else {
-            //System.out.println("Error retrieving ingredient: " + ingredientsResponse.getMessage());
-            JOptionPane.showMessageDialog(null,"Error retrieving ingredient: " + ingredientsResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+            Response<Ingredient> ingredientsResponse = INGREDIENT_CONTROLLER.getIngredientById(Integer.parseInt(ingredientIDInput));
+            if (ingredientsResponse.isSuccess()) {
+                Ingredient ingredient = ingredientsResponse.getData();
+                //ingredient.display();
+                JOptionPane.showMessageDialog(null, ingredient.display());
+            } else {
+                //System.out.println("Error retrieving ingredient: " + ingredientsResponse.getMessage());
+                JOptionPane.showMessageDialog(null,"Error retrieving ingredient: " + ingredientsResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+            }
+            
+          }catch(NumberFormatException er){
+            JOptionPane.showMessageDialog(null, er, "ERROR!", JOptionPane.ERROR_MESSAGE);
+          }
         }
     }
 
@@ -59,58 +76,97 @@ public class getAccessPoint {
     }
     
       void checkForReorder() {
-        //System.out.print("Enter ingredient id: ");
-        String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
+        //System.out.print("Enter ingredient id: ");while(true){
+          while(true){
+            try{
+                String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
         
+                if(ingredientIDInput == null){
+                    return;
+                }
         
-        Response<String> reorderCheckResponse = INGREDIENT_CONTROLLER.checkReorderNeed(Integer.parseInt(ingredientIDInput));
-        if(reorderCheckResponse.isSuccess()) {
-            //System.out.println(reorderCheckResponse.getMessage());
-            JOptionPane.showMessageDialog(null, reorderCheckResponse.getMessage());
-        } else {
-            //System.out.println("Error checking ingredient: " + reorderCheckResponse.getMessage());
-            JOptionPane.showMessageDialog(null,"Error checking ingredient: " + reorderCheckResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-        }
+                    Response<String> reorderCheckResponse = INGREDIENT_CONTROLLER.checkReorderNeed(Integer.parseInt(ingredientIDInput));
+                    if(reorderCheckResponse.isSuccess()) {
+                    //System.out.println(reorderCheckResponse.getMessage());
+                    JOptionPane.showMessageDialog(null, reorderCheckResponse.getMessage());
+                } else {
+                    //System.out.println("Error checking ingredient: " + reorderCheckResponse.getMessage());
+                    JOptionPane.showMessageDialog(null,"Error checking ingredient: " + reorderCheckResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                }
+                    
+            }catch(NumberFormatException er){
+                JOptionPane.showMessageDialog(null, er, "ERROR!", JOptionPane.ERROR_MESSAGE);
+            }
+          }
     }
 
-      void updateStocks() {
-        //System.out.print("Enter ingredient id: ");
-        String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
-
-        //System.out.print("Enter quantity: ");
-        String ingredientQuantityInput = JOptionPane.showInputDialog(null,"Enter quantity: ");
+      void updateStocks(){
+        while(true){
+          try{
+            //System.out.print("Enter ingredient id: ");
+            String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
         
-        Response<Ingredient> updateStocksResponse = INGREDIENT_CONTROLLER.updateQuantity(
-            Integer.parseInt(ingredientIDInput),
-            Integer.parseInt(ingredientQuantityInput)
-        );
-        if(updateStocksResponse.isSuccess()) {
-            //System.out.println(updateStocksResponse.getMessage());
-            JOptionPane.showMessageDialog(null, updateStocksResponse.getMessage());
-        } else {
-            //System.out.println("Error updating ingredient: " + updateStocksResponse.getMessage());
-            JOptionPane.showMessageDialog(null, "Error updating ingredient: " + updateStocksResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-        }
+            if(ingredientIDInput == null){
+                return;
+            }
+
+            //System.out.print("Enter quantity: ");
+            String ingredientQuantityInput = JOptionPane.showInputDialog(null,"Enter quantity: ");
+        
+            if(ingredientQuantityInput == null){
+                return;
+            }
+        
+            Response<Ingredient> updateStocksResponse = INGREDIENT_CONTROLLER.updateQuantity(
+                Integer.parseInt(ingredientIDInput),
+                Integer.parseInt(ingredientQuantityInput)
+            );
+            if(updateStocksResponse.isSuccess()) {
+                //System.out.println(updateStocksResponse.getMessage());
+                JOptionPane.showMessageDialog(null, updateStocksResponse.getMessage());
+            } else {
+                //System.out.println("Error updating ingredient: " + updateStocksResponse.getMessage());
+                JOptionPane.showMessageDialog(null, "Error updating ingredient: " + updateStocksResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+            }
+            }catch(NumberFormatException er){
+                JOptionPane.showMessageDialog(null, er, "ERROR!", JOptionPane.ERROR_MESSAGE);
+            }
+          }
+        
     }
     
       void updateReorderPoints() {
-        //System.out.print("Enter ingredient id: ");
-        String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
-
-       // System.out.print("Enter reorder points: ");
-        String ingredientReorderPointsInput = JOptionPane.showInputDialog(null,"Enter reorder points: ");
+        while(true){
+          try{
+            //System.out.print("Enter ingredient id: ");
+            String ingredientIDInput = JOptionPane.showInputDialog(null,"Enter ingredient id: ");
         
-        Response<Ingredient> updateReorderPointsResponse = INGREDIENT_CONTROLLER.updateReorderPoints(
-            Integer.parseInt(ingredientIDInput),
-            Integer.parseInt(ingredientReorderPointsInput)
-        );
-        if(updateReorderPointsResponse.isSuccess()) {
-            //System.out.println(updateReorderPointsResponse.getMessage());
-            JOptionPane.showMessageDialog(null, updateReorderPointsResponse.getMessage());
-        } else {
-            //System.out.println("Error updating ingredient: " + updateReorderPointsResponse.getMessage());
-            JOptionPane.showMessageDialog(null, "Error updating ingredient: " + updateReorderPointsResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-        }
+            if(ingredientIDInput == null){
+                return;
+            }
+
+            // System.out.print("Enter reorder points: ");
+            String ingredientReorderPointsInput = JOptionPane.showInputDialog(null,"Enter reorder points: ");
+        
+            if(ingredientReorderPointsInput == null){
+                return;
+            }
+        
+            Response<Ingredient> updateReorderPointsResponse = INGREDIENT_CONTROLLER.updateReorderPoints(
+                Integer.parseInt(ingredientIDInput),
+                Integer.parseInt(ingredientReorderPointsInput)
+            );
+            if(updateReorderPointsResponse.isSuccess()) {
+                //System.out.println(updateReorderPointsResponse.getMessage());
+                JOptionPane.showMessageDialog(null, updateReorderPointsResponse.getMessage());
+            } else {
+                //System.out.println("Error updating ingredient: " + updateReorderPointsResponse.getMessage());
+                JOptionPane.showMessageDialog(null, "Error updating ingredient: " + updateReorderPointsResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+            }
+          }catch(NumberFormatException er){
+                JOptionPane.showMessageDialog(null, er, "ERROR!", JOptionPane.ERROR_MESSAGE);
+            }
+          }
     }
 
     public String displayIngredientItems(List<Ingredient> ingredients) {
@@ -136,4 +192,11 @@ public class getAccessPoint {
     
         return output.toString();
     }
+    
+    void showProfile(User user) {
+        /*        System.out.println("Full Name: " + user.getFullName());
+        System.out.println("Address: " + user.getFullAddress());*/
+        JOptionPane.showMessageDialog(null, "YOUR PROFILE:\n\nFull Name: " + user.getFullName() + "\nAddress: " + user.getFullAddress(),"MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
 }

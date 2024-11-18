@@ -86,6 +86,6 @@ public class Ingredient extends Supplier {
         super.display();*/
         
         //JOptionPane.showMessageDialog(null, "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "Re-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display());
-        return "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "Re-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display();
+        return "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "\nRe-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display();
     }
 }

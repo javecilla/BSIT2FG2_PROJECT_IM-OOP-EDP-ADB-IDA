@@ -11,6 +11,7 @@ import interfaces.IOperatorsValidators;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Collections;
+import javax.swing.JOptionPane;
 
 public class IngredientController implements IOperatorsValidators<Ingredient> {
     protected final IngredientService ingredientService;
@@ -79,7 +80,8 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             List<Ingredient> ingredients = ingredientService.getAllLowStock();
 
             if (ingredients == null || ingredients.isEmpty()) {
-                System.out.println("No ingredients found or response is empty.");
+                //System.out.println("No ingredients found or response is empty.");
+                JOptionPane.showMessageDialog(null, "No ingredients found or response is empty.", "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
                 return Response.success("No ingredients found", Collections.emptyList());
             }
 

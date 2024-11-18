@@ -15,6 +15,7 @@ import static views.RunnerTest.LOGIN_CONTROLLER;
 
 public class MommyVarietyStoreMain {
     getAccessPoint getAccess = new getAccessPoint();
+    User userHolder;
     String userPassword = "admin";
     
     String userRole = "";
@@ -131,7 +132,6 @@ public class MommyVarietyStoreMain {
     }
     
     void home(){
-        
         while(true){
             Object[] options = {"USER", "ADMIN"};
         
@@ -145,7 +145,6 @@ public class MommyVarietyStoreMain {
                     userRole = UserRoles.CLIENT.name();
                     // Code for Browse Menu/Order Now
                     logInForm();
-                    foodCategoryChoice();
                     break;
                 case 1:
                     userRole = UserRoles.ADMIN.name();
@@ -160,10 +159,33 @@ public class MommyVarietyStoreMain {
         }
     }
     
+    void clientDashboard(User user){
+        Object[] options = {"ORDER NOW", "PROFILE","LOG OUT"};
+        
+            // Display JOptionPane with custom buttons
+            int choice = JOptionPane.showOptionDialog(null, "=====================WELCOME TO MOMMY'S VARIETY STORE======================\nWelcome back!, " + user.getFullName(), "MOMMY'S VARIETY STORE", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+            switch(choice){
+                case 0:
+                    foodCategoryChoice();
+                    break;
+                case 1:
+                    getAccess.showProfile(user);
+                    clientDashboard(user);
+                    break;
+                case 2:
+                    home();
+                    break;
+                default:
+                    systemExit();
+                    break;
+            }
+    }
+    
     void foodCategoryChoice(){
         while(true){
-            Object[] options = {"RICE MEALS", "SANDWICHES", "FRIES", "DRINKS","CART", "HOME", "EXIT"};
-            int foodChoice = JOptionPane.showOptionDialog(null, "==========================================WELCOME TO OUR MENU===========================================\n", "MOMMY'S VARIETY STORE", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            Object[] options = {"RICE MEALS", "SANDWICHES", "FRIES", "DRINKS","CART","DASHBOARD", "HOME", "EXIT"};
+            int foodChoice = JOptionPane.showOptionDialog(null, "==================================================WELCOME TO OUR MENU===================================================\n", "MOMMY'S VARIETY STORE", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             
             switch(foodChoice){
                 case 0:
@@ -182,9 +204,12 @@ public class MommyVarietyStoreMain {
                     printReceipt();
                     break;
                 case 5:
-                    home();
+                    clientDashboard(userHolder);
                     break;
                 case 6:
+                    home();
+                    break;
+                case 7:
                     systemExit();
                     break;
                 default:
@@ -207,9 +232,9 @@ public class MommyVarietyStoreMain {
     }
     
     void riceMealsMenu(){
-        Object[] options = {"[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "[7]", "MAIN MENU", "CART", "HOME", "EXIT"};
+        Object[] options = {"[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "[7]", "MAIN MENU", "CART", "DASHBOARD","HOME", "EXIT"};
         
-        String riceMealsMenu = "==========================================================RICE MEALS MENU===============================================================\n\n"
+        String riceMealsMenu = "====================================================================RICE MEALS MENU=========================================================================\n\n"
                         + "[1] SAMGYUP RICE ----------------------------------- Php 60\n"
                         + "[2] 1pc. BURGER STEAK ---------------------------- Php 45\n"
                         + "[3] 2pc. BURGER STEAK ---------------------------- Php 65\n"
@@ -276,9 +301,12 @@ public class MommyVarietyStoreMain {
                 printReceipt();
                 break;
             case 9:
-                home();
+                clientDashboard(userHolder);
                 break;
             case 10:
+                home();
+                break;
+            case 11:
                 systemExit();
                 break;
             default:
@@ -288,9 +316,9 @@ public class MommyVarietyStoreMain {
     }
     
     void sandwichesMenu(){
-        Object[] options = {"[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "MAIN MENU","CART", "HOME", "EXIT"};
+        Object[] options = {"[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "MAIN MENU","CART","DASHBOARD", "HOME", "EXIT"};
         
-        String sandwichesMenu = "======================================================SANDWICHES MENU===========================================================\n\n"
+        String sandwichesMenu = "================================================================SANDWICHES MENU=====================================================================\n\n"
                         + "[1] REGULAR BURGER --------------------------------- Php 35\n"
                         + "[2] CHEESE BURGER ----------------------------------- Php 45\n"
                         + "[3] ALOHA BURGER ------------------------------------- Php 65\n"
@@ -349,9 +377,12 @@ public class MommyVarietyStoreMain {
                 printReceipt();
                 break;
             case 8:
-                home();
+                clientDashboard(userHolder);
                 break;
             case 9:
+                home();
+                break;
+            case 10:
                 systemExit();
                 break;
             default:
@@ -361,9 +392,9 @@ public class MommyVarietyStoreMain {
     }
     
     void friesMenu(){
-        Object[] options = {"[1]", "[2]", "[3]", "MAIN MENU","CART", "HOME", "EXIT"};
+        Object[] options = {"[1]", "[2]", "[3]", "MAIN MENU","CART","DASHBOARD", "HOME", "EXIT"};
         
-        String FriesMenu = "=======================================FRIES MENU=======================================\n\n"
+        String FriesMenu = "===============================================FRIES MENU===============================================\n\n"
                         + "[1] SMALL FRIES ------------------------------------ Php 20\n"
                         + "[2] MEDIUM FRIES ---------------------------------- Php 35\n"
                         + "[3] LARGE FRIES ------------------------------------ Php 55\n";
@@ -386,9 +417,12 @@ public class MommyVarietyStoreMain {
                 printReceipt();
                 break;
             case 5:
-                home();
+                clientDashboard(userHolder);
                 break;
             case 6:
+                home();
+                break;
+            case 7:
                 systemExit();
                 break;
             default:
@@ -542,7 +576,7 @@ public class MommyVarietyStoreMain {
     }
     
     void drinksMenu(){
-        Object[] options = {"[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "MAIN MENU","CART" , "HOME", "EXIT"};
+        Object[] options = {"[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "MAIN MENU","CART" ,"DASHBOARD", "HOME", "EXIT"};
         
         String drinksMenu = "======================================================DRINKS MENU===========================================================\n\n"
                         + "[1] MILO BLAST ------------------------------------------------- Php 35\n"
@@ -603,9 +637,12 @@ public class MommyVarietyStoreMain {
                 printReceipt();
                 break;
             case 8:
-                home();
+                clientDashboard(userHolder);
                 break;
             case 9:
+                home();
+                break;
+            case 10:
                 systemExit();
                 break;
             default:
@@ -918,11 +955,11 @@ public class MommyVarietyStoreMain {
             
             loggedIn = true;
             loginSuccess = true;
-            
+            userHolder = user;
             if (UserRoles.ADMIN.name().equals(userRole)) {
                 adminSection(user);
             } else if (UserRoles.CLIENT.name().equals(userRole)){
-                 
+                clientDashboard(user);
             }
             loggedIn = false; // Logout after navigating the dashboard to return to the role selection screen
             startPanel = true;
@@ -931,7 +968,7 @@ public class MommyVarietyStoreMain {
             
             return;
         }else{
-            JOptionPane.showMessageDialog(null, "WRONG PASSWORD!","ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "INVALID CREDENTIALS!","ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
             continue;
         }
         }
@@ -1074,8 +1111,7 @@ public class MommyVarietyStoreMain {
                         case "7":
                             break;
                         default:
-                            JOptionPane.showMessageDialog(null, "INVALID INPUT!!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
-                            
+                            JOptionPane.showMessageDialog(null, "INVALID INPUT!!", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);      
                     }
                     break;
                 case 1:
@@ -1108,6 +1144,7 @@ public class MommyVarietyStoreMain {
                     continue;
                     }
                     }*/
+                    getAccess.showProfile(user);
                     break;
                 case 2:
                     home();
