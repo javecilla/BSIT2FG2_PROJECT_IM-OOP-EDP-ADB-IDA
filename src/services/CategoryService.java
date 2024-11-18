@@ -22,7 +22,9 @@ public class CategoryService implements IDatabaseOperators<Category> {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
            
-            String query = "INSERT INTO CATEGORY (Category_Name) VALUES (?)";
+            String query = """
+                INSERT INTO CATEGORY (Category_Name) VALUES (?)
+            """;
             pst = conn.prepareStatement(query);
             pst.setString(1, category.getCategoryName());
         
@@ -53,7 +55,9 @@ public class CategoryService implements IDatabaseOperators<Category> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT * FROM CATEGORY WHERE Category_ID = ?";
+            String query = """
+                SELECT * FROM CATEGORY WHERE Category_ID = ?
+            """;
  
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
@@ -81,7 +85,9 @@ public class CategoryService implements IDatabaseOperators<Category> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT * FROM CATEGORY";
+            String query = """
+                SELECT * FROM CATEGORY
+            """;
             
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
@@ -109,7 +115,9 @@ public class CategoryService implements IDatabaseOperators<Category> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE CATEGORY SET Category_Name = ? WHERE Category_ID = ? ";
+            String query = """
+                UPDATE CATEGORY SET Category_Name = ? WHERE Category_ID = ? 
+            """;
             pst = conn.prepareStatement(query);
             
             pst.setString(1, category.getCategoryName());
@@ -129,7 +137,9 @@ public class CategoryService implements IDatabaseOperators<Category> {
         
         try {
             conn = DBConnection.getConnection();
-            String query = "DELETE FROM CATEGORY WHERE Category_ID = ? ";
+            String query = """
+                DELETE FROM CATEGORY WHERE Category_ID = ? 
+            """;
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             
@@ -146,7 +156,9 @@ public class CategoryService implements IDatabaseOperators<Category> {
         ResultSet rs = null;
         
         try {
-            String query = "SELECT COUNT(*) FROM CATEGORY WHERE UPPER(Category_Name) = UPPER(?)";
+            String query = """
+                SELECT COUNT(*) FROM CATEGORY WHERE UPPER(Category_Name) = UPPER(?)
+            """;
             pst = conn.prepareStatement(query);
             pst.setString(1, categoryName);
             rs = pst.executeQuery();

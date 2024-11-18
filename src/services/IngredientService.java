@@ -24,9 +24,12 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
+            
+            String query = """
+                INSERT INTO INGREDIENT (Ingredient_Name, Ingredient_Quantity, Reorder_Point, Supplier_ID, Admin_ID)
+                VALUES (?, ?, ?, ?, ?)
+            """;
 
-            String query = "INSERT INTO INGREDIENT (Ingredient_Name, Ingredient_Quantity, Reorder_Point, Supplier_ID, Admin_ID) "
-                         + "VALUES (?, ?, ?, ?, ?)";
             pst = conn.prepareStatement(query);
             pst.setString(1, ingredient.getIngredientName());
             pst.setInt(2, ingredient.getQuantity());
@@ -61,20 +64,18 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT TOP 1 * "
-                + "FROM USER_INFO "
-                + "INNER JOIN ( "
-                    + "[USER] "
-                    + "INNER JOIN ( "
-                        + "ADMIN "
-                        + "INNER JOIN ( "
-                            + "SUPPLIER "
-                            + "INNER JOIN INGREDIENT ON SUPPLIER.Supplier_ID = INGREDIENT.Supplier_ID "
-                        + ") ON ADMIN.Admin_ID = INGREDIENT.Admin_ID "
-                    + ") ON [USER].User_ID = ADMIN.Admin_ID "
-                + ") ON USER_INFO.UserInfo_ID = [USER].UserInfo_ID "
-              + "WHERE INGREDIENT.Ingredient_ID = ?;";
-            
+            String query = """
+                SELECT TOP 1 *            
+                FROM USER_INFO
+                INNER JOIN ([USER]
+                    INNER JOIN (ADMIN   
+                        INNER JOIN (SUPPLIER
+                            INNER JOIN INGREDIENT ON SUPPLIER.Supplier_ID = INGREDIENT.Supplier_ID
+                        ) ON ADMIN.Admin_ID = INGREDIENT.Admin_ID
+                    ) ON [USER].User_ID = ADMIN.Admin_ID
+                ) ON USER_INFO.UserInfo_ID = [USER].UserInfo_ID
+                WHERE INGREDIENT.Ingredient_ID = ?
+            """;            
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             rs = pst.executeQuery();
@@ -126,16 +127,18 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT * FROM USER_INFO "
-                + "INNER JOIN ( "
-                    + "[USER] "
-                    + "INNER JOIN ( "
-                        + "ADMIN INNER JOIN ( "
-                            + "SUPPLIER INNER JOIN INGREDIENT ON SUPPLIER.Supplier_ID = INGREDIENT.Supplier_ID "
-                        + ") ON ADMIN.Admin_ID = INGREDIENT.Admin_ID"
-                    + ") ON USER.User_ID = ADMIN.Admin_ID"
-                + ") ON USER_INFO.UserInfo_ID = USER.UserInfo_ID "
-                + "ORDER BY INGREDIENT.Ingredient_ID ASC ";
+            String query = """
+                SELECT *            
+                FROM USER_INFO
+                INNER JOIN ([USER]
+                    INNER JOIN (ADMIN   
+                        INNER JOIN (SUPPLIER
+                            INNER JOIN INGREDIENT ON SUPPLIER.Supplier_ID = INGREDIENT.Supplier_ID
+                        ) ON ADMIN.Admin_ID = INGREDIENT.Admin_ID
+                    ) ON [USER].User_ID = ADMIN.Admin_ID
+                ) ON USER_INFO.UserInfo_ID = [USER].UserInfo_ID
+                ORDER BY INGREDIENT.Ingredient_ID ASC
+            """; 
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
 
@@ -183,17 +186,20 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
         try {
             conn = DBConnection.getConnection();
-            String query = "SELECT * FROM USER_INFO "
-                + "INNER JOIN ( "
-                    + "[USER] "
-                    + "INNER JOIN ( "
-                        + "ADMIN INNER JOIN ( "
-                            + "SUPPLIER INNER JOIN INGREDIENT ON SUPPLIER.Supplier_ID = INGREDIENT.Supplier_ID "
-                        + ") ON ADMIN.Admin_ID = INGREDIENT.Admin_ID"
-                    + ") ON USER.User_ID = ADMIN.Admin_ID"
-                + ") ON USER_INFO.UserInfo_ID = USER.UserInfo_ID "
-                + "WHERE INGREDIENT.Ingredient_Quantity <= INGREDIENT.Reorder_Point "
-                + "ORDER BY INGREDIENT.Ingredient_ID ASC ";
+            String query = """
+                SELECT *            
+                FROM USER_INFO
+                INNER JOIN ([USER]
+                    INNER JOIN (ADMIN   
+                        INNER JOIN (SUPPLIER
+                            INNER JOIN INGREDIENT ON SUPPLIER.Supplier_ID = INGREDIENT.Supplier_ID
+                        ) ON ADMIN.Admin_ID = INGREDIENT.Admin_ID
+                    ) ON [USER].User_ID = ADMIN.Admin_ID
+                ) ON USER_INFO.UserInfo_ID = [USER].UserInfo_ID
+                WHERE INGREDIENT.Ingredient_Quantity <= INGREDIENT.Reorder_Point
+                ORDER BY INGREDIENT.Ingredient_ID ASC
+            """; 
+ 
             pst = conn.prepareStatement(query);
             rs = pst.executeQuery();
 
@@ -240,14 +246,15 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE INGREDIENT "
-                + "SET Ingredient_Name = ?, "
-                    + "Ingredient_Quantity = ?, "
-                    + "Reorder_Point = ?, "
-                    + "Supplier_ID = ?, "
-                    + "Admin_ID = ? "
-               + "WHERE Ingredient_ID = ? ";
-                       
+            String query = """
+                UPDATE INGREDIENT 
+                SET Ingredient_Name = ?,
+                    Ingredient_Quantity = ?,
+                    Reorder_Point = ?,
+                    Supplier_ID = ?,
+                    Admin_ID = ? 
+                WHERE Ingredient_ID = ?          
+            """;                       
             pst = conn.prepareStatement(query);
             pst.setString(1, ingredient.getIngredientName());
             pst.setInt(2, ingredient.getQuantity());
@@ -269,10 +276,12 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE INGREDIENT "
-                + "SET Ingredient_Quantity = ? "
-                + "WHERE Ingredient_ID = ? ";
-
+            String query = """
+                UPDATE INGREDIENT
+                SET Ingredient_Quantity = ?
+                WHERE Ingredient_ID = ?
+            """;
+            
             pst = conn.prepareStatement(query);
             pst.setInt(1, newQuantity); 
             pst.setInt(2, id);  
@@ -290,9 +299,11 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
         try {
             conn = DBConnection.getConnection();
-            String query = "UPDATE INGREDIENT "
-                + "SET Reorder_Point = ? "
-                + "WHERE Ingredient_ID = ? ";
+            String query = """
+                UPDATE INGREDIENT
+                SET Reorder_Point = ?
+                WHERE Ingredient_ID = ?
+            """;
 
             pst = conn.prepareStatement(query);
             pst.setInt(1, newReorderPoint);  
@@ -313,7 +324,9 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
         try {
             conn = DBConnection.getConnection();
-            String query = "DELETE FROM INGREDIENT WHERE Ingredient_ID = ?";
+            String query = """
+               DELETE FROM INGREDIENT WHERE Ingredient_ID = ?
+            """;
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
 
@@ -330,7 +343,9 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         ResultSet rs = null;
         
         try {
-            String query = "SELECT COUNT(*) FROM INGREDIENT WHERE UPPER(Ingredient_Name) = UPPER(?)";
+            String query = """
+                SELECT COUNT(*) FROM INGREDIENT WHERE UPPER(Ingredient_Name) = UPPER(?)
+            """;
             pst = conn.prepareStatement(query);
             pst.setString(1, ingredientName);
             rs = pst.executeQuery();
