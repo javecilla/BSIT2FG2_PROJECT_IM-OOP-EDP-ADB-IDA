@@ -30,6 +30,11 @@ public class FoodController implements IOperatorsValidators<Food> {
         
         // Proceed with creation if validation passes
         try { 
+            
+            if (foodService.isFoodExists(foodName)) {
+                return Response.error("Error: Food '" + foodName + "' already exists!");
+            }
+            
             if(foodService.create(newFood)) {
                 return Response.success("Food created successfully!", newFood);
             } else {
