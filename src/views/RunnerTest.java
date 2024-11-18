@@ -3,22 +3,31 @@ package views;
 import models.User;
 import models.Ingredient;
 import models.Category;
+import models.Food;
 import controllers.UserController;
 import controllers.IngredientController;
 import controllers.CategoryController;
+import controllers.FoodController;
+import controllers.CartController;
 import helpers.Response;
 import enums.UserRoles;
 
 import java.util.Scanner;
 import java.util.List;
+import javax.swing.JOptionPane;
+import models.Cart;
+import models.CartItem;
 
 public class RunnerTest {
     protected static final Scanner SCANNER = new Scanner(System.in);
     protected static final UserController LOGIN_CONTROLLER = new UserController();
     protected static final IngredientController INGREDIENT_CONTROLLER = new IngredientController();
     protected static final CategoryController CATEGORY_CONTROLLER = new CategoryController();
+    protected static final FoodController FOOD_CONTROLLER = new FoodController();
+    protected static final CartController CART_CONTROLLER = new CartController();
  
     private static int categoriesCounter = 0;
+    private static int foodsCounter = 0;
     public static void main(String[] args) {
         int userChoice = 0;
         String userRole = "";
@@ -65,6 +74,7 @@ public class RunnerTest {
                 Response<User> loginResponse = LOGIN_CONTROLLER.loginUser(usernameInput, passwordInput, userRole);
                 if (loginResponse.isSuccess()) {
                     System.out.println(loginResponse.getMessage());
+                    //JOptionPane.showMessageDialog(null,loginResponse.getMessage(),"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
                     User user = loginResponse.getData();
                     System.out.println("\nWelcome back, " + user.getFullName());
                     loggedIn = true;
@@ -335,7 +345,7 @@ private static void adminManageStock() {
                     showCategoryMenu();
                     break;
                 case 2:
-                    System.out.println("show cart");
+                    showCart();
                     break;
                 case 3:
                     System.out.println("Your Profile");
@@ -355,8 +365,130 @@ private static void adminManageStock() {
         System.out.println("Address: " + user.getFullAddress());
     }
     
+    private static void showCart() {
+        System.out.println("\n--- Your Cart ---");
+        Response<Cart> cartResponse = CART_CONTROLLER.viewCart();
+
+        if (cartResponse.isSuccess()) {
+            Cart cart = cartResponse.getData();
+
+            if (cart.getItems().isEmpty()) {
+                System.out.println("Your cart is empty.");
+            } else {
+                int itemNumber = 1;
+                System.out.printf("%-5s %-20s %-10s %-10s %-10s\n", "No.", "Food Name", "Price", "Qty", "Total");
+                System.out.println("-----------------------------------------------------------");
+
+                for (CartItem item : cart.getItems()) {
+                    double totalPrice = item.getTotalPrice();
+                    System.out.printf("%-5d %-20s %-10.2f %-10d %-10.2f\n", 
+                        itemNumber++, 
+                        item.getFoodName(), 
+                        item.getFoodPrice(), 
+                        item.getQuantity(), 
+                        totalPrice
+                    );
+                }
+
+                System.out.println("-----------------------------------------------------------");
+                System.out.printf("%-35s %-10.2f\n", "Total Amount:", cart.getTotalAmount());
+            }
+        } else {
+            System.out.println("Error: " + cartResponse.getMessage());
+            return; // Exit if there's an issue fetching the cart
+        }
+
+        // Provide options to the user
+        int choice;
+        do {
+            System.out.println("\nOptions:");
+            System.out.println("[0] Back");
+            System.out.println("[1] Go to Shop Again");
+            System.out.print("Enter your choice: ");
+            choice = SCANNER.nextInt();
+
+            if (choice == 0) {
+                return; // Back to the previous menu
+            } else if (choice == 1) {
+                showCategoryMenu(); // Go back to shopping categories
+                return;
+            } else {
+                System.out.println("Invalid choice. Please select again.");
+            }
+        } while (true);
+    }
+
+    
+    private static void showFoodMenu(int categoryId) {
+        int choice;
+        do {
+            displayFoodListsByCategory(categoryId); 
+            System.out.print("Enter your choice: ");
+            choice = SCANNER.nextInt();
+
+            // Check if the choice is valid for categories (1 to foodsCounter)
+            if (choice > 0 && choice <= foodsCounter) {
+                Response<Food> foodResponse = FOOD_CONTROLLER.getFoodById(choice);
+                if (foodResponse.isSuccess()) {
+                    Food selectedFood = foodResponse.getData();
+                    promptQuantityOrder(selectedFood.getFoodId(), selectedFood.getFoodName(), selectedFood.getPrice());
+                } else {
+                    System.out.println("Error: " + foodResponse.getMessage());
+                }
+            } else if (choice == (foodsCounter + 1)) { 
+                return;  // Go back to the category menu
+            } else {
+                System.out.println("Invalid choice. Please select again.");
+            }
+        } while (true);
+    }
+    
+    private static void promptQuantityOrder(int foodId, String foodName, double foodPrice) {
+        int quantity;
+        do {
+            System.out.println("\n--- Client Dashboard ---");
+            System.out.println("Food Name: " + foodName);
+            System.out.println("Food Price: " + foodPrice);
+            System.out.println("-------------------------\n");
+            System.out.println("[0] Back");
+            System.out.print("Enter quantity: ");
+            quantity = SCANNER.nextInt();
+
+            if (quantity > 0) {
+                Response<Cart> addToCartResponse = CART_CONTROLLER.addToCart(foodId, foodName, foodPrice, quantity);
+                if (addToCartResponse.isSuccess()) {
+                    System.out.println("Item added to cart successfully.");
+                } else {
+                    System.out.println("Error: " + addToCartResponse.getMessage());
+                }
+            } else if (quantity == 0) { 
+                return;  // Go back to the food menu
+            } else {
+                System.out.println("Invalid choice. Please select again.");
+            }
+        } while (true);
+    }       
+    
+    private static void displayFoodListsByCategory(int categoryId) {
+        foodsCounter = 0;  
+        
+        Response<List<Food>> foodsResponse = FOOD_CONTROLLER.getFoodsByCategory(categoryId);
+        if (foodsResponse.isSuccess()) {
+            List<Food> foods = foodsResponse.getData();
+            System.out.println("\n--- Select Food ---");
+            for (Food food : foods) {
+                System.out.println("[" + food.getFoodId() + "] \t" + food.getFoodName() + "\t\t" + food.getPrice());
+                foodsCounter++;
+            }
+ 
+            System.out.println("[" + (foods.size() + 1) + "] Back\n");
+        } else {
+            System.out.println("Error: " + foodsResponse.getMessage());
+        }
+    }
+    
     private static void showCategoryMenu() {
-    int choice;
+        int choice;
         do {
             displayCategories(); 
             System.out.print("Enter your choice: ");
@@ -364,8 +496,7 @@ private static void adminManageStock() {
 
             // Check if the choice is valid for categories (1 to categoriesCounter)
             if (choice > 0 && choice <= categoriesCounter) {
-                //showFoodList(choice);  
-                System.out.println("Show food list for the selected category");
+                showFoodMenu(choice);
             } else if (choice == (categoriesCounter + 1)) { 
                 return;  // Go back to the client dashboard
             } else {

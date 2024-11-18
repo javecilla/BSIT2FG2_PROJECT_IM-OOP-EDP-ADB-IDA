@@ -1,14 +1,13 @@
 package models;
 
-import javax.swing.JOptionPane;
-
 public class Ingredient extends Supplier {
     private int id;
     private String name;
     private int quantity;
     private int reorderPoint;
     
-    protected Admin admin;
+    private Supplier supplier;
+    private Admin admin;
     
     public Ingredient() {
         super();
@@ -76,6 +75,14 @@ public class Ingredient extends Supplier {
         this.admin = admin;
     }
     
+    public Supplier getSupplier() {
+        return supplier;
+    }
+    
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+
     @Override
     public String display() {
         /*System.out.println("Ingredient ID: " + getIngredientId());
