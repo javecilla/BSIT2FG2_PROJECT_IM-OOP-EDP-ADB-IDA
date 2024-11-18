@@ -1,5 +1,7 @@
 package models;
 
+import javax.swing.JOptionPane;
+
 public class Ingredient extends Supplier {
     private int id;
     private String name;
@@ -75,12 +77,15 @@ public class Ingredient extends Supplier {
     }
     
     @Override
-    public void display() {
-        System.out.println("Ingredient ID: " + getIngredientId());
+    public String display() {
+        /*System.out.println("Ingredient ID: " + getIngredientId());
         System.out.println("Ingredient Name: " + getIngredientName());
         System.out.println("Current Stock: " + getQuantity());
         System.out.println("Re-order Points: " + getReorderPoint());
         System.out.println("\nSupplier Info: ");
-        super.display();
+        super.display();*/
+        
+        //JOptionPane.showMessageDialog(null, "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "Re-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display());
+        return "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "\nRe-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display();
     }
 }

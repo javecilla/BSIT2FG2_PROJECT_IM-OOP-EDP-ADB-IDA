@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 
 public final class DBConnection {
-    private static final String MS_ACCESS_PATH = "C://Users//Server//Documents//NetBeansProjects//PROJECT_ECOMMERCE//src//config//Mommys-Variety-Store-Database.accdb";
+    private static final String MS_ACCESS_PATH = "C://Users//Admin//Documents//NetBeansProjects//FINALPROJECT//src//config//Mommys-Variety-Store-Database.accdb";
     private static final String URL = "jdbc:ucanaccess://" + MS_ACCESS_PATH;
     private static Connection connection = null;
     

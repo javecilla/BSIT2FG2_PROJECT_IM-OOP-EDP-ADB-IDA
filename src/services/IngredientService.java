@@ -1,11 +1,11 @@
 package services;
 
-import interfaces.IDatabaseOperators;
-import config.DBConnection;
 import models.Ingredient;
 import models.Supplier;
 import models.Admin;
 import models.User;
+import config.DBConnection;
+import interfaces.IDatabaseOperators;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +13,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class IngredientService implements IDatabaseOperators<Ingredient> {
+    protected final SupplierService supplierService = new SupplierService();
+    protected final UserService userService = new UserService();
     
     @Override
     public boolean create(Ingredient ingredient) throws SQLException {
@@ -25,6 +28,24 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
+
+            //validate if ingredient already exists
+            if(isIngredientExists(conn, ingredient.getIngredientName())) {
+                //System.out.println("Error: Ingredient '" + ingredient.getIngredientName() + "' already exists!");
+                //JOptionPane.showMessageDialog(null, pst,"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error: Ingredient '" + ingredient.getIngredientName() + "' already exists!","MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!supplierService.isSupplierExists(conn, ingredient.getSupplierId())) {
+                //System.out.println("Error: Supplier with ID " + ingredient.getSupplierId() + " does not exist!");
+                JOptionPane.showMessageDialog(null, "Error: Supplier with ID " + ingredient.getSupplierId() + " does not exist!","MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if(!userService.isAdminExists(conn, ingredient.getAdmin().getAdminId())) {
+                //System.out.println("Error: Admin with ID " + ingredient.getAdmin().getAdminId() + " does not exist!");
+                JOptionPane.showMessageDialog(null, "Error: Admin with ID " + ingredient.getAdmin().getAdminId() + " does not exist!","MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
 
             String query = "INSERT INTO INGREDIENT (Ingredient_Name, Ingredient_Quantity, Reorder_Point, Supplier_ID, Admin_ID) "
                          + "VALUES (?, ?, ?, ?, ?)";
@@ -46,7 +67,8 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return success;
         } catch(SQLException e) {
             if (conn != null) conn.rollback();
-            System.err.println("Error creating ingredient: " + e.getMessage());
+            //System.err.println("Error creating ingredient: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error creating ingredient: " + e.getMessage(),"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
             throw e;
         } finally {
             if (conn != null) conn.setAutoCommit(true);
@@ -229,7 +251,8 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             }
             
             // Debugging log
-            System.out.println("Found " + ingredients.size() + " ingredients with low stock.");
+            //System.out.println("Found " + ingredients.size() + " ingredients with low stock.");
+            JOptionPane.showMessageDialog(null, "Found " + ingredients.size() + " ingredients with low stock.","MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
             return ingredients;
         } finally {
             DBConnection.closeResources(rs, pst);
@@ -328,8 +351,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         }
     }
 
-    public boolean isIngredientExists(String ingredientName) throws SQLException {
-        Connection conn = null;
+    protected boolean isIngredientExists(Connection conn, String ingredientName) throws SQLException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         

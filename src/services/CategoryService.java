@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class CategoryService implements IDatabaseOperators<Category> {
     @Override
@@ -22,6 +23,12 @@ public class CategoryService implements IDatabaseOperators<Category> {
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
+            
+            if (isCategoryExists(conn, category.getCategoryName())) {
+                //System.out.println("Error: Category '" + category.getCategoryName() + "' already exists!");
+                JOptionPane.showMessageDialog(null, "Error: Category '" + category.getCategoryName() + "' already exists!", "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             
             String query = "INSERT INTO CATEGORY (Category_Name) VALUES (?)";
             pst = conn.prepareStatement(query);
@@ -141,8 +148,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         }
     }
     
-    public boolean isCategoryExists(String categoryName) throws SQLException {
-        Connection conn = null;
+    protected boolean isCategoryExists(Connection conn, String categoryName) throws SQLException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         

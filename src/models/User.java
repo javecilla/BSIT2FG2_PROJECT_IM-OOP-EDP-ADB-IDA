@@ -1,6 +1,8 @@
 
 package models;
 
+import javax.swing.JOptionPane;
+
 public class User extends UserInfo {
     private int id;
     private String username;
@@ -77,11 +79,12 @@ public class User extends UserInfo {
     }
     
     @Override
-    public void display() {
-        System.out.println("User ID: " + getUserId());
+    public String display() {
+        /*        System.out.println("User ID: " + getUserId());
         System.out.println("Username: " + getUsername());
         System.out.println("Password: " + getPassword());
-        System.out.println("User Info: \n");
-        super.display();
+        System.out.println("User Info: \n");*/
+        //JOptionPane.showMessageDialog(null,"User ID: " + getUserId() +  "\nUsername: " + getUsername() + "\nPassword: " + getPassword() + "User Info: \n" + super.display());
+        return "User ID: " + getUserId() +  "\nUsername: " + getUsername() + "\nPassword: " + getPassword() + "User Info: \n" + super.display();
     }
 }

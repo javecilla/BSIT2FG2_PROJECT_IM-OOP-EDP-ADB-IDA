@@ -1,5 +1,7 @@
 package models;
 
+import javax.swing.JOptionPane;
+
 public class Customer extends User {
     private int id;
     private String status;
@@ -42,10 +44,11 @@ public class Customer extends User {
     }
     
     @Override
-    public void display() {
-        System.out.println("Customer ID: " + getCustomerId());
+    public String display() {
+        /*System.out.println("Customer ID: " + getCustomerId());
         System.out.println("Customer Status: " + getCustomerStatus());
-        System.out.println("Customer Info: \n");
-        super.display();
+        System.out.println("Customer Info: \n");*/
+        //JOptionPane.showMessageDialog(null, "Customer ID: " + getCustomerId() + "\nCustomer Status: " + getCustomerStatus() + "\nCustomer Info: \n\n" + super.display());
+        return "Customer ID: " + getCustomerId() + "\nCustomer Status: " + getCustomerStatus() + "\nCustomer Info: \n\n" + super.display();
     }   
 }

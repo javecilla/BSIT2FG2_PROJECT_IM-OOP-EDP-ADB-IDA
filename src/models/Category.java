@@ -1,6 +1,8 @@
 
 package models;
 
+import javax.swing.JOptionPane;
+
 public class Category {
     private int id;
     private String name;
@@ -30,9 +32,11 @@ public class Category {
     }
     
     public void displayInfo() {
-        System.out.printf("%-10d %-30s%n", 
-                          getCategoryId(), 
-                          getCategoryName()
-        );
+        /*        System.out.printf("%-10d %-30s%n",
+        getCategoryId(),
+        getCategoryName()
+        );*/
+        String message = String.format("%-10d %-30s%n", getCategoryId(), getCategoryName());
+        JOptionPane.showMessageDialog(null, message);
     }
 }

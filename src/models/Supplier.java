@@ -1,5 +1,7 @@
 package models;
 
+import javax.swing.JOptionPane;
+
 public class Supplier {
     private int id;
     private String name;
@@ -48,10 +50,12 @@ public class Supplier {
         this.contactNumber = contactNumber;
     }
     
-    public void display() {
-        System.out.println("Supplier ID: " + getSupplierId());
+    public String display() {
+        /*System.out.println("Supplier ID: " + getSupplierId());
         System.out.println("Full Name: " + getSupplierName());
         System.out.println("Contact Number: " + getContactNumber());
-        System.out.println("Address: " + getAddress());
+        System.out.println("Address: " + getAddress());*/
+        JOptionPane.showMessageDialog(null, "Supplier ID: " + getSupplierId() + "\nFull Name: " + getSupplierName() + "\nContact Number: " + getContactNumber() + "\nAddress: " + getAddress());
+        return "Supplier ID: " + getSupplierId() + "\nFull Name: " + getSupplierName() + "\nContact Number: " + getContactNumber() + "\nAddress: " + getAddress();
     }
 }

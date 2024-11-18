@@ -1,7 +1,7 @@
 package services;
 
-import config.DBConnection;
 import models.User;
+import config.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,8 +62,7 @@ public class UserService {
         }
     }
     
-    public boolean isAdminExists(int adminId) throws SQLException {
-        Connection conn = null;
+    protected boolean isAdminExists(Connection conn, int adminId) throws SQLException {
         String query = "SELECT COUNT(*) FROM ADMIN WHERE Admin_ID = ?";
         try (PreparedStatement pst = conn.prepareStatement(query)) {
             pst.setInt(1, adminId);

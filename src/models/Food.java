@@ -1,5 +1,7 @@
 package models;
 
+import javax.swing.JOptionPane;
+
 public class Food extends Category {
     private int id;
     private String name;
@@ -50,11 +52,11 @@ public class Food extends Category {
  
     @Override
     public void displayInfo() {
-        System.out.printf("%-10d %-30s $%-9.2f %-20s%n", 
-                          id, 
-                          name, 
-                          price, 
-                          super.getCategoryName()
-        );
+        String message = String.format("%-10d %-30s $%-9.2f %-20s%n", 
+                                      id, 
+                                      name, 
+                                      price, 
+                                      super.getCategoryName());
+        JOptionPane.showMessageDialog(null, message, "Item Information", JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -10,25 +10,25 @@ public class ingredients {
         IngredientController controller = new IngredientController();
         
         //1. GET ALL INGREDIENT RECORDS                
-        Response<List<Ingredient>> ingredientsResponse = controller.getAllIngredients();
-        if (ingredientsResponse.isSuccess()) {
-            List<Ingredient> ingredients = ingredientsResponse.getData();
-            for (Ingredient ingredient : ingredients) {
-                //ingredient.display();
-                System.out.println("\n[Ingredient Information]:");
-                System.out.println("\tId: " + ingredient.getIngredientId());
-                System.out.println("\tName: " + ingredient.getIngredientName());
-                System.out.println("\tCurrent Stock: " + ingredient.getQuantity());
-                System.out.println("\tReorder Points: " + ingredient.getReorderPoint());
-                System.out.println("[Supplier Information]:");
-                System.out.println("\tName: " + ingredient.getSupplierName());
-                System.out.println("\tContact: " + ingredient.getContactNumber());
-                System.out.println("\tAddress: " + ingredient.getAddress() + "\n");
-            }
-            System.out.println("Total Records: " + ingredients.size());
-        } else {
-            System.out.println("Error: " + ingredientsResponse.getMessage());
-        }
+//        Response<List<Ingredient>> ingredientsResponse = controller.getAllIngredients();
+//        if (ingredientsResponse.isSuccess()) {
+//            List<Ingredient> ingredients = ingredientsResponse.getData();
+//            for (Ingredient ingredient : ingredients) {
+//                //ingredient.display();
+//                System.out.println("\n[Ingredient Information]:");
+//                System.out.println("\tId: " + ingredient.getIngredientId());
+//                System.out.println("\tName: " + ingredient.getIngredientName());
+//                System.out.println("\tCurrent Stock: " + ingredient.getQuantity());
+//                System.out.println("\tReorder Points: " + ingredient.getReorderPoint());
+//                System.out.println("[Supplier Information]:");
+//                System.out.println("\tName: " + ingredient.getSupplierName());
+//                System.out.println("\tContact: " + ingredient.getContactNumber());
+//                System.out.println("\tAddress: " + ingredient.getAddress() + "\n");
+//            }
+//            System.out.println("Total Records: " + ingredients.size());
+//        } else {
+//            System.out.println("Error: " + ingredientsResponse.getMessage());
+//        }
 
         // 2. UPDATE FOOD QUANTITY/STOCKS
         int testingId = 1;

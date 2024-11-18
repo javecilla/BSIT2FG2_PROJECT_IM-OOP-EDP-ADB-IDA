@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class FoodService implements IDatabaseOperators<Food> {
     @Override
@@ -23,7 +24,11 @@ public class FoodService implements IDatabaseOperators<Food> {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
             
-            
+            if (isFoodExists(conn, food.getFoodName())) {
+                //System.out.println("Error: Food '" + food.getFoodName() + "' already exists!");
+                JOptionPane.showMessageDialog(null, "Error: Food '" + food.getFoodName() + "' already exists!", "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             
             String query = "INSERT INTO FOOD (Food_Name, Price, Category_ID) VALUES (?, ?, ?)";
             pst = conn.prepareStatement(query);
@@ -201,8 +206,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         }
     }
     
-    public boolean isFoodExists(String foodName) throws SQLException {
-        Connection conn = null;
+    protected boolean isFoodExists(Connection conn, String foodName) throws SQLException {
         PreparedStatement pst = null;
         ResultSet rs = null;
         

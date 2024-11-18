@@ -28,10 +28,6 @@ public class CategoryController implements IOperatorsValidators<Category> {
         }
         
         try { 
-             if (categoryService.isCategoryExists(categoryName)) {
-                return Response.error("Error: Category '" + categoryName + "' already exists!");
-            }
-             
             if(categoryService.create(category)) {
                 return Response.success("Category created successfully!", category);
             } else {
