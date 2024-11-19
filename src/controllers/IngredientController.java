@@ -18,12 +18,11 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
     protected final IngredientService ingredientService;
     protected final SupplierService supplierService;
     protected final UserService userService;
-
+   
     public IngredientController() {
         this.ingredientService = new IngredientService();
         this.supplierService = new SupplierService();
-        this.userService = new UserService();
-        
+        this.userService = new UserService();    
     }
 
     // Add a new ingredient
