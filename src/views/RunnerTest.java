@@ -14,7 +14,6 @@ import enums.UserRoles;
 
 import java.util.Scanner;
 import java.util.List;
-import javax.swing.JOptionPane;
 import models.Cart;
 import models.CartItem;
 
@@ -33,7 +32,7 @@ public class RunnerTest {
         String userRole = "";
         boolean startPanel = true;
         boolean loggedIn = false;
-            
+                    
         do {
             // Show the main start panel (role selection)
             if (startPanel) {
@@ -402,16 +401,29 @@ private static void adminManageStock() {
         int choice;
         do {
             System.out.println("\nOptions:");
-            System.out.println("[0] Back");
-            System.out.println("[1] Go to Shop Again");
+            System.out.println("[1] Edit Order");
+            System.out.println("[2] Remove Order");
+            System.out.println("[3] Checkout Order");
+            System.out.println("[4] Back");
             System.out.print("Enter your choice: ");
             choice = SCANNER.nextInt();
 
-            if (choice == 0) {
-                return; // Back to the previous menu
-            } else if (choice == 1) {
-                showCategoryMenu(); // Go back to shopping categories
-                return;
+            if(choice == 1) {
+                System.out.println("edit order");
+                //CART_CONTROLLER.updateQuantity(id, newQuantity);
+            } else if (choice == 2) {
+                System.out.println("remove order");
+                //CART_CONTROLLER.removeFromCart(id);
+            } else if (choice == 3) {
+                //checkout order
+                Response<Cart> cartOrderReponse = CART_CONTROLLER.checkOutOrder();
+                if (cartOrderReponse.isSuccess()) {
+                    System.out.println(cartOrderReponse.getMessage());
+                } else {
+                    System.out.println("Error: " + cartOrderReponse.getMessage());
+                }
+            } else if(choice == 4) {
+                 return; // Back to the previous menu
             } else {
                 System.out.println("Invalid choice. Please select again.");
             }

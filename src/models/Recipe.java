@@ -4,34 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe {
-    private int quantiy;
+    private int quantity;
     private Food food;
-    private Ingredient ingredient;
-    private List<Ingredient> ingredients;  // This should hold multiple ingredients.
+    private Ingredient ingredient; //ingredient for one
+    private List<Ingredient> ingredients;  //ingredients for multiple
 
     public Recipe() {}
 
     // Constructor to initialize with a list of ingredients
     public Recipe(int quantity, Food food, List<Ingredient> ingredients) {
-        this.quantiy = quantity;
+        this.quantity = quantity;
         this.food = food;
         this.ingredients = ingredients;
     }  
     
     // Constructor for a single ingredient
     public Recipe(int quantity, Food food, Ingredient ingredient) {
-        this.quantiy = quantity;
+        this.quantity = quantity;
         this.food = food;
         this.ingredients = new ArrayList<>();
         this.ingredients.add(ingredient); // Add the single ingredient to the list
     }
 
     public int getRecipeQuantity() {
-        return quantiy;
+        return quantity;
     }
 
     public void setRecipeQuantity(int quantity) {
-        this.quantiy = quantity;
+        this.quantity = quantity;
     }
 
     public Food getFood() {

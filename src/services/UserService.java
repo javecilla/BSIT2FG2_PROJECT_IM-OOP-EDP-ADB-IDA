@@ -7,6 +7,11 @@ import java.sql.SQLException;
 
 import models.User;
 import config.DBConnection;
+import enums.UserRoles;
+import helpers.Text;
+import models.Admin;
+import models.Customer;
+import models.Session;
 
 public class UserService {
     public boolean login(User user) throws SQLException {
@@ -18,16 +23,21 @@ public class UserService {
             conn = DBConnection.getConnection();
             
             String query = """
-               SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role,
-                      USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, USER_INFO.Barangay, USER_INFO.Street,
-                      USER_INFO.House_Number, USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality
-                FROM USER
-                INNER JOIN USER_INFO ON USER.UserInfo_ID = USER_INFO.UserInfo_ID
-                WHERE USER.Username = ? AND USER.User_Role = ?
-            """;                        
+                SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role, USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, USER_INFO.Barangay, USER_INFO.Street, USER_INFO.House_Number, USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality, CUSTOMER.*
+                FROM (USER_INFO INNER JOIN [USER] ON USER_INFO.UserInfo_ID = USER.UserInfo_ID)   
+            """;
+            // Join based on user role
+            if(user.getUserRole().equalsIgnoreCase(UserRoles.CLIENT.name())) {
+                query += "INNER JOIN CUSTOMER ON USER.User_ID = CUSTOMER.Customer_ID ";
+            } else if(user.getUserRole().equalsIgnoreCase(UserRoles.ADMIN.name())) {
+                query += "INNER JOIN ADMIN ON USER.User_ID = ADMIN.Admin_ID ";
+            }
+            
+            query += "WHERE (((USER.Username)= ?)); ";
+            
             pst = conn.prepareStatement(query);
             pst.setString(1, user.getUsername());
-            pst.setString(2, user.getUserRole());
+
             rs = pst.executeQuery();
             
            
@@ -52,6 +62,21 @@ public class UserService {
             user.setRegion(rs.getString("Region"));
             user.setProvince(rs.getString("Province"));
             user.setMunicipality(rs.getString("Municipality"));
+            Session.setLoggedInUser(user); // Store logged-in user
+            
+            //populate role-specific ifnormation
+            if(user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.CLIENT.name()))) {
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getInt("Customer_ID"));
+                customer.setCustomerStatus(rs.getString("Customer_Status"));
+                Session.setLoggedInCustomer(customer); // Store customer in session
+            }
+            else if(user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.ADMIN.name()))) {
+                Admin admin = new Admin();
+                admin.setAdminId(rs.getInt("Admin_ID"));
+                admin.setAdminType(rs.getString("Admin_Type"));
+                Session.setLoggedInAdmin(admin); // Store admin in session
+            }
 
             return true;
 

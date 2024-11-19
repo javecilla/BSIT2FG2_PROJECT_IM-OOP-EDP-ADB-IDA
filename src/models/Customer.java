@@ -31,8 +31,8 @@ public class Customer extends User {
         return id;
     }
     
-    public void setPassword(int customerId) {
-        this.id = customerId;
+    public void setCustomerId(int id) {
+        this.id = id;
     }
     
     public String getCustomerStatus() {

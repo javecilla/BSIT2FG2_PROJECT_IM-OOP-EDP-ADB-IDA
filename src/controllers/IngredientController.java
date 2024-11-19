@@ -18,12 +18,11 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
     protected final IngredientService ingredientService;
     protected final SupplierService supplierService;
     protected final UserService userService;
-
+   
     public IngredientController() {
         this.ingredientService = new IngredientService();
         this.supplierService = new SupplierService();
-        this.userService = new UserService();
-        
+        this.userService = new UserService();    
     }
 
     // Add a new ingredient
@@ -199,11 +198,13 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             Ingredient ingredient = ingredientService.getById(id);
             if (ingredient == null) return Response.error("Ingredient not found with ID: " + id);
 
-            // Calculate the new quantity
             int currentQuantity = ingredient.getQuantity();
             int newQuantity = currentQuantity + quantity;
 
-            if (newQuantity < 0) return Response.error("New quantity cannot be negative.");
+            // Check if the new quantity is negative or exceeds available stock
+            if (newQuantity < 0) {
+                return Response.error("New quantity cannot be negative. Current stock: " + currentQuantity + ", Attempted change: " + quantity);
+            }
 
             boolean isUpdated = ingredientService.updateQuantity(id, newQuantity);
 
@@ -215,6 +216,7 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         }
     }
 
+ 
     // Update the reorder points
     public Response<Ingredient> updateReorderPoints(int id, int reorderPoints) {
         if (reorderPoints == 0) return Response.error("Reorder points change cannot be zero.");
