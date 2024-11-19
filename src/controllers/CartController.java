@@ -1,28 +1,35 @@
 package controllers;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import models.Cart;
 import models.CartItem;
 import models.Food;
-import models.Recipe;
+import models.SalesDetails;
 import models.Customer;
 import models.Ingredient;
 import models.Recipe;
+import models.Sale;
 import services.RecipeService;
 import services.IngredientService;
+import services.SaleService;
+import services.SalesDetailsService;
 import helpers.Response;
 import helpers.Date;
+import models.Session;
 
 public class CartController {
-    private final Cart cart;
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
+    private final SaleService saleService;
+    private final SalesDetailsService salesDetailsService;
+    private final Cart cart;
     
     public CartController() {
         this.recipeService = new RecipeService();
         this.ingredientService = new IngredientService();
+        this.saleService = new SaleService();
+        this.salesDetailsService = new SalesDetailsService();
         this.cart = new Cart();
     }
     
@@ -30,7 +37,26 @@ public class CartController {
         if(quantity <= 0) {
             return Response.error("Quantity must be greater than 0.");
         }
-
+        
+        try {
+            //check first if the each ingredient quantity of the food selected 
+            //is sufficient paba or hindi, if succient pa then allow to order
+            //pag hindi return food is currentlt not available
+            Recipe recipe = recipeService.getAllIngredientsInFood(foodId);
+            if(recipe == null) return Response.error("Failed to fetch recipe details for food ID: " + foodId);
+            
+            for(Ingredient ingredient : recipe.getIngredients()) {
+                Response<String> reorderCheckResponse = 
+                        new IngredientController().checkReorderNeed(ingredient.getIngredientId());
+                if(reorderCheckResponse.isSuccess()) {
+                    //System.out.println(reorderCheckResponse.getMessage());
+                    return Response.error("Opps sorry, The food " + foodName + " you selected is currently not available.");
+                } 
+            }
+        } catch(SQLException e) {
+            return Response.error("Something went wrong during checkout: " + e.getMessage());
+        }
+        
         // Check if the food item is already in the cart
         boolean itemExists = false;
         for(CartItem item : cart.getItems()) {
@@ -95,56 +121,74 @@ public class CartController {
         if(cart == null || cart.getItems().isEmpty()) {
             return Response.error("The cart is empty. Please add items before checking out.");
         }
-        
+
         try {
-            Customer customer = new Customer();
-            
+            Customer customer = Session.getLoggedInCustomer();
+            //Create a sale record (once for the entire checkout)
+            Sale sale = new Sale(
+                Date.getCurrentDate(), 
+                cart.getTotalAmount(), 
+                customer
+            );
+
+            boolean isSaleCreated = saleService.create(sale);
+            if(!isSaleCreated) {
+                return Response.error("Failed to create a new sale record.");
+            }
+
+            //iterate over cart items
             for(CartItem item : cart.getItems()) {
+           
                 //get all ingredients information  base on the food id
-                Recipe recipe = recipeService.getById(item.getFoodId());
-                recipe.getRecipeQuantity();
-                //1 * 2 = 2;
-                int newQuantity = recipe.getRecipeQuantity() * item.getQuantity();
+                Recipe recipe = recipeService.getAllIngredientsInFood(item.getFoodId());
+                if(recipe == null) {
+                    return Response.error("Failed to fetch recipe details for food ID: " + item.getFoodId());
+                }
                 
+                //get the recipe quantity record and multiply it by the customer's order quantity
+                int totalQuantity = recipe.getRecipeQuantity() * item.getQuantity();
+                
+                //System.out.println("totalQuantity to reduce: " + totalQuantity + " for food " + item.getFoodName());
                 //loop all the ingredients na bumubuo sa food
                 //kase kada order sa food mag babawas ng quantity
                 //per ingridients
-                List<Ingredient> ingredients = recipe.getIngredients();
-                for(Ingredient ingredient : ingredients) {
-                    //update the table ingredients base on the ingredient id
-                    ingredientService.updateQuantity(ingredient.getIngredientId(), newQuantity);
-                }  
-               
-                /*
-                #insert these data in table SALE [Sales_Date, Customer_ID, Net_Total]
-                
-                Sale sale = new Sale(
-                    Date.getCurrentDate(),
-                    customer.getCustomerId(),
-                    cart.getTotalAmount()
-                ); 
-                saleService.create(sale);
-                
-                
-                #insert these data in table SALE_DETAILS [Food_ID, Sales_ID, Item_Quantity]                
-                salesDetailsService.create(
+                for(Ingredient ingredient : recipe.getIngredients()) {
+                    // Calculate the new ingredient stock change
+                    int quantityChange = -totalQuantity; // Negative because we’re reducing stock
+                    //System.out.println("HALA: " + quantityChange);
+                    if (totalQuantity <= 0 ) return Response.error("Quantity change cannot be negative or zero.");
+     
+                    Response<Ingredient> updateStocksResponse = new IngredientController().updateQuantity(
+                            ingredient.getIngredientId(), quantityChange);
+                    if(!updateStocksResponse.isSuccess()) {
+                        return Response.error("Error updating ingredient: " + updateStocksResponse.getMessage());
+                    } 
+                }
+            
+                //insert sales details for each item
+                boolean isSalesDetailsCreated = salesDetailsService.create(
                     new SalesDetails(
-                        item.getFoodId(),
-                        sale.getSaleId(),
+                        new Food(
+                            item.getFoodId(), 
+                            item.getFoodName(), 
+                            item.getFoodPrice()
+                        ),
+                        sale, 
                         item.getQuantity()
                     )
                 );
-                */  
+                if(!isSalesDetailsCreated) {
+                    return Response.error("Failed to create sales details for food ID: " + item.getFoodId());
+                }
             }
             
+            //clear the cart after successful ng checkout
+            cart.getItems().clear();
             
-            return Response.success("Your order is successfully checked out! Thankyou for your order.", null);
-        } catch(SQLException e) {
-            return Response.error("Something went wrong: " + e.getMessage());
+            return Response.success("Your order is successfully checked out! Thank you for your order.", null);
+        } catch (SQLException e) {
+            return Response.error("Something went wrong during checkout: " + e.getMessage());
         }
-
-       
-        
     }
 
 }

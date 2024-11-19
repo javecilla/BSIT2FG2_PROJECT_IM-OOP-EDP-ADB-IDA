@@ -41,7 +41,7 @@ public class Admin extends User {
         return type;
     }
     
-    public void setAdminStatus(String type) {
+    public void setAdminType(String type) {
         this.type = type;
     }
     
