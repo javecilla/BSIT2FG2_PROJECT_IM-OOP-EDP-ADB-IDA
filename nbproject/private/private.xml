@@ -2,19 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/services/IngredientService.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/controllers/IngredientController.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/services/SalesDetailsService.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/SalesDetails.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/config/DBConnection.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/services/SaleService.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/Sale.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/services/RecipeService.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/Ingredient.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/controllers/CartController.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/views/RunnerTest.java</file>
-            <file>file:/C:/Users/Server/Documents/NetBeansProjects/PROJECT_ECOMMERCE/src/models/Recipe.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

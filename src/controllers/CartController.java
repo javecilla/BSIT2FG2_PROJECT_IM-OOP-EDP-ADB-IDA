@@ -1,6 +1,8 @@
 package controllers;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
 import models.Cart;
 import models.CartItem;
@@ -10,13 +12,14 @@ import models.Customer;
 import models.Ingredient;
 import models.Recipe;
 import models.Sale;
+import models.Session;
 import services.RecipeService;
 import services.IngredientService;
 import services.SaleService;
 import services.SalesDetailsService;
 import helpers.Response;
 import helpers.Date;
-import models.Session;
+
 
 public class CartController {
     private final RecipeService recipeService;
@@ -48,7 +51,7 @@ public class CartController {
             for(Ingredient ingredient : recipe.getIngredients()) {
                 Response<String> reorderCheckResponse = 
                         new IngredientController().checkReorderNeed(ingredient.getIngredientId());
-                if(reorderCheckResponse.isSuccess()) {
+                if(!reorderCheckResponse.isSuccess()) {
                     //System.out.println(reorderCheckResponse.getMessage());
                     return Response.error("Opps sorry, The food " + foodName + " you selected is currently not available.");
                 } 
@@ -188,6 +191,21 @@ public class CartController {
             return Response.success("Your order is successfully checked out! Thank you for your order.", null);
         } catch (SQLException e) {
             return Response.error("Something went wrong during checkout: " + e.getMessage());
+        }
+    }
+    
+    public Response<List<SalesDetails>> getOrderReports() {
+        try {
+            Customer customer = Session.getLoggedInCustomer();
+            List<SalesDetails> salesDetals = salesDetailsService.getSalesDetailsByCustomer(customer.getCustomerId());
+            
+            if(salesDetals == null || salesDetals.isEmpty()) {
+                return Response.success("No foods found", Collections.emptyList());
+            }
+            
+            return Response.success("Sales details retrieved successfully", salesDetals);
+        } catch(SQLException e) {
+            return Response.error("Something went wrong: " + e.getMessage());
         }
     }
 
