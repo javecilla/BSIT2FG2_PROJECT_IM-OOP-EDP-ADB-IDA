@@ -10,16 +10,19 @@ import controllers.CategoryController;
 import controllers.FoodController;
 import helpers.Response;
 import enums.UserRoles;
+import helpers.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import java.time.LocalDate;
 import models.Cart;
 import models.CartItem;
 import models.Food;
+import models.SalesDetails;
+import static views.RunnerTest.CART_CONTROLLER;
+import static views.RunnerTest.SCANNER;
 
 public class MommyVarietyStoreMain {
     User userHolder;
-    String userPassword = "admin";
     
     String userRole = "";
     String quantityType = "add";
@@ -39,6 +42,8 @@ public class MommyVarietyStoreMain {
     
     LocalDate date = LocalDate.now();
     int userPayment;
+    
+    Cart found;
     
     public static void main(String[] args) {
         MommyVarietyStoreMain store = new MommyVarietyStoreMain();
@@ -185,10 +190,6 @@ public class MommyVarietyStoreMain {
         }
     }
     
-    void checkOutDone(){
-        
-    }
-    
     void adminSection(User user){
         int choice;
         boolean showLowStock = false; // Flag to track if we're showing low stock
@@ -255,7 +256,7 @@ public class MommyVarietyStoreMain {
         if (ingredientsWithLowStocksResponse.isSuccess()) {
             List<Ingredient> ingredients = ingredientsWithLowStocksResponse.getData();
             //displayIngredientItems(ingredients);
-            JOptionPane.showMessageDialog(null, displayIngredientItems(ingredients),"MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "<html><pre>" + displayIngredientItems(ingredients) + "</pre></html>","MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, ingredientsWithLowStocksResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -292,7 +293,7 @@ public class MommyVarietyStoreMain {
         Response<List<Ingredient>> ingredientsResponse = INGREDIENT_CONTROLLER.getAllIngredients();
         if (ingredientsResponse.isSuccess()) {
             List<Ingredient> ingredients = ingredientsResponse.getData();
-            JOptionPane.showMessageDialog(null, displayIngredientItems(ingredients),"MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "<html><pre>" + displayIngredientItems(ingredients) + "</pre></html>","MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, ingredientsResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -394,24 +395,23 @@ public class MommyVarietyStoreMain {
 
     public String displayIngredientItems(List<Ingredient> ingredients) {
         StringBuilder output = new StringBuilder();
-    
-        // Header
-        output.append("Ingredient ID\t");
-        output.append("Name\t");
-        output.append("Current Stock\t");
-        output.append("Reorder Point\n");
-    
+
+        // Header with formatted alignment
+        output.append(String.format("%-15s %-30s %-15s %-20s%n", 
+            "Ingredient ID", "Name", "Current Stock", "Reorder Point"));
+        output.append("-------------------------------------------------------------------------------\n");
+
         // Rows
         for (Ingredient ingredient : ingredients) {
-            output.append(String.format("%-10s %-30s $%-10s %-20s%n", 
+            output.append(String.format("%-15s %-30s %-15s %-20s%n", 
                 ingredient.getIngredientId(), 
                 ingredient.getIngredientName(),
                 ingredient.getQuantity(), 
                 ingredient.getReorderPoint()));
-        }
-    
-        // Footer
-        output.append("Total Records: ").append(ingredients.size());
+    }
+
+    // Footer
+    output.append(String.format("%nTotal Records: %d", ingredients.size()));
     
         return output.toString();
     }
@@ -422,69 +422,247 @@ public class MommyVarietyStoreMain {
         JOptionPane.showMessageDialog(null, "YOUR PROFILE:\n\nFull Name: " + user.getFullName() + "\nAddress: " + user.getFullAddress(),"MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    void showCart() {
-            //System.out.println("\n--- Your Cart ---");
-            Object[] options = {"OK", "EDIT QUANTITY","REMOVE ITEM" ,"CHECK OUT"};
-            String cartHolder = "\n-------------------------------------------- Your Cart ---------------------------------------------";
-            Response<Cart> cartResponse = CART_CONTROLLER.viewCart();
-
-            if (cartResponse.isSuccess()) {
-                Cart cart = cartResponse.getData();
-
-                if (cart.getItems().isEmpty()) {
-                    //System.out.println("Your cart is empty.");
-                    JOptionPane.showMessageDialog(null, "Your cart is empty.", "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
-                    foodCategoryChoice();
-                } else {
-                    int itemNumber = 1;
-                    //System.out.printf("%-5s %-20s %-10s %-10s %-10s\n", "No.", "Food Name", "Price", "Qty", "Total");
-                    cartHolder += "\n" +"No.    "+ "Food Name                               "+"Price                      "+ "Qty                   "+ "Total\n";
-                    //System.out.println("-----------------------------------------------------------");
-                    cartHolder += "--------------------------------------------------------------------------------------------------------";
-
-                for (CartItem item : cart.getItems()) {
-                    double totalPrice = item.getTotalPrice();
-                    
-                    cartHolder += "\n" + itemNumber++ +"    "+ item.getFoodName() +"                        "+ item.getFoodPrice() +"                   "+ item.getQuantity() +"                  "+ totalPrice;
-                }
-
-                //System.out.println("-----------------------------------------------------------");
-                cartHolder += "\n----------------------------------------------------------------------------------------------------------\n";
-                //System.out.printf("%-35s %-10.2f\n", "Total Amount:", cart.getTotalAmount());
-                cartHolder += "Total Amount: Php "+ cart.getTotalAmount() + "";
-                //JOptionPane.showMessageDialog(null, cartHolder, "MOMMY'S VARIETY STORE", JOptionPane.PLAIN_MESSAGE);
-                int choice = JOptionPane.showOptionDialog(null, cartHolder, "MOMMY'S VARIETY STORE", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-                
-                if(choice == 0){
-                    foodCategoryChoice();
-                }else if(choice == 1){
-                    //editQuantity
-                    quantityType = "edit";
-                    foodCategoryChoice();
-                }else if(choice == 2){
-                    quantityType = "remove";
-                    foodCategoryChoice();
-                }else if(choice == 3){
-                    //checkout
-                }else{
-                    foodCategoryChoice();
-                }
-                return ;
-            }
-        } else {
-            //System.out.println("Error: " + cartResponse.getMessage());
-            JOptionPane.showMessageDialog(null, "Error: " + cartResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-            return ; // Exit if there's an issue fetching the cart
-        }
-
-        // Provide options to the user
+    /*    void showCart() {
+    //System.out.println("\n--- Your Cart ---");
+    Object[] options = {"OK", "EDIT QUANTITY","REMOVE ITEM" ,"CHECK OUT"};
+    String cartHolder = "\n-------------------------------------------- Your Cart ---------------------------------------------";
+    Response<Cart> cartResponse = CART_CONTROLLER.viewCart();
+    
+    if (cartResponse.isSuccess()) {
+    Cart cart = cartResponse.getData();
+    
+    if (cart.getItems().isEmpty()) {
+    //System.out.println("Your cart is empty.");
+    JOptionPane.showMessageDialog(null, "Your cart is empty.", "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
+    foodCategoryChoice();
+    } else {
+    int itemNumber = 1;
+    //System.out.printf("%-5s %-20s %-10s %-10s %-10s\n", "No.", "Food Name", "Price", "Qty", "Total");
+    cartHolder += "\n" +"No.    "+ "Food Name                               "+"Price                      "+ "Qty                   "+ "Total\n";
+    //System.out.println("-----------------------------------------------------------");
+    cartHolder += "--------------------------------------------------------------------------------------------------------";
+    
+    for (CartItem item : cart.getItems()) {
+    double totalPrice = item.getTotalPrice();
+    
+    cartHolder += "\n" + itemNumber++ +"    "+ item.getFoodName() +"                        "+ item.getFoodPrice() +"                   "+ item.getQuantity() +"                  "+ totalPrice;
     }
+    
+    //System.out.println("-----------------------------------------------------------");
+    cartHolder += "\n----------------------------------------------------------------------------------------------------------\n";
+    //System.out.printf("%-35s %-10.2f\n", "Total Amount:", cart.getTotalAmount());
+    cartHolder += "Total Amount: Php "+ cart.getTotalAmount() + "";
+    //JOptionPane.showMessageDialog(null, cartHolder, "MOMMY'S VARIETY STORE", JOptionPane.PLAIN_MESSAGE);
+    int choice = JOptionPane.showOptionDialog(null, cartHolder, "MOMMY'S VARIETY STORE", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+    
+    if(choice == 0){
+    foodCategoryChoice();
+    }else if(choice == 1){
+    //editQuantity
+    quantityType = "edit";
+    foodCategoryChoice();
+    }else if(choice == 2){
+    quantityType = "remove";
+    foodCategoryChoice();
+    }else if(choice == 3){
+    //checkout
+    }else{
+    foodCategoryChoice();
+    }
+    return ;
+    }
+    } else {
+    //System.out.println("Error: " + cartResponse.getMessage());
+    JOptionPane.showMessageDialog(null, "Error: " + cartResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+    return ; // Exit if there's an issue fetching the cart
+    }
+    
+    // Provide options to the user
+    }*/
+    
+    void showCart() {
+    Object[] options = {"OK", "EDIT QUANTITY", "REMOVE ITEM", "CHECK OUT"};
+    StringBuilder cartHolder = new StringBuilder();
+
+    // Header
+    cartHolder.append("\n----------------------------- Your Cart ------------------------------\n");
+    cartHolder.append(String.format("%-5s %-35s %-10s %-10s %-10s%n", 
+        "No.", "Food Name", "Price", "Qty", "Total"));
+    cartHolder.append("-----------------------------------------------------------------------\n");
+
+    // Fetch cart data
+    Response<Cart> cartResponse = CART_CONTROLLER.viewCart();
+
+    if (cartResponse.isSuccess()) {
+        Cart cart = cartResponse.getData();
+
+        if (cart.getItems().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Your cart is empty.", "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
+            foodCategoryChoice();
+        } else {
+            int itemNumber = 1;
+
+            // Add cart items
+            for (CartItem item : cart.getItems()) {
+                cartHolder.append(String.format("%-5d %-35s %-10.2f %-10d %-10.2f%n", 
+                    itemNumber++, 
+                    item.getFoodName(), 
+                    item.getFoodPrice(), 
+                    item.getQuantity(), 
+                    item.getTotalPrice()));
+            }
+
+            // Footer
+            cartHolder.append("-----------------------------------------------------------------------\n");
+            cartHolder.append(String.format("%-59s Php %.2f%n", "Total Amount:", cart.getTotalAmount()));
+
+            // Display the cart and options
+            int choice = JOptionPane.showOptionDialog(null, 
+                "<html><pre>" + cartHolder + "</pre></html>", 
+                "MOMMY'S VARIETY STORE", 
+                JOptionPane.DEFAULT_OPTION, 
+                JOptionPane.PLAIN_MESSAGE, 
+                null, 
+                options, 
+                options[0]);
+
+            // Handle user choice
+            switch (choice) {
+                case 0: foodCategoryChoice(); // OK
+                    break;
+                case 1: 
+                    quantityType = "edit";
+                    foodCategoryChoice(); // EDIT QUANTITY
+                    break;
+                case 2: 
+                    quantityType = "remove";
+                    foodCategoryChoice(); // REMOVE ITEM
+                    break;
+                case 3:
+                    // CHECKOUT
+                    double amountPayment = 0;
+                    do {
+                        // Show input dialog and get the payment amount
+                        String paymentInput = JOptionPane.showInputDialog(null, 
+                            "Payable amount: " + cart.getTotalAmount()+ "\n\nEnter your payment amount:", "MOMMY'S VARIETY STORE", JOptionPane.PLAIN_MESSAGE);
+
+                        // Check if the input is null (user pressed Cancel) or empty (user entered nothing)
+                        if (paymentInput == null) {
+                            showCart();
+                            return;
+                        }
+
+                        try {
+                            amountPayment = Double.parseDouble(paymentInput); // Try to parse the input as a double
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, e,"ERROR", JOptionPane.ERROR_MESSAGE);
+                            amountPayment = -1; // If invalid input, set amountPayment to -1
+                            continue;
+                        }
+
+                        // Display error or insufficient payment message
+                        if (amountPayment <= 0) {
+                            JOptionPane.showMessageDialog(null, "Invalid payment amount! Please enter a positive number.", 
+                                                          "Invalid Payment", JOptionPane.ERROR_MESSAGE);
+                        } else if (amountPayment < cart.getTotalAmount()) {
+                            JOptionPane.showMessageDialog(null, "Insufficient payment! The total amount is " + cart.getTotalAmount(), 
+                                                          "Insufficient Payment", JOptionPane.ERROR_MESSAGE);
+                        }
+
+                    } while (amountPayment < cart.getTotalAmount() || amountPayment <= 0);
+
+                    double change = amountPayment - cart.getTotalAmount();
+
+                    // Process order
+                    Response<Cart> cartOrderResponse = CART_CONTROLLER.checkOutOrder();
+                    if (cartOrderResponse.isSuccess()) {
+                        JOptionPane.showMessageDialog(null, cartOrderResponse.getMessage(), "Order Successful", JOptionPane.INFORMATION_MESSAGE);
+
+                        // Get sales details / reports
+                        Response<List<SalesDetails>> salesDetailsResponse = CART_CONTROLLER.getOrderReports();
+                        if (salesDetailsResponse.isSuccess()) {
+                            List<SalesDetails> salesDetails = salesDetailsResponse.getData();
+                            StringBuilder salesReport = new StringBuilder();
+
+                            // Add header
+                            salesReport.append("========================== SALES REPORT ==========================\n");
+                            salesReport.append("Name: ").append(salesDetails.get(0).getUserInfo().getFullName()).append("\n");
+                            // Define a maximum length for the address
+                                final int MAX_ADDRESS_LENGTH = 50; // Adjust this value as needed
+
+                                // Truncate the address if it exceeds the maximum length
+                                String address = salesDetails.get(0).getUserInfo().getFullAddress();
+                                if (address.length() > MAX_ADDRESS_LENGTH) {
+                                    address = address.substring(0, MAX_ADDRESS_LENGTH) + "..."; // Add ellipsis
+                                }
+
+                                salesReport.append("Address: ").append(address).append("\n");
+
+                            salesReport.append("Date: ").append(Date.formatToReadableDate(salesDetails.get(0).getSale().getSaleDate())).append("\n");
+                            salesReport.append("Sales ID: ").append(salesDetails.get(0).getSale().getSaleId()).append("\n");
+                            salesReport.append("------------------------------------------------------------------\n");
+
+                            // Add table header
+                            salesReport.append(String.format("%-20s %-15s %-10s %-15s\n", "Food Name", "Price", "Quantity", "Subtotal"));
+                            salesReport.append("------------------------------------------------------------------\n");
+
+                            // Add table rows
+                            double subTotal = 0;
+                            double netTotal = 0;
+
+                            for (CartItem item : cart.getItems()) {
+                                subTotal = item.getQuantity() * item.getFoodPrice(); // Calculate subtotal
+                                netTotal += subTotal; // Calculate net total
+
+                                salesReport.append(String.format("%-20s %-15.2f %-10d %-15.2f\n",
+                                        item.getFoodName(),
+                                        item.getFoodPrice(),
+                                        item.getQuantity(),
+                                        subTotal));
+                            }
+
+                            // Add footer
+                            salesReport.append("------------------------------------------------------------------\n");
+                            salesReport.append(String.format("%-43s Php %.2f%n", "Net Total:", netTotal));
+                            salesReport.append(String.format("%-43s Php %.2f%n", "Payment:", amountPayment));
+                            salesReport.append(String.format("%-43s Php %.2f%n", "Change:", change));
+                            salesReport.append("\n==================================================================\n");
+
+                            // Display the sales report in a dialog box
+                            JOptionPane.showMessageDialog(null,"<html><pre>"+ salesReport.toString()+"<html><pre>", "Sales Report", JOptionPane.PLAIN_MESSAGE);
+
+                            // Clear the cart items after displaying the report
+                            cart.getItems().clear();
+                            clientDashboard(userHolder);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: " + salesDetailsResponse.getMessage(), 
+                                                          "Error Retrieving Sales Details", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: " + cartOrderResponse.getMessage(), 
+                                                      "Order Checkout Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+
+                default: foodCategoryChoice(); // Cancel/Close
+                    break;
+            }
+        }
+    } else {
+        // Handle cart fetch error
+        JOptionPane.showMessageDialog(null, 
+            "Error: " + cartResponse.getMessage(), 
+            "MOMMY'S VARIETY STORE", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+
 
     
      void showFoodMenu(int categoryId) {
         try{
         do {
-            String holder = displayFoodListsByCategory(categoryId); 
+            String holder = "<html><pre>" + displayFoodListsByCategory(categoryId)+"<html><pre>"; 
             //System.out.print("Enter your choice: ");
             String input = JOptionPane.showInputDialog(null, holder + "\nEnter your choice: ", "MOMMY'S VARIETY STORE", JOptionPane.PLAIN_MESSAGE);
             
@@ -529,15 +707,21 @@ public class MommyVarietyStoreMain {
         int quantity = 1;
         try{
         do {
-            if(quantityType.equals("add") || quantityType.equals("edit")){
-                String clientDashboard = "\n------------- Client Dashboard -------------\n"
-                                    + "Food Name: " + foodName + "\n"
-                                    + "Food Price: " + foodPrice + "\n"
-                                    + "------------------------------\n"
-                                    + "[0] Back\n\n"
-                                    + "Enter quantity: ";
-            
-            String input = JOptionPane.showInputDialog(null, clientDashboard, "MOMMY'S VARIETY STORE", JOptionPane.PLAIN_MESSAGE);
+            if (quantityType.equals("add") || quantityType.equals("edit")) {
+                
+                StringBuilder clientDashboard = new StringBuilder();
+                clientDashboard.append("\n---------- Client Dashboard ----------\n");
+                clientDashboard.append(String.format("%-15s %-30s%n", "Food Name:", foodName));
+                clientDashboard.append(String.format("%-15s %-30.2f%n", "Food Price:", foodPrice));
+                clientDashboard.append("--------------------------------------\n");
+                clientDashboard.append("[0] Back\n\n");
+                clientDashboard.append("Enter quantity: ");
+
+                // Show input dialog
+                String input = JOptionPane.showInputDialog(null, 
+                    "<html><pre>" + clientDashboard + "</pre></html>", 
+                    "MOMMY'S VARIETY STORE", JOptionPane.PLAIN_MESSAGE);
+
 
             if(input == null){
                 return;
@@ -578,6 +762,8 @@ public class MommyVarietyStoreMain {
                     } else {
                         //System.out.println("Error: " + addToCartResponse.getMessage());
                         JOptionPane.showMessageDialog(null, "Error: " + updateQuantityResponse.getMessage(),"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                        showCart();
+                        return;
                     }
                 }else if(quantityType.equals("remove")){
                     Response<Cart> removeFromCartResponse = CART_CONTROLLER.removeFromCart(foodId);
@@ -594,6 +780,8 @@ public class MommyVarietyStoreMain {
                     } else {
                         //System.out.println("Error: " + addToCartResponse.getMessage());
                         JOptionPane.showMessageDialog(null, "Error: " + removeFromCartResponse.getMessage(),"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+                        showCart();
+                        return;
                     }
                 }
             } else if (quantity == 0) { 
@@ -611,32 +799,68 @@ public class MommyVarietyStoreMain {
         }
     }       
     
-     String displayFoodListsByCategory(int categoryId) {
+     /*     String displayFoodListsByCategory(int categoryId) {
+     foodsCounter = 0;
+     
+     Response<List<Food>> foodsResponse = FOOD_CONTROLLER.getFoodsByCategory(categoryId);
+     if (foodsResponse.isSuccess()) {
+     List<Food> foods = foodsResponse.getData();
+     String selectFood = "------------------- Select Food -------------------\n";
+     //System.out.println("\n--- Select Food ---");
+     for (Food food : foods) {
+     //System.out.println("[" + food.getFoodId() + "] \t" + food.getFoodName() + "\t\t" + food.getPrice());
+     selectFood += "[" + food.getFoodId() + "]     " + food.getFoodName() + "     " + food.getPrice()+"\n";
+     foodsCounter++;
+     foodCounter = food.getFoodId();
+     }
+     
+     //System.out.println("[" + (foods.size() + 1) + "] Back\n");
+     selectFood += "[" + (foodCounter + 1) + "]    Cart\n";
+     selectFood += "[" + (foodCounter + 2) + "]    Dashboard\n";
+     selectFood += "[" + (foodCounter + 3) + "]    Back\n";
+     
+     return selectFood;
+     } else {
+     JOptionPane.showMessageDialog(null, "Error: " + foodsResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+     return "";
+     }
+     }*/
+     
+    String displayFoodListsByCategory(int categoryId) {
         foodsCounter = 0;
-        
+
         Response<List<Food>> foodsResponse = FOOD_CONTROLLER.getFoodsByCategory(categoryId);
         if (foodsResponse.isSuccess()) {
             List<Food> foods = foodsResponse.getData();
-            String selectFood = "------------------- Select Food -------------------\n";
-            //System.out.println("\n--- Select Food ---");
+
+            StringBuilder selectFood = new StringBuilder();
+            selectFood.append("------------------- Select Food -------------------\n");
+            selectFood.append(String.format("%-5s %-30s %-10s%n", "ID", "Food Name", "Price")); // Header
+            selectFood.append("--------------------------------------------------\n");
+
+            // Loop through food items
             for (Food food : foods) {
-                //System.out.println("[" + food.getFoodId() + "] \t" + food.getFoodName() + "\t\t" + food.getPrice());
-                selectFood += "[" + food.getFoodId() + "]     " + food.getFoodName() + "     " + food.getPrice()+"\n";
+                selectFood.append(String.format("%-5s %-30s %-10.2f%n", 
+                    "[" + food.getFoodId() + "]", food.getFoodName(), food.getPrice()));
                 foodsCounter++;
                 foodCounter = food.getFoodId();
             }
- 
-            //System.out.println("[" + (foods.size() + 1) + "] Back\n");
-            selectFood += "[" + (foodCounter + 1) + "]    Cart\n";
-            selectFood += "[" + (foodCounter + 2) + "]    Dashboard\n";
-            selectFood += "[" + (foodCounter + 3) + "]    Back\n";
-            
-            return selectFood;
+
+            // Add options
+            selectFood.append(String.format("%-5s %-30s%n", "[" + (foodCounter + 1) + "]", "Cart"));
+            selectFood.append(String.format("%-5s %-30s%n", "[" + (foodCounter + 2) + "]", "Dashboard"));
+            selectFood.append(String.format("%-5s %-30s%n", "[" + (foodCounter + 3) + "]", "Back"));
+
+            return selectFood.toString();
         } else {
-            JOptionPane.showMessageDialog(null, "Error: " + foodsResponse.getMessage(), "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, 
+                "Error: " + foodsResponse.getMessage(), 
+                "MOMMY'S VARIETY STORE", 
+                JOptionPane.ERROR_MESSAGE);
             return "";
         }
-    }
+}
+
     
      void showCategoryMenu() {
         int choice;
@@ -696,4 +920,5 @@ public class MommyVarietyStoreMain {
             return "";
         }
     }
+     
 }

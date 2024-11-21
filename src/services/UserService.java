@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import models.User;
 import config.DBConnection;
 import enums.UserRoles;
-import helpers.Text;
 import models.Admin;
 import models.Customer;
 import models.Session;
@@ -23,9 +22,17 @@ public class UserService {
             conn = DBConnection.getConnection();
             
             String query = """
-                SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role, USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, USER_INFO.Barangay, USER_INFO.Street, USER_INFO.House_Number, USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality, CUSTOMER.*
-                FROM (USER_INFO INNER JOIN [USER] ON USER_INFO.UserInfo_ID = USER.UserInfo_ID)   
+                SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role, USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, USER_INFO.Barangay, USER_INFO.Street, USER_INFO.House_Number, USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality         
             """;
+  
+            if(user.getUserRole().equalsIgnoreCase(UserRoles.CLIENT.name())) {
+                query += ", CUSTOMER.* ";
+            } else if(user.getUserRole().equalsIgnoreCase(UserRoles.ADMIN.name())) {
+                query += ", ADMIN.* ";
+            }
+            
+            query += "FROM (USER_INFO INNER JOIN [USER] ON USER_INFO.UserInfo_ID = USER.UserInfo_ID) ";
+            
             // Join based on user role
             if(user.getUserRole().equalsIgnoreCase(UserRoles.CLIENT.name())) {
                 query += "INNER JOIN CUSTOMER ON USER.User_ID = CUSTOMER.Customer_ID ";
@@ -45,7 +52,7 @@ public class UserService {
             if(!rs.next()) {
                 return false;
             }
-
+            
             //check input password if match sa db records
             if(!rs.getString("Password").equals(user.getPassword())) {
                 return false;
@@ -65,13 +72,13 @@ public class UserService {
             Session.setLoggedInUser(user); // Store logged-in user
             
             //populate role-specific ifnormation
-            if(user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.CLIENT.name()))) {
+            if(user.getUserRole().equalsIgnoreCase(UserRoles.CLIENT.name())) {
                 Customer customer = new Customer();
                 customer.setCustomerId(rs.getInt("Customer_ID"));
                 customer.setCustomerStatus(rs.getString("Customer_Status"));
                 Session.setLoggedInCustomer(customer); // Store customer in session
             }
-            else if(user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.ADMIN.name()))) {
+            else if(user.getUserRole().equalsIgnoreCase(UserRoles.ADMIN.name())) {
                 Admin admin = new Admin();
                 admin.setAdminId(rs.getInt("Admin_ID"));
                 admin.setAdminType(rs.getString("Admin_Type"));
