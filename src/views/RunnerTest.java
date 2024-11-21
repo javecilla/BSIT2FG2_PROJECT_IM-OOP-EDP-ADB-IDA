@@ -450,20 +450,20 @@ private static void adminManageStock() {
                         double subTotal = 0;
                         double netTotal = 0;
                         System.out.printf("\n\n%-10s %-30s %-10s %-20s%n", "Food Name", "Price", "Quantity", "Subtotal");
-                        for (SalesDetails saleDetail : salesDetails) {
-                            subTotal = saleDetail.getItemQuantity() * saleDetail.getFood().getPrice(); //subtotal
+                        for(CartItem item : cart.getItems()) {
+                            subTotal = item.getQuantity() * item.getFoodPrice(); //subtotal
                             netTotal += subTotal;
                             System.out.printf("%-10s %-30s $%-10s %-20s%n", 
-                                saleDetail.getFood().getFoodName(), 
-                                saleDetail.getFood().getPrice(), 
-                                saleDetail.getItemQuantity(), 
+                                item.getFoodName(), 
+                                item.getFoodPrice(), 
+                                item.getQuantity(), 
                                 subTotal
                             );
-
-                        }
+}
                        
                         System.out.printf("Net Total: %.2f\nPayment: %.2f\nChange: %.2f\n", netTotal, amountPayment, change);
                         System.out.println("================================================");
+                        cart.getItems().clear();
                     } else {
                         System.out.println("Error: " + salesDetailsResponse.getMessage());
                     }

@@ -186,7 +186,7 @@ public class CartController {
             }
             
             //clear the cart after successful ng checkout
-            cart.getItems().clear();
+            
             
             return Response.success("Your order is successfully checked out! Thank you for your order.", null);
         } catch (SQLException e) {
@@ -202,6 +202,8 @@ public class CartController {
             if(salesDetals == null || salesDetals.isEmpty()) {
                 return Response.success("No foods found", Collections.emptyList());
             }
+            
+            //cart.getItems().clear();
             
             return Response.success("Sales details retrieved successfully", salesDetals);
         } catch(SQLException e) {
