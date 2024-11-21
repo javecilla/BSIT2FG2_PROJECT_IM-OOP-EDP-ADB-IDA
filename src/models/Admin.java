@@ -1,12 +1,14 @@
 package models;
-
-import javax.swing.JOptionPane;
-
+/**
+ * Represents the `Admin` table in the database.
+ * Extends the `User` class to include fields specific to administrators.
+ * Includes attributes for admin ID, admin type, and associated `User` and `UserInfo` details.
+ */
 public class Admin extends User {
     private int id;
-    private String type;
-    private User user;
-    private UserInfo userInfo;
+    private String type;        // Type of admin (e.g., super admin, manager).
+    private User user;          // Associated user account details.
+    private UserInfo userInfo;  // Detailed user information for the admin.
     
     public Admin() {
         super();
@@ -55,13 +57,6 @@ public class Admin extends User {
     
     @Override
     public String display() {
-        /*System.out.println("Admin ID: " + getAdminId());
-        System.out.println("Admin Type: " + getAdminType());
-        System.out.println("Admin Info: \n");*/
-        /*        JOptionPane.showMessageDialog(null, "Admin ID: " + getAdminId() +
-        "\nAdmin Type: " + getAdminType() + "\n"
-        + "Admin Info: " + super.display(), "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);*/
-        
         return "Admin ID: " + getAdminId() + "\nAdmin Type: " + getAdminType() + "\n" + "Admin Info: \n\n" + super.display();
     }   
 }

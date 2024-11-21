@@ -1,10 +1,15 @@
 package models;
-
+/**
+ * Represents the `Sale` table in the database.
+ * Extends the `Customer` class to associate sales with a specific customer.
+ * Includes attributes for sale ID, date, and net total amount of the sale.
+ */
 public class Sale extends Customer {
     private int id;
     private String date;
-    private double netTotal;
+    private double netTotal; // Total amount of the sale after any deductions.
     
+    // Constructors
     public Sale() {}
     
     public Sale(int id, String date, double netTotal) {
@@ -19,11 +24,11 @@ public class Sale extends Customer {
             customer.getCustomerId(),
             customer.getCustomerStatus()
         );
-        this.id = id;
         this.date = date;
         this.netTotal = netTotal;
     }
     
+    // Getters and setters for all fields
     public int getSaleId() {
         return id;
     }
@@ -48,7 +53,7 @@ public class Sale extends Customer {
         this.netTotal = netTotal;
     }
     
-     @Override
+    @Override
     public String display() {
      return "Sale ID: " + getSaleId() + "\nSale Date: " + getSaleDate() + "\nNet Total: " + getNetTotal() + "\nCustomer Info: \n\n" + super.display();
     }   

@@ -1,10 +1,12 @@
 package models;
-
-import javax.swing.JOptionPane;
-
+/**
+ * Represents the `Customer` table in the database.
+ * Extends the `User` class to include fields specific to customers.
+ * Includes attributes for customer ID and status (e.g., active, inactive).
+ */
 public class Customer extends User {
     private int id;
-    private String status;
+    private String status; // Status of the customer (e.g., active, inactive)
     
     public Customer() {
         super();
@@ -44,11 +46,7 @@ public class Customer extends User {
     }
     
     @Override
-    public String display() {
-        /*System.out.println("Customer ID: " + getCustomerId());
-        System.out.println("Customer Status: " + getCustomerStatus());
-        System.out.println("Customer Info: \n");*/
-        //JOptionPane.showMessageDialog(null, "Customer ID: " + getCustomerId() + "\nCustomer Status: " + getCustomerStatus() + "\nCustomer Info: \n\n" + super.display());
+    public String display() {      
         return "Customer ID: " + getCustomerId() + "\nCustomer Status: " + getCustomerStatus() + "\nCustomer Info: \n\n" + super.display();
     }   
 }

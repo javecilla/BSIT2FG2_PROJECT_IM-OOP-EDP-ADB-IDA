@@ -1,14 +1,18 @@
 package models;
-
+/**
+ * Represents the `Ingredient` entity with details about an ingredient,
+ * including its name, quantity, reorder points, and associated supplier.
+ */
 public class Ingredient extends Supplier {
     private int id;
     private String name;
     private int quantity;
     private int reorderPoint;
     
-    private Supplier supplier;
-    private Admin admin;
+    private Supplier supplier;      // Associated supplier for the ingredient.
+    private Admin admin;            // Admin associated with the ingredient.
     
+    // Constructors 
     public Ingredient() {
         super();
     }
@@ -21,7 +25,6 @@ public class Ingredient extends Supplier {
         this.reorderPoint = reorderPoint;
     }
 
-    
     public Ingredient(int id, String name, int quantity, int reorderPoint, Supplier supplier) {
         super(
             supplier.getSupplierId(),
@@ -35,6 +38,7 @@ public class Ingredient extends Supplier {
         this.reorderPoint = reorderPoint;
     }
     
+    // Getters and setters
     public int getIngredientId() {
         return id;
     }
@@ -85,14 +89,6 @@ public class Ingredient extends Supplier {
 
     @Override
     public String display() {
-        /*System.out.println("Ingredient ID: " + getIngredientId());
-        System.out.println("Ingredient Name: " + getIngredientName());
-        System.out.println("Current Stock: " + getQuantity());
-        System.out.println("Re-order Points: " + getReorderPoint());
-        System.out.println("\nSupplier Info: ");
-        super.display();*/
-        
-        //JOptionPane.showMessageDialog(null, "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "Re-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display());
         return "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "\nRe-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display();
     }
 }

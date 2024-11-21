@@ -61,17 +61,17 @@ Adherence to consistent coding practices is crucial. Please review the repositor
 
 ### Development Team
 - **Jerson Valdez**  
-  *Role:* User Interface (UI) & User Experience (UI)  
+  *Role:* User Interface (UI) & User Experience (UX)  
 
 - **Jerome Avecilla**  
   *Role:* Business Logic & Database Transaction  
 
 ### Database Team
 - **Gillian Bandiola Sioco**  
-  *Role:* Entity Relationship Diagram (ERD) Designer  
+  *Role:* Entity Relationship Diagram (ERD)  
 
 - **Pauline Caballero**  
-  *Role:* Enhanced Entity-Relationship Diagram (EERD) Specialist  
+  *Role:* Enhanced Entity-Relationship Diagram (EERD)  
 
 - **Raizen Acuña**  
   *Role:* Relational Data Model (RDM) Specialist and Database Converter (MS Access Integration)  

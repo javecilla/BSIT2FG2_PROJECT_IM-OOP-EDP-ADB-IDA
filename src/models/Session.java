@@ -1,9 +1,15 @@
 package models;
 
+/**
+ * Session class responsible for managing the logged-in user, customer, and admin.
+ * It handles the session state for different types of users in the system.
+ */
 public class Session {
-    private static User loggedInUser; // Common to all roles
-    private static Customer loggedInCustomer; // For clients
-    private static Admin loggedInAdmin;       // For admins
+    // Static references to store the logged-in entities
+    private static User loggedInUser;           // Common to all roles
+    private static Customer loggedInCustomer;   // For clients
+    private static Admin loggedInAdmin;         // For admins
+
 
     public static void setLoggedInUser(User user) {
         loggedInUser = user;
@@ -28,5 +34,22 @@ public class Session {
     public static Admin getLoggedInAdmin() {
         return loggedInAdmin;
     }
-}
 
+    public static void clearSession() {
+        loggedInUser = null;
+        loggedInCustomer = null;
+        loggedInAdmin = null;
+    }
+
+    public static boolean isUserLoggedIn() {
+        return loggedInUser != null;
+    }
+
+    public static boolean isAdminLoggedIn() {
+        return loggedInAdmin != null;
+    }
+    
+    public static boolean isCustomerLoggedIn() {
+        return loggedInCustomer != null;
+    }
+}

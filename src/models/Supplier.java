@@ -1,13 +1,15 @@
 package models;
-
-import javax.swing.JOptionPane;
-
+/**
+ * Represents the `Supplier` entity with information about a supplier's 
+ * contact details and address.
+ */
 public class Supplier {
-    private int id;
-    private String name;
-    private String address;
-    private String contactNumber;
+    private int id;                 
+    private String name;            
+    private String address;         
+    private String contactNumber;   
     
+    // Constructors
     public Supplier() {}
     
     public Supplier(int id, String name, String address, String contactNumber) {
@@ -51,11 +53,10 @@ public class Supplier {
     }
     
     public String display() {
-        /*System.out.println("Supplier ID: " + getSupplierId());
-        System.out.println("Full Name: " + getSupplierName());
-        System.out.println("Contact Number: " + getContactNumber());
-        System.out.println("Address: " + getAddress());*/
-        JOptionPane.showMessageDialog(null, "Supplier ID: " + getSupplierId() + "\nFull Name: " + getSupplierName() + "\nContact Number: " + getContactNumber() + "\nAddress: " + getAddress());
-        return "Supplier ID: " + getSupplierId() + "\nFull Name: " + getSupplierName() + "\nContact Number: " + getContactNumber() + "\nAddress: " + getAddress();
+        // Return the supplier info as a formatted string
+        return "Supplier ID: " + getSupplierId() + 
+               "\nFull Name: " + getSupplierName() + 
+               "\nContact Number: " + getContactNumber() + 
+               "\nAddress: " + getAddress();
     }
 }
