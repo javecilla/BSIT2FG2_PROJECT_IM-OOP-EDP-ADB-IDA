@@ -3,11 +3,12 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-The Cart class methods manage the collection of items in the cart.
-*/
+/**
+ * The Cart class manages a collection of CartItem objects.
+ * It provides methods to add, remove, and calculate the total cost of items in the cart.
+ */
 public class Cart {
-    private List<CartItem> items;
+    private List<CartItem> items; // List of CartItem objects representing the items in the cart
 
     public Cart() {
         items = new ArrayList<>();
@@ -22,19 +23,28 @@ public class Cart {
     }
 
     public void removeItem(CartItem item) {
-        items.remove(item); // Removes the exact object reference
+        items.remove(item); // Removes by exact object reference
     }
 
     public void removeItemById(int foodId) {
         items.removeIf(item -> item.getFoodId() == foodId); // Removes by foodId
     }
 
-    // New method to calculate the total amount
     public double getTotalAmount() {
-        double totalAmount = 0;
-        for (CartItem item : items) {
-            totalAmount += item.getTotalPrice();
-        }
-        return totalAmount;
+        return items.stream()  
+                    .mapToDouble(CartItem::getTotalPrice)  // Maps each CartItem to its total price
+                    .sum();  // Sums up the total price of all CartItems
+    }
+
+    public void clearCart() {
+        items.clear();
+    }
+
+    public int getItemCount() {
+        return items.size();
+    }
+
+    public boolean hasItems() {
+        return !items.isEmpty();
     }
 }

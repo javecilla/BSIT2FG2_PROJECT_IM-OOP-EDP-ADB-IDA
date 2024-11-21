@@ -1,19 +1,22 @@
 package models;
 
-/*
-The CartItem class methods focus on managing individual items,
-*/ 
+/**
+ * The CartItem class represents an individual item in the cart, 
+ * including its food details, price, and quantity. 
+ */
 public class CartItem {
     private int foodId;
     private String foodName;
     private double foodPrice;
     private int quantity;
 
+    public CartItem() {}
+    
     public CartItem(int foodId, String foodName, double foodPrice, int quantity) {
         this.foodId = foodId;
         this.foodName = foodName;
         this.foodPrice = foodPrice;
-        this.quantity = quantity;
+        setQuantity(quantity);  // Ensures that quantity can't be negative
     }
 
     // Getters and setters
@@ -46,20 +49,30 @@ public class CartItem {
     }
 
     public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
         this.quantity = quantity;
     }
 
-    // Method to get total price for this item (quantity * price)
     public double getTotalPrice() {
         return foodPrice * quantity;
     }
 
-    // Basic operations without validation
     public void increaseQuantity(int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount to increase must be positive.");
+        }
         this.quantity += amount;
     }
 
     public void decreaseQuantity(int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount to decrease must be positive.");
+        }
+        if (this.quantity - amount < 0) {
+            throw new IllegalArgumentException("Quantity cannot be less than zero.");
+        }
         this.quantity -= amount;
     }
 }

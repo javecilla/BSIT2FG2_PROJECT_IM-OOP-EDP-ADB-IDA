@@ -1,14 +1,19 @@
 package models;
-
+/**
+ * Represents the `SalesDetails` table in the database.
+ * Stores detailed information about items in a sale, including the quantity, associated food, category,
+ * and references to the customer, user, and their user information involved in the sale.
+ */
 public class SalesDetails {
-    private int quantity;
-    private Food food;
-    private Category category;
-    private Sale sale;
-    private Customer customer;
-    private User user;
-    private UserInfo userInfo;
+    private int quantity;           // Quantity of food items sold.
+    private Food food;              // Food item associated with the sale.
+    private Category category;      // Category of the food item.
+    private Sale sale;              // The sale associated with this sales detail.
+    private Customer customer;      // Customer involved in the sale.
+    private User user;              // User (client) processing the sale.
+    private UserInfo userInfo;      // User information related to the user processing the sale.
     
+    // Constructors
     public SalesDetails() {}
     
     public SalesDetails(int quantity) {
@@ -31,6 +36,7 @@ public class SalesDetails {
         this.userInfo = userInfo;
     }
     
+    // Getters and setters for all fields
     public int getItemQuantity() {
         return quantity;
     }

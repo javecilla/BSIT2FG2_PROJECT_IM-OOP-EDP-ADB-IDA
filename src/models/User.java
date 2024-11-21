@@ -1,14 +1,16 @@
-
 package models;
-
-import javax.swing.JOptionPane;
-
+/**
+ * Represents the `User` table in the database.
+ * Extends the `UserInfo` class to include additional fields specific to user accounts.
+ * Includes attributes for user ID, username, password, and role.
+ */
 public class User extends UserInfo {
     private int id;
     private String username;
     private String password;
-    private String role;
+    private String role;  // Role of the user (e.g., Admin, Client).
     
+    // Constructors
     public User() {
       super();
     }
@@ -80,11 +82,6 @@ public class User extends UserInfo {
     
     @Override
     public String display() {
-        /*        System.out.println("User ID: " + getUserId());
-        System.out.println("Username: " + getUsername());
-        System.out.println("Password: " + getPassword());
-        System.out.println("User Info: \n");*/
-        //JOptionPane.showMessageDialog(null,"User ID: " + getUserId() +  "\nUsername: " + getUsername() + "\nPassword: " + getPassword() + "User Info: \n" + super.display());
         return "User ID: " + getUserId() +  "\nUsername: " + getUsername() + "\nPassword: " + getPassword() + "User Info: \n" + super.display();
     }
 }

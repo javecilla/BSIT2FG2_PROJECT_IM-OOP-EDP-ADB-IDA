@@ -1,9 +1,12 @@
-
 package models;
-
-import javax.swing.JOptionPane;
-
+/**
+ * Represents a user's detailed information such as name, address, and location details.
+ * This class is part of the Model layer in the MVC architecture, encapsulating the 
+ * structure of the `UserInfo` database table. It provides methods for accessing and 
+ * manipulating user information while maintaining data consistency.
+ */
 public class UserInfo {
+    // Attributes (represent column name in the database)
     private int id;
     private String firstName;
     private String lastName;
@@ -14,6 +17,7 @@ public class UserInfo {
     private String province;
     private String municipality;
     
+    // Constructors
     public UserInfo() {}
     
     public UserInfo(
@@ -116,10 +120,6 @@ public class UserInfo {
     }
     
     public String display() {
-        /*System.out.println("UserInfo ID: " + getUserInfoId());
-        System.out.println("Full Name: " + getFullName());
-        System.out.println("Address: " + getFullAddress());*/
-        //JOptionPane.showMessageDialog(null, "UserInfo ID: " +  getUserInfoId() + "\nFull Name: " + getFullName() + "\nAddress: " + getFullAddress());
         return "UserInfo ID: " +  getUserInfoId() + "\nFull Name: " + getFullName() + "\nAddress: " + getFullAddress();
     }
 }

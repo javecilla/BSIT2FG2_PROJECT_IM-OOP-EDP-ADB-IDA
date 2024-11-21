@@ -3,29 +3,33 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a Recipe that contains a list of ingredients and food details.
+ * It supports both single and multiple ingredients.
+ */
 public class Recipe {
     private int quantity;
-    private Food food;
-    private Ingredient ingredient; //ingredient for one
-    private List<Ingredient> ingredients;  //ingredients for multiple
-
+    private Food food;                      // The food item associated with the recipe.
+    private Ingredient ingredient;          // A single ingredient for the recipe.
+    private List<Ingredient> ingredients;   // A list of ingredients for multiple ingredients.
+    
+    // Constructors
     public Recipe() {}
 
-    // Constructor to initialize with a list of ingredients
     public Recipe(int quantity, Food food, List<Ingredient> ingredients) {
         this.quantity = quantity;
         this.food = food;
         this.ingredients = ingredients;
     }  
     
-    // Constructor for a single ingredient
     public Recipe(int quantity, Food food, Ingredient ingredient) {
         this.quantity = quantity;
         this.food = food;
         this.ingredients = new ArrayList<>();
         this.ingredients.add(ingredient); // Add the single ingredient to the list
     }
-
+    
+    // Getters and setters for all fields
     public int getRecipeQuantity() {
         return quantity;
     }
