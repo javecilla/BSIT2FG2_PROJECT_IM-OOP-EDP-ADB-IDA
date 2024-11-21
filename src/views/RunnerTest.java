@@ -11,11 +11,13 @@ import controllers.FoodController;
 import controllers.CartController;
 import helpers.Response;
 import enums.UserRoles;
+import helpers.Date;
 
 import java.util.Scanner;
 import java.util.List;
 import models.Cart;
 import models.CartItem;
+import models.SalesDetails;
 
 public class RunnerTest {
     protected static final Scanner SCANNER = new Scanner(System.in);
@@ -24,9 +26,10 @@ public class RunnerTest {
     protected static final CategoryController CATEGORY_CONTROLLER = new CategoryController();
     protected static final FoodController FOOD_CONTROLLER = new FoodController();
     protected static final CartController CART_CONTROLLER = new CartController();
- 
-    private static int categoriesCounter = 0;
-    private static int foodsCounter = 0;
+
+    static int categoriesCounter = 0;
+    static int foodsCounter = 0;
+    
     public static void main(String[] args) {
         int userChoice = 0;
         String userRole = "";
@@ -367,9 +370,9 @@ private static void adminManageStock() {
     private static void showCart() {
         System.out.println("\n--- Your Cart ---");
         Response<Cart> cartResponse = CART_CONTROLLER.viewCart();
-
+        Cart cart = cartResponse.getData();
         if (cartResponse.isSuccess()) {
-            Cart cart = cartResponse.getData();
+            
 
             if (cart.getItems().isEmpty()) {
                 System.out.println("Your cart is empty.");
@@ -415,10 +418,55 @@ private static void adminManageStock() {
                 System.out.println("remove order");
                 //CART_CONTROLLER.removeFromCart(id);
             } else if (choice == 3) {
-                //checkout order
+                double amountPayment;
+                do {
+                    System.out.print("Enter your payment amount: ");
+                    amountPayment = SCANNER.nextDouble();
+                    System.out.println("total amount: " + cart.getTotalAmount());
+                    if (amountPayment <= 0) {
+                        System.out.println("Invalid payment amount! Please enter a positive number.");
+                    } else if (amountPayment < cart.getTotalAmount()) {
+                        System.out.println("Insufficient payment! The total amount is " + cart.getTotalAmount());
+                    }
+                } while (amountPayment < cart.getTotalAmount());
+                
+                 double change = amountPayment - cart.getTotalAmount();
+                //proccess order
                 Response<Cart> cartOrderReponse = CART_CONTROLLER.checkOutOrder();
                 if (cartOrderReponse.isSuccess()) {
                     System.out.println(cartOrderReponse.getMessage());
+                    
+                    //get sales details / reports
+                    Response<List<SalesDetails>> salesDetailsResponse = CART_CONTROLLER.getOrderReports();
+                    if (salesDetailsResponse.isSuccess()) {
+                        List<SalesDetails> salesDetails = salesDetailsResponse.getData();
+                        
+                        System.out.println("=====================REPORT=====================");
+                        System.out.println("Name: " + salesDetails.getFirst().getUserInfo().getFullName());
+                        System.out.println("Address: " + salesDetails.getFirst().getUserInfo().getFullAddress());
+                        System.out.println("Date: " + Date.formatToReadableDate(salesDetails.getFirst().getSale().getSaleDate()));
+                        System.out.println("Sales ID: " + salesDetails.getFirst().getSale().getSaleId());
+                        
+                        double subTotal = 0;
+                        double netTotal = 0;
+                        System.out.printf("\n\n%-10s %-30s %-10s %-20s%n", "Food Name", "Price", "Quantity", "Subtotal");
+                        for (SalesDetails saleDetail : salesDetails) {
+                            subTotal = saleDetail.getItemQuantity() * saleDetail.getFood().getPrice(); //subtotal
+                            netTotal += subTotal;
+                            System.out.printf("%-10s %-30s $%-10s %-20s%n", 
+                                saleDetail.getFood().getFoodName(), 
+                                saleDetail.getFood().getPrice(), 
+                                saleDetail.getItemQuantity(), 
+                                subTotal
+                            );
+
+                        }
+                       
+                        System.out.printf("Net Total: %.2f\nPayment: %.2f\nChange: %.2f\n", netTotal, amountPayment, change);
+                        System.out.println("================================================");
+                    } else {
+                        System.out.println("Error: " + salesDetailsResponse.getMessage());
+                    }
                 } else {
                     System.out.println("Error: " + cartOrderReponse.getMessage());
                 }

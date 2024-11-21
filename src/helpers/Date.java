@@ -1,6 +1,7 @@
 package helpers;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -21,5 +22,21 @@ public class Date {
         String formattedDate = parsedDate.format(outputFormatter);
         
         return formattedDate;
+    }
+    
+    public static String formatToReadableDate(String dateTimeString) {
+        try {
+            // Parse the input string to LocalDateTime
+            LocalDateTime dateTime = LocalDateTime.parse(
+                dateTimeString, 
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+            );
+            
+            //ormat the LocalDateTime to "MMMM dd, yyyy"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH);
+            return dateTime.format(formatter);
+        } catch (Exception e) {
+            return "Invalid Date";
+        }
     }
 }
