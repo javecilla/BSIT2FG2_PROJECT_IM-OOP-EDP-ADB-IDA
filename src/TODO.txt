@@ -1,0 +1,10 @@
+SYSTEM APPLICATION:
+
+1. E-commerce Store
+Description: An online store simulation where customers can browse products, add items to a cart,
+and place orders.
+
+    Features:
+        - Add products to the cart and checkout.
+        - Manage product listings and inventory.
+        - Process basic customer payments.
