@@ -10,7 +10,8 @@ import config.DBConnection;
 import enums.UserRoles;
 import models.Admin;
 import models.Customer;
-import models.Session;
+import core.Session;
+import helpers.Text;
 
 public class UserService {
     public boolean login(User user) throws SQLException {
@@ -40,10 +41,11 @@ public class UserService {
                 query += "INNER JOIN ADMIN ON USER.User_ID = ADMIN.Admin_ID ";
             }
             
-            query += "WHERE (((USER.Username)= ?)); ";
+            query += "WHERE USER.Username)= ? AND USER.User_Role = ?; ";
             
             pst = conn.prepareStatement(query);
             pst.setString(1, user.getUsername());
+            pst.setString(2, Text.capitalizeFirstLetterInString(user.getUserRole()));
 
             rs = pst.executeQuery();
             

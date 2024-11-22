@@ -1,4 +1,4 @@
-package models;
+package core;
 
 /**
  * The CartItem class represents an individual item in the cart, 

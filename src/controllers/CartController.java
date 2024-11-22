@@ -4,15 +4,15 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
-import models.Cart;
-import models.CartItem;
+import core.Cart;
+import core.CartItem;
 import models.Food;
 import models.SalesDetails;
 import models.Customer;
 import models.Ingredient;
 import models.Recipe;
 import models.Sale;
-import models.Session;
+import core.Session;
 import services.RecipeService;
 import services.IngredientService;
 import services.SaleService;

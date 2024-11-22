@@ -15,8 +15,8 @@ import helpers.Date;
 
 import java.util.Scanner;
 import java.util.List;
-import models.Cart;
-import models.CartItem;
+import core.Cart;
+import core.CartItem;
 import models.SalesDetails;
 
 public class RunnerTest {

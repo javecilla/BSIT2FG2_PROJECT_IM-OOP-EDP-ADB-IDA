@@ -11,7 +11,6 @@ public final class DBConnection {
     final static String JERSON_DB_SRC = "C://Users//Admin//Documents//NetBeansProjects//BSIT2FG2_PROJECT_G1-main//src//config//Mommys-Variety-Store-Database.accdb";
     
     private static final String MS_ACCESS_PATH = JEROME_DB_SRC;
-    //private static final String MS_ACCESS_PATH = JERSON_DB_SRC;
     private static final String URL = "jdbc:ucanaccess://" + MS_ACCESS_PATH;
     private static Connection connection = null;
     

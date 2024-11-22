@@ -1,4 +1,8 @@
-package models;
+package core;
+
+import models.Admin;
+import models.Customer;
+import models.User;
 
 /**
  * Session class responsible for managing the logged-in user, customer, and admin.

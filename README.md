@@ -32,11 +32,14 @@ The application is organized into the following logical packages:
 - **`controllers`**  
   Coordinates application workflows, handles requests, and processes logic as the **Controller** layer in MVC. Controllers interact with services and models to manage specific tasks.
 
+- **`services`**  
+  Handles complex business logic beyond the controllers' scope, supporting abstraction, inheritance, and code reuse.
+
 - **`models`**  
   Represents data structures and encapsulates database tables. Models implement the **Model** layer in MVC, ensuring data encapsulation and manipulation consistency.
 
-- **`services`**  
-  Handles complex business logic beyond the controllers' scope, supporting abstraction, inheritance, and code reuse.
+- **`core`**  
+  Contains essential classes and foundational components that define the application's core functionality. These classes are not tied to any specific layer (e.g., MVC) but represent key abstractions, utilities, or domain-specific logic that other packages rely on. The core package ensures reusability and encapsulation of central features.
 
 ## Development Process
 The application was collaboratively developed using Git for version control, enabling seamless team collaboration. Contributions, updates, and issue tracking are available in the project’s GitHub repository:  
