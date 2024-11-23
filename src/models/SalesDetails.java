@@ -7,11 +7,8 @@ package models;
 public class SalesDetails {
     private int quantity;           // Quantity of food items sold.
     private Food food;              // Food item associated with the sale.
-    private Category category;      // Category of the food item.
     private Sale sale;              // The sale associated with this sales detail.
     private Customer customer;      // Customer involved in the sale.
-    private User user;              // User (client) processing the sale.
-    private UserInfo userInfo;      // User information related to the user processing the sale.
     
     // Constructors
     public SalesDetails() {}
@@ -24,16 +21,6 @@ public class SalesDetails {
         this.food = food;
         this.sale = sale;
         this.quantity = quantity;
-    }
-    
-    public SalesDetails(Food food, Sale sale, int quantity, Category category, Customer customer, User user, UserInfo userInfo) {
-        this.food = food;
-        this.sale = sale;
-        this.quantity = quantity;
-        this.category = category;
-        this.customer = customer;
-        this.user = user;
-        this.userInfo = userInfo;
     }
     
     // Getters and setters for all fields
@@ -53,14 +40,6 @@ public class SalesDetails {
         this.food = food;
     }
     
-    public Category getCategory() {
-        return category;
-    }
-    
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-    
     public Sale getSale() {
         return sale;
     }
@@ -76,20 +55,4 @@ public class SalesDetails {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     } 
-    
-    public User getUser() {
-        return user;
-    }
-    
-    public void setUser(User user) {
-        this.user = user;
-    } 
-    
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-    
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
 }

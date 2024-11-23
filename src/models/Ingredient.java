@@ -3,7 +3,7 @@ package models;
  * Represents the `Ingredient` entity with details about an ingredient,
  * including its name, quantity, reorder points, and associated supplier.
  */
-public class Ingredient extends Supplier {
+public class Ingredient {
     private int id;
     private String name;
     private int quantity;
@@ -13,12 +13,9 @@ public class Ingredient extends Supplier {
     private Admin admin;            // Admin associated with the ingredient.
     
     // Constructors 
-    public Ingredient() {
-        super();
-    }
+    public Ingredient() {}
     
     public Ingredient(int id, String name, int quantity, int reorderPoint) {
-        super();
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -26,12 +23,7 @@ public class Ingredient extends Supplier {
     }
 
     public Ingredient(int id, String name, int quantity, int reorderPoint, Supplier supplier) {
-        super(
-            supplier.getSupplierId(),
-            supplier.getSupplierName(),
-            supplier.getAddress(),
-            supplier.getContactNumber()     
-        );
+        setSupplier(supplier);
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -87,8 +79,7 @@ public class Ingredient extends Supplier {
         this.supplier = supplier;
     }
 
-    @Override
     public String display() {
-        return "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "\nRe-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + super.display();
+        return "Ingredient ID: " + getIngredientId() + "\nIngredient Name: " + getIngredientName() + "\nCurrent Stock: " + getQuantity() + "\nRe-order Points: " + getReorderPoint() + "\nSupplier Info: \n" + supplier.display();
     }
 }

@@ -8,6 +8,7 @@ public class Sale extends Customer {
     private int id;
     private String date;
     private double netTotal; // Total amount of the sale after any deductions.
+    private double paymentAmount;
     
     // Constructors
     public Sale() {}
@@ -24,6 +25,16 @@ public class Sale extends Customer {
             customer.getCustomerId(),
             customer.getCustomerStatus()
         );
+        this.date = date;
+        this.netTotal = netTotal;
+    }
+    
+    public Sale(int id, String date, double netTotal, Customer customer) {
+        super(
+            customer.getCustomerId(),
+            customer.getCustomerStatus()
+        );
+        this.id = id;
         this.date = date;
         this.netTotal = netTotal;
     }
@@ -51,6 +62,14 @@ public class Sale extends Customer {
     
     public void setNetTotal(double netTotal) {
         this.netTotal = netTotal;
+    }
+    
+    public double getPaymentAmount() {
+        return paymentAmount;
+    }
+    
+    public void setPaymentAmount(double paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
     
     @Override

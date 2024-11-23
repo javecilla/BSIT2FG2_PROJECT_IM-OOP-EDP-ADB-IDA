@@ -47,6 +47,24 @@ public class User extends UserInfo {
         this.password = password;
     }
     
+    public User(int userId, String username, String password, String userRole, UserInfo userInfo) {
+        super(
+            userInfo.getUserInfoId(),
+            userInfo.getFirstName(),
+            userInfo.getLastName(),
+            userInfo.getBarangay(),
+            userInfo.getStreet(),
+            userInfo.getHouseNumber(),
+            userInfo.getRegion(),
+            userInfo.getProvince(),
+            userInfo.getMunicipality()
+        );
+        this.id = userId;
+        this.username = username;
+        this.password = password;
+        this.role = userRole;
+    }
+    
     // Getters and setters for all fields
     public int getUserId() {
         return id;
