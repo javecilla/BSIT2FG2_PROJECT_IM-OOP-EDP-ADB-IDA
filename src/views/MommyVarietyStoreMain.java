@@ -586,12 +586,12 @@ public class MommyVarietyStoreMain {
 
                             // Add header
                             salesReport.append("========================== SALES REPORT ==========================\n");
-                            salesReport.append("Name: ").append(salesDetails.get(0).getUserInfo().getFullName()).append("\n");
+                            salesReport.append("Name: ").append(salesDetails.get(0).getCustomer().getFullName()).append("\n");
                             // Define a maximum length for the address
                                 final int MAX_ADDRESS_LENGTH = 50; // Adjust this value as needed
 
                                 // Truncate the address if it exceeds the maximum length
-                                String address = salesDetails.get(0).getUserInfo().getFullAddress();
+                                String address = salesDetails.get(0).getCustomer().getFullAddress();
                                 if (address.length() > MAX_ADDRESS_LENGTH) {
                                     address = address.substring(0, MAX_ADDRESS_LENGTH) + "..."; // Add ellipsis
                                 }

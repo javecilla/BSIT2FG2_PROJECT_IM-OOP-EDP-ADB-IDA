@@ -41,7 +41,7 @@ public class UserService {
                 query += "INNER JOIN ADMIN ON USER.User_ID = ADMIN.Admin_ID ";
             }
             
-            query += "WHERE USER.Username)= ? AND USER.User_Role = ?; ";
+            query += "WHERE USER.Username = ? AND USER.User_Role = ?; ";
             
             pst = conn.prepareStatement(query);
             pst.setString(1, user.getUsername());

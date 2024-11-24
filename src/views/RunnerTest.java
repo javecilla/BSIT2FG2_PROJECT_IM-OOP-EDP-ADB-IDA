@@ -242,10 +242,10 @@ private static void adminManageStock() {
             System.out.println("Current Stock: " + ingredient.getQuantity());
             System.out.println("Re-order Points: " + ingredient.getReorderPoint());
             System.out.println("\nSupplier Info: ");
-            System.out.println("\tSupplier ID: " + ingredient.getSupplierId());
-            System.out.println("\tFull Name: " + ingredient.getSupplierName());
-            System.out.println("\tContact Number: " + ingredient.getContactNumber());
-            System.out.println("\tAddress: " + ingredient.getAddress());
+            System.out.println("\tSupplier ID: " + ingredient.getSupplier().getSupplierId());
+            System.out.println("\tFull Name: " + ingredient.getSupplier().getSupplierName());
+            System.out.println("\tContact Number: " + ingredient.getSupplier().getContactNumber());
+            System.out.println("\tAddress: " + ingredient.getSupplier().getAddress());
         } else {
             System.out.println("Error retrieving ingredient: " + ingredientsResponse.getMessage());
         }
@@ -442,8 +442,8 @@ private static void adminManageStock() {
                         List<SalesDetails> salesDetails = salesDetailsResponse.getData();
                         
                         System.out.println("=====================REPORT=====================");
-                        System.out.println("Name: " + salesDetails.getFirst().getUserInfo().getFullName());
-                        System.out.println("Address: " + salesDetails.getFirst().getUserInfo().getFullAddress());
+                        System.out.println("Name: " + salesDetails.getFirst().getCustomer().getFullName());
+                        System.out.println("Address: " + salesDetails.getFirst().getCustomer().getFullAddress());
                         System.out.println("Date: " + Date.formatToReadableDate(salesDetails.getFirst().getSale().getSaleDate()));
                         System.out.println("Sales ID: " + salesDetails.getFirst().getSale().getSaleId());
                         

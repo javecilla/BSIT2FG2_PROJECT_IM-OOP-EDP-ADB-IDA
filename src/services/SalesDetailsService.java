@@ -100,39 +100,39 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
                     new Food(
                         rs.getInt("Food_ID"), 
                         rs.getString("Food_Name"), 
-                        rs.getDouble("Price")
+                        rs.getDouble("Price"),
+                        new Category(
+                            rs.getInt("Category_ID"),
+                            rs.getString("Category_Name")
+                        )
                     ), 
                     new Sale(
                         rs.getInt("Sales_ID"), 
                         rs.getString("Sales_Date"), 
-                        rs.getDouble("Net_Total")
+                        rs.getDouble("Net_Total"),
+                        new Customer(
+                            rs.getInt("Customer_ID"),
+                            rs.getString("Customer_Status"),
+                            new User(
+                                rs.getInt("User_ID"),
+                                rs.getString("Username"),
+                                rs.getString("Password"),
+                                rs.getString("User_Role"),
+                                new UserInfo(
+                                    rs.getInt("UserInfo_ID"),
+                                    rs.getString("First_Name"),
+                                    rs.getString("Last_Name"),
+                                    rs.getString("Barangay"),
+                                    rs.getString("Street"),
+                                    rs.getString("House_Number"),
+                                    rs.getString("Region"),
+                                    rs.getString("Province"),
+                                    rs.getString("Municipality")
+                                )      
+                            )
+                        )
                     ),
-                    rs.getInt("Item_Quantity"),
-                    new Category(
-                        rs.getInt("Category_ID"),
-                        rs.getString("Category_Name")
-                    ),
-                    new Customer(
-                        rs.getInt("Customer_ID"),
-                        rs.getString("Customer_Status")
-                    ),
-                    new User(
-                        rs.getInt("User_ID"),
-                        rs.getString("Username"),
-                        rs.getString("Password"),
-                        rs.getString("User_Role")
-                    ),
-                    new UserInfo(
-                        rs.getInt("UserInfo_ID"),
-                        rs.getString("First_Name"),
-                        rs.getString("Last_Name"),
-                        rs.getString("Barangay"),
-                        rs.getString("Street"),
-                        rs.getString("House_Number"),
-                        rs.getString("Region"),
-                        rs.getString("Province"),
-                        rs.getString("Municipality")
-                    )
+                    rs.getInt("Item_Quantity")
                 );
                 
                 salesDetails.add(salesDetail);

@@ -74,10 +74,10 @@ Adherence to consistent coding practices is crucial. Please review the repositor
   *Role:* Entity Relationship Diagram (ERD)  
 
 - **Pauline Caballero**  
-  *Role:* Enhanced Entity-Relationship Diagram (EERD)  
+  *Role:* Enhanced Entity-Relationship Diagram (EERD)  and Relational Data Model (RDM)
 
 - **Raizen Acuña**  
-  *Role:* Relational Data Model (RDM) Specialist and Database Converter (MS Access Integration)  
+  *Role:*  Database Converter (MS Access Integration)  
 
 ### Research and Documentation
 - **Francis Palma**  

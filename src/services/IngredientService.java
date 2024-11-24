@@ -34,7 +34,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             pst.setString(1, ingredient.getIngredientName());
             pst.setInt(2, ingredient.getQuantity());
             pst.setInt(3, ingredient.getReorderPoint());
-            pst.setInt(4, ingredient.getSupplierId());
+            pst.setInt(4, ingredient.getSupplier().getSupplierId());
             pst.setInt(5, ingredient.getAdmin().getAdminId());
 
             success = pst.executeUpdate() > 0;
@@ -259,7 +259,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             pst.setString(1, ingredient.getIngredientName());
             pst.setInt(2, ingredient.getQuantity());
             pst.setInt(3, ingredient.getReorderPoint());
-            pst.setInt(4, ingredient.getSupplierId());
+            pst.setInt(4, ingredient.getSupplier().getSupplierId());
             pst.setInt(5, ingredient.getAdmin().getAdminId());
             pst.setInt(6, ingredient.getIngredientId());
 
