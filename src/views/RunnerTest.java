@@ -1,26 +1,15 @@
 package views;
 
-import models.User;
-import models.Ingredient;
-import models.Category;
-import models.Food;
-import controllers.UserController;
-import controllers.IngredientController;
-import controllers.CategoryController;
-import controllers.FoodController;
-import controllers.CartController;
-import helpers.Response;
-import enums.UserRoles;
-import helpers.Date;
-
 import java.util.Scanner;
 import java.util.List;
-import core.Cart;
-import core.CartItem;
-import helpers.Text;
 import java.util.InputMismatchException;
-import models.SalesDetails;
-import models.UserInfo;
+
+import models.*;
+import controllers.*;
+import helpers.*;
+import enums.*;
+import helpers.*;
+import core.*;
 
 public class RunnerTest {
     protected static final Scanner SCANNER = new Scanner(System.in);
@@ -29,6 +18,7 @@ public class RunnerTest {
     protected static final CategoryController CATEGORY_CONTROLLER = new CategoryController();
     protected static final FoodController FOOD_CONTROLLER = new FoodController();
     protected static final CartController CART_CONTROLLER = new CartController();
+    protected static final CourierController COURIER_CONTROLLER = new CourierController();
 
     static int categoriesCounter = 0;
     static int foodsCounter = 0;
@@ -165,10 +155,11 @@ private static void navigateToDashboard(User user) {
                     adminManageStock();
                     break;
                 case 2:
+                    //adminManageUser();
                     System.out.println("adminManageUser()");
                     break;
                 case 3:
-                    System.out.println("adminManageCourier()");
+                    adminManageCourier();
                     break;
                 case 4:
                     System.out.println("Your Profile");
@@ -177,13 +168,130 @@ private static void navigateToDashboard(User user) {
 
                 case 5:
                     System.out.println("Logging out...");
-                    return;  // Exit admin dashboard and go back to role selection
+                    return;  
                 default:
                     System.out.println("Invalid choice. Returning to dashboard.");
             }
         } while (true); 
     }
 
+private static void adminManageCourier() {
+    int choice;
+    boolean showByStatus = false; 
+    boolean showAllCouriers = false; 
+    boolean showOneCourier = false; 
+    do {
+        if (showByStatus) {
+            showCouriersByStatus();
+
+            showByStatus = false; 
+            showAllCouriers = true;
+            showOneCourier = false;
+        } else if (showOneCourier) {
+            System.out.println("showOneCourierInformation();");
+
+            showByStatus = false; 
+            showAllCouriers = false;
+            showOneCourier = false;
+        } else if (showAllCouriers) {
+            System.out.println("\n--- Manage Couriers ---");
+            showAllCouriers();
+            
+
+            showByStatus = false; 
+            showOneCourier = false;
+        }
+
+        System.out.println("\n--- Select Action ---");
+        System.out.println("[1] Show All");
+        System.out.println("[2] Show All (By Status)");
+        System.out.println("[3] Update");
+        System.out.println("[4] Delete");
+        System.out.println("[5] Show One");
+        System.out.println("[6] Back\n");
+        System.out.print("Enter your choice: ");
+        choice = SCANNER.nextInt();
+
+        // Handle the user's choice
+        switch (choice) {
+            case 1:
+                showByStatus = false;  
+                showAllCouriers = true; 
+                break;
+            case 2:
+                showByStatus = true;   
+                showAllCouriers = false; 
+                showOneCourier = false;
+                break;
+            case 3:
+                System.out.println("updateCourier();");
+                break;
+            case 4:
+                System.out.println("deleteCourier();");
+                break;
+            case 5:
+                showOneCourier = true;    
+                showByStatus = false;   
+                showAllCouriers = false;
+                break;   
+            case 6:
+                return;  // Back to admin dashboard
+            default:
+                System.out.println("Invalid choice. Returning to manage couriers menu.");
+        }
+    } while (true);
+}
+
+private static void showAllCouriers() {
+        // Fetch all ingredients (not just low stock)
+        Response<List<Courier>> couriersResponse = COURIER_CONTROLLER.getAllCouriers();
+        if (couriersResponse.isSuccess()) {
+            List<Courier> couriers = couriersResponse.getData();
+            displayCouriers(couriers);
+        } else {
+            System.out.println("Error: " + couriersResponse.getMessage());
+        }
+    }
+
+    private static void showCouriersByStatus() {
+        System.out.println("[1] - Available");
+        System.out.println("[2] - Unavailable");
+        System.out.print("Enter choice: ");
+        int choice = SCANNER.nextInt();
+        String status = "";
+        if(choice == 1) {
+            status = Text.capitalizeFirstLetterInString(CourierStatus.AVAILABLE.name());
+        } else if(choice == 2) {
+            status = Text.capitalizeFirstLetterInString(CourierStatus.UNAVAILABLE.name());
+        }
+        
+        // Fetch ingredients with low stock
+        Response<List<Courier>> couriersByStatus = COURIER_CONTROLLER.getCouriersByStatus(status);
+        if (couriersByStatus.isSuccess()) {
+            List<Courier> couriers = couriersByStatus.getData();
+            displayCouriers(couriers);
+        } else {
+            System.out.println("Error: " + couriersByStatus.getMessage());
+        }
+    }
+    
+    
+    private static void displayCouriers(List<Courier> couriers) {
+        System.out.printf("\n%-10s %-30s %-10s %-20s %-10s%n", "Courier ID", "Name", "Company", "Contact No.", "Status");
+        for (Courier courier : couriers) {
+            String name = courier.getFirstName() + ", " + courier.getLastName();
+            System.out.printf("%-10s %-30s %-10s %-20s %-10s%n", 
+                courier.getRiderId(), 
+                name, 
+                courier.getCompany(), 
+                courier.getContactNumber(),
+                courier.getStatus()
+            );
+        }
+        System.out.println("Total Records: " + couriers.size());
+    }
+    
+    
 private static void adminManageStock() {
     int choice;
     boolean showLowStock = false; // Flag to track if we're showing low stock
@@ -261,7 +369,7 @@ private static void adminManageStock() {
 }
 
 
-    private static void showLowStock() {
+private static void showLowStock() {
         // Fetch ingredients with low stock
         Response<List<Ingredient>> ingredientsWithLowStocksResponse = INGREDIENT_CONTROLLER.getAllIngredientsLowStocks();
         if (ingredientsWithLowStocksResponse.isSuccess()) {
@@ -271,6 +379,10 @@ private static void adminManageStock() {
             System.out.println("Error: " + ingredientsWithLowStocksResponse.getMessage());
         }
     }
+
+
+
+
 
     private static void showOneItemInformation() {
         System.out.print("Enter ingredient id: ");

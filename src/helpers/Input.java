@@ -38,4 +38,15 @@ public class Input {
         
         return true;
     }
+    
+    
+    public static boolean fieldChanged(String existingValue, String newValue) {
+        if(existingValue == null && newValue == null) {
+            return false; // Both are null, no change
+        }
+        if(existingValue == null || newValue == null) {
+            return true; // One is null, change detected
+        }
+        return !existingValue.equals(newValue); //Detect value differences
+    }
 }
