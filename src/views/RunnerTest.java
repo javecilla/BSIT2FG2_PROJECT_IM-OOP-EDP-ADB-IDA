@@ -17,11 +17,14 @@ import java.util.Scanner;
 import java.util.List;
 import core.Cart;
 import core.CartItem;
+import helpers.Text;
+import java.util.InputMismatchException;
 import models.SalesDetails;
+import models.UserInfo;
 
 public class RunnerTest {
     protected static final Scanner SCANNER = new Scanner(System.in);
-    protected static final UserController LOGIN_CONTROLLER = new UserController();
+    protected static final UserController USER_CONTROLLER = new UserController();
     protected static final IngredientController INGREDIENT_CONTROLLER = new IngredientController();
     protected static final CategoryController CATEGORY_CONTROLLER = new CategoryController();
     protected static final FoodController FOOD_CONTROLLER = new FoodController();
@@ -30,79 +33,114 @@ public class RunnerTest {
     static int categoriesCounter = 0;
     static int foodsCounter = 0;
     
-    public static void main(String[] args) {
-        int userChoice = 0;
-        String userRole = "";
-        boolean startPanel = true;
-        boolean loggedIn = false;
-                    
-        do {
-            // Show the main start panel (role selection)
-            if (startPanel) {
-                System.out.println("[1] User");
-                System.out.println("[2] Admin");
-                System.out.println("[3] Exit\n");
-                System.out.print("Enter your choice: ");
-                userChoice = SCANNER.nextInt();
-
-                switch (userChoice) {
-                    case 1: // CLIENT
-                        userRole = UserRoles.CLIENT.name();
-                        break;
-                    case 2: // ADMIN
-                        userRole = UserRoles.ADMIN.name();
-                        break;
-                    case 3: // Exit
-                        System.out.println("Exiting system...");
-                        return; 
-                    default:
-                        System.out.println("Invalid choice, please select again.");
-                }
-            }
-            
-            boolean loginSuccess = false;
-
-            while (!loginSuccess) {
-                System.out.println("\nLogin to your account");
-
-                System.out.print("Username: ");
-                String usernameInput = SCANNER.next().trim();
-
-                System.out.print("Password: ");
-                String passwordInput = SCANNER.next().trim();
-
-                System.out.println("Logging in...\n");
-                // Attempt login with username, password, and role
-                Response<User> loginResponse = LOGIN_CONTROLLER.loginUser(usernameInput, passwordInput, userRole);
-                if (loginResponse.isSuccess()) {
-                    System.out.println(loginResponse.getMessage());
-                    //JOptionPane.showMessageDialog(null,loginResponse.getMessage(),"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-                    User user = loginResponse.getData();
-                    System.out.println("\nWelcome back, " + user.getFullName());
-                    loggedIn = true;
-                    loginSuccess = true;  // Exit the loop if login is successful
-                    
-                    // If login is successful, show dashboard based on user role
-                    if (loggedIn) { 
-                        if (UserRoles.ADMIN.name().equals(userRole)) {
-                            adminDashboard(user);
-                        } else if (UserRoles.CLIENT.name().equals(userRole)){
-                            clientDashboard(user); 
-                        }
-
-                        loggedIn = false; // Logout after navigating the dashboard to return to the role selection screen
-                        startPanel = true;
-                    }
-                } else {
-                    System.out.println("Failed to login! Invalid credentials");
-                    System.out.println("Please try again.\n");
-                }
-            }
+public static void main(String[] args) {
+    int userChoice = 0;
+    boolean exitSystem = false;
+    
+    while (!exitSystem) {
+        // Show the main start panel
+        System.out.println("[1] Login");
+        System.out.println("[2] Register");
+        System.out.println("[3] Exit\n");
+        System.out.print("Enter your choice: ");
         
+        try {
+            userChoice = SCANNER.nextInt();
             
-
-        } while (true);
+            switch (userChoice) {
+                case 1: // Login
+                    handleLogin();
+                    break;
+                case 2: // Register new user
+                    handleRegistration();
+                    break;
+                case 3: // Exit
+                    System.out.println("Exiting system...");
+                    exitSystem = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice, please select again.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            SCANNER.nextLine(); // Clear the invalid input
+        }
     }
+}
+
+private static void handleLogin() {
+    while (true) {
+        System.out.println("\nLogin to your account");
+        System.out.print("Username: ");
+        String usernameInput = SCANNER.next().trim();
+        System.out.print("Password: ");
+        String passwordInput = SCANNER.next().trim();
+        
+        // Attempt login with username and password
+        Response<User> loginResponse = USER_CONTROLLER.loginUser(usernameInput, passwordInput);
+        
+        if (loginResponse.isSuccess()) {
+            User user = loginResponse.getData();
+            System.out.println(loginResponse.getMessage());
+            System.out.println("\nWelcome back, " + user.getFullName());
+            
+            // Navigate to appropriate dashboard based on user role
+            navigateToDashboard(user);
+            break; // Exit login loop after successful login and dashboard navigation
+        } else {
+            System.out.println(loginResponse.getMessage());
+            System.out.println("Would you like to try again? (y/n)");
+            String tryAgain = SCANNER.next().trim().toLowerCase();
+            
+            if (!tryAgain.equals("y")) {
+                break; // Exit login loop if user doesn't want to try again
+            }
+        }
+    }
+}
+
+private static void handleRegistration() {       
+    UserInfo userInfo = new UserInfo(
+       0,
+       "firstName2",
+       "lastName2",
+       "barangay2",
+       "street2",
+       "houseNumber2",
+       "region2",
+       "province2",
+       "municipality2"
+    );
+    User user = new User(
+        0,
+        "username2",
+        "password2",
+        "email2@gmail.com",
+        "09772465532",
+        userInfo
+    );
+    user.setUserRole(Text.capitalizeFirstLetterInString(UserRoles.CLIENT.name()));
+    Response<User> registrationResponse = USER_CONTROLLER.registerUser(user);
+        
+     if(registrationResponse.isSuccess()) {
+         System.out.println(registrationResponse.getMessage());
+     } else {   
+         System.out.println(registrationResponse.getMessage());
+     }
+}
+
+private static void navigateToDashboard(User user) {
+    
+    if (user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.CLIENT.name()))) {
+        clientDashboard(user);
+    } else if (user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.ADMIN.name()))) {
+        adminDashboard(user);
+    } else {
+        System.out.println("No dashboard found for this user role.");
+    }
+}
+    
+    
     
     /*
       ==========================================================================
@@ -115,9 +153,10 @@ public class RunnerTest {
         do {
             System.out.println("\n--- Admin Dashboard ---");
             System.out.println("[1] Manage Stocks");
-            System.out.println("[2] Others admin menu...");
-            System.out.println("[3] Profile");
-            System.out.println("[4] Log Out\n");
+            System.out.println("[2] Manage Users");
+            System.out.println("[3] Manage Couriers");
+            System.out.println("[4] Profile");
+            System.out.println("[5] Log Out\n");
             System.out.print("Enter your choice: ");
             choice = SCANNER.nextInt();
 
@@ -126,14 +165,17 @@ public class RunnerTest {
                     adminManageStock();
                     break;
                 case 2:
-                    System.out.println("add mo nalang mga other panel for admin, apply mo lang similar logic");
+                    System.out.println("adminManageUser()");
                     break;
                 case 3:
+                    System.out.println("adminManageCourier()");
+                    break;
+                case 4:
                     System.out.println("Your Profile");
                     showProfile(user);
                     break;
 
-                case 4:
+                case 5:
                     System.out.println("Logging out...");
                     return;  // Exit admin dashboard and go back to role selection
                 default:

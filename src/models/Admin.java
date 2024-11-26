@@ -25,7 +25,9 @@ public class Admin extends User {
             user.getUserId(), 
             user.getUsername(),
             user.getPassword(),
-            user.getUserRole()
+            user.getUserRole(),
+            user.getEmail(),
+            user.getContactNumber()
         );
         this.id = id;
         this.type = type;

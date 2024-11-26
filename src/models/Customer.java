@@ -23,7 +23,9 @@ public class Customer extends User {
             user.getUserId(), 
             user.getUsername(),
             user.getPassword(),
-            user.getUserRole()
+            user.getUserRole(),
+            user.getEmail(),
+            user.getContactNumber()
         );
         this.id = customerId;
         this.status = customerStatus;

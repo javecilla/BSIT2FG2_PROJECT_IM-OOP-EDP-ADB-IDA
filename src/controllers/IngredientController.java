@@ -30,7 +30,7 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         Admin admin = new Admin(
             adminId,
             null,
-            new User(0, "", "", "")
+            new User(0, "", "", "", "", "")
         );
 
         Ingredient newIngredient = new Ingredient(
@@ -153,7 +153,7 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         Admin admin = new Admin(
             adminId,
             null,
-            new User(0, "", "", "")
+            new User(0, "", "", "", "", "")
         );
 
         Ingredient updatedIngredient = new Ingredient(

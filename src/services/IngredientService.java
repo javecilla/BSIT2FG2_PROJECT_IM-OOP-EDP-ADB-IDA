@@ -88,7 +88,9 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                         rs.getInt("User_ID"),
                         rs.getString("Username"),
                         rs.getString("Password"),
-                        rs.getString("User_Role")
+                        rs.getString("User_Role"),
+                        rs.getString("Email"),   
+                        rs.getString("Contact_Number")
                     )
                 );
 
@@ -150,7 +152,9 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                         rs.getInt("User_ID"),
                         rs.getString("Username"),
                         rs.getString("Password"),
-                        rs.getString("User_Role")
+                        rs.getString("User_Role"),
+                        rs.getString("Email"),   
+                        rs.getString("Contact_Number")
                     )
                 );
 
@@ -211,7 +215,9 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                         rs.getInt("User_ID"),
                         rs.getString("Username"),
                         rs.getString("Password"),
-                        rs.getString("User_Role")
+                        rs.getString("User_Role"),
+                        rs.getString("Email"),   
+                        rs.getString("Contact_Number")
                     )
                 );
 

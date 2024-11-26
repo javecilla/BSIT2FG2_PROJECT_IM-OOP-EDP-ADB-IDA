@@ -118,6 +118,8 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
                                 rs.getString("Username"),
                                 rs.getString("Password"),
                                 rs.getString("User_Role"),
+                                rs.getString("Email"),   
+                                rs.getString("Contact_Number"),
                                 new UserInfo(
                                     rs.getInt("UserInfo_ID"),
                                     rs.getString("First_Name"),

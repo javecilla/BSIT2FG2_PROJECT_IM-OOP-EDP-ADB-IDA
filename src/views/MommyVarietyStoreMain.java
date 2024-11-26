@@ -161,7 +161,7 @@ public class MommyVarietyStoreMain {
             logInForm();
         }
         
-        Response<User> loginResponse = LOGIN_CONTROLLER.loginUser(userNameHolder, userPasswordHolder, userRole);
+        Response<User> loginResponse = LOGIN_CONTROLLER.loginUser(userNameHolder, userPasswordHolder);
         
         if(loginResponse.isSuccess()){
             

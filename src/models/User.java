@@ -9,28 +9,40 @@ public class User extends UserInfo {
     private String username;
     private String password;
     private String role;  // Role of the user (e.g., Admin, Client).
+    private String email;
+    private String contactNumber;
     
     // Constructors
     public User() {
       super();
     }
     
-    public User(String username, String password, String userRole) {
+    public User(String username, String password) {
+        super();
+        this.username = username;
+        this.password = password;
+    }
+    
+    public User(String username, String password, String userRole, String email, String contactNumber) {
         super();
         this.username = username;
         this.password = password;
         this.role = userRole;
+        this.email = email;
+        this.contactNumber = contactNumber;
     }
     
-    public User(int userId, String username, String password, String userRole) {
+    public User(int userId, String username, String password, String userRole, String email, String contactNumber) {
         super();
         this.id = userId;
         this.username = username;
         this.password = password;
         this.role = userRole;
+        this.email = email;
+        this.contactNumber = contactNumber;
     }
     
-    public User(int userId, String username, String password, UserInfo userInfo) {
+    public User(int userId, String username, String password, String email, String contactNumber, UserInfo userInfo) {
         super(
             userInfo.getUserInfoId(),
             userInfo.getFirstName(),
@@ -45,9 +57,11 @@ public class User extends UserInfo {
         this.id = userId;
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.contactNumber = contactNumber;
     }
     
-    public User(int userId, String username, String password, String userRole, UserInfo userInfo) {
+    public User(int userId, String username, String password, String userRole, String email, String contactNumber, UserInfo userInfo) {
         super(
             userInfo.getUserInfoId(),
             userInfo.getFirstName(),
@@ -63,6 +77,8 @@ public class User extends UserInfo {
         this.username = username;
         this.password = password;
         this.role = userRole;
+        this.email = email;
+        this.contactNumber = contactNumber;
     }
     
     // Getters and setters for all fields
@@ -96,6 +112,22 @@ public class User extends UserInfo {
     
     public void setUserRole(String userRole) {
         this.role = userRole;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String getContactNumber() {
+        return contactNumber;
+    }
+    
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
     
     @Override
