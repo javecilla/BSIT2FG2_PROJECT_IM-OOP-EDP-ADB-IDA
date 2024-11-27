@@ -193,10 +193,35 @@ public class CourierService implements IDatabaseOperators<Courier> {
     }
     
     @Override
-    public boolean update(Courier courier) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        public boolean update(Courier courier) throws SQLException {
+            Connection conn = null;
+            PreparedStatement pst = null;
 
+            try {
+                conn = DBConnection.getConnection();
+                String query = """
+                    UPDATE COURIER
+                    SET First_Name = ?, 
+                        Last_Name = ?, 
+                        Courier_Company = ?,    -- Correct column name here
+                        Contact_Number = ?, 
+                        Status = ?
+                    WHERE Rider_ID = ?
+                """;
+
+                pst = conn.prepareStatement(query);
+                pst.setString(1, courier.getFirstName());
+                pst.setString(2, courier.getLastName());
+                pst.setString(3, courier.getCompany());   
+                pst.setString(4, courier.getContactNumber());
+                pst.setString(5, courier.getStatus());
+                pst.setInt(6, courier.getRiderId());
+
+                return pst.executeUpdate() > 0;
+            } finally {
+                DBConnection.closeResources(null, pst);
+            }
+        }
 
     @Override
     public boolean delete(int id) throws SQLException {
