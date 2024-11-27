@@ -52,7 +52,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         } finally {
             if (conn != null) conn.setAutoCommit(true);
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -115,7 +115,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return null; //no record found
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
 
@@ -178,7 +178,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return ingredients;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -241,7 +241,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return ingredients;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
 
@@ -272,7 +272,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return pst.executeUpdate() > 0;
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -295,7 +295,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return pst.executeUpdate() > 0;  
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -318,7 +318,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return pst.executeUpdate() > 0;  
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
 
@@ -339,7 +339,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             return pst.executeUpdate() > 0;
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
 

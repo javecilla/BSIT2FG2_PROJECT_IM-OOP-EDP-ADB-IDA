@@ -41,12 +41,16 @@ public class Input {
     
     
     public static boolean fieldChanged(String existingValue, String newValue) {
-        if(existingValue == null && newValue == null) {
+        // Trim strings to avoid space-related issues
+        if (existingValue != null) existingValue = existingValue.trim();
+        if (newValue != null) newValue = newValue.trim();
+
+        if (existingValue == null && newValue == null) {
             return false; // Both are null, no change
         }
-        if(existingValue == null || newValue == null) {
+        if (existingValue == null || newValue == null) {
             return true; // One is null, change detected
         }
-        return !existingValue.equals(newValue); //Detect value differences
+        return !existingValue.equals(newValue); // Detect value differences
     }
 }

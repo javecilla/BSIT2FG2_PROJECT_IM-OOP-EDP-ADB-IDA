@@ -53,7 +53,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             throw new SQLException("Creation of courirer failed due to database error: " + e.getMessage());
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
             if (conn != null) conn.setAutoCommit(true);
         }
     }
@@ -68,7 +68,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
         try {
             conn = DBConnection.getConnection();
             String query = """
-               SELECT * FROM COURIRER
+               SELECT * FROM COURIER
                WHERE Rider_ID = ?
             """;            
             pst = conn.prepareStatement(query);
@@ -90,7 +90,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             return null;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
 
@@ -127,7 +127,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             return couriers;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -165,87 +165,38 @@ public class CourierService implements IDatabaseOperators<Courier> {
             return couriers;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
-
-    @Override
-    //updates only the changed fields and leaves the others as they
-    public boolean update(Courier courier) throws SQLException {
+    
+    public boolean updateStatus(int id, String newStatus) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
-        boolean isUpdated = false;
 
         try {
             conn = DBConnection.getConnection();
-            conn.setAutoCommit(false);
+            String query = """
+                UPDATE COURIER
+                SET Status = ?
+                WHERE Rider_ID = ?
+            """;
 
-            //retrieve the current record
-            Courier courierDB = getById(courier.getRiderId());
-            if(courierDB == null) {
-                throw new SQLException("Courier with Rider_ID " + courier.getRiderId() + " not found.");
-            }
+            pst = conn.prepareStatement(query);
+            pst.setString(1, newStatus);  
+            pst.setInt(2, id);  
 
-            //compare fields and update only yung mga feilds na nabago
-            String updateQuery = "UPDATE COURIER SET ";
-            StringBuilder setClause = new StringBuilder();
-            List<Object> params = new ArrayList<>();
-
-            if(Input.fieldChanged(courierDB.getFirstName(), courier.getFirstName())) {
-                setClause.append("First_Name = ?, ");
-                params.add(courier.getFirstName());
-            }
-            if(Input.fieldChanged(courierDB.getLastName(), courier.getLastName())) {
-                setClause.append("Last_Name = ?, ");
-                params.add(courier.getLastName());
-            }
-            if(Input.fieldChanged(courierDB.getCompany(), courier.getCompany())) {
-                setClause.append("Courier_Company = ?, ");
-                params.add(courier.getCompany());
-            }
-            if(Input.fieldChanged(courierDB.getContactNumber(), courier.getContactNumber())) {
-                setClause.append("Contact_Number = ?, ");
-                params.add(courier.getContactNumber());
-            }
-            if(Input.fieldChanged(courierDB.getStatus(), courier.getStatus())) {
-                setClause.append("Status = ?, ");
-                params.add(courier.getStatus());
-            }
-
-            if(setClause.length() == 0) {
-                throw new SQLException("No changes occured.");
-                //return false;
-            }
-
-            //rmove trailing comma and add WHERE clause
-            updateQuery += setClause.substring(0, setClause.length() - 2) + " WHERE Rider_ID = ?";
-            params.add(courier.getRiderId());
-
-            pst = conn.prepareStatement(updateQuery);
-
-            for(int i = 0; i < params.size(); i++) {
-                pst.setObject(i + 1, params.get(i));
-            }
-
-            isUpdated = pst.executeUpdate() > 0;
-
-            if(isUpdated) {
-                conn.commit();
-            } else {
-                conn.rollback();
-            }
-
-            return isUpdated;
-
-        } catch (SQLException e) {
-            if (conn != null) conn.rollback();
-            throw new SQLException("Updation of courier failed due to database error: " + e.getMessage());
+            return pst.executeUpdate() > 0;  
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.setAutoCommit(true);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
+    
+    @Override
+    public boolean update(Courier courier) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 
     @Override
     public boolean delete(int id) throws SQLException {
@@ -277,7 +228,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             throw new SQLException("Deletion of courirer failed due to database error: " + e.getMessage());
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
             if (conn != null) conn.setAutoCommit(true);
         }
     }

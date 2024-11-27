@@ -74,19 +74,24 @@ public class UserService implements IDatabaseOperators<User> {
             user.setMunicipality(rs.getString("Municipality"));
             
             Session.setLoggedInUser(user);
-            
             // Populate role-specific information
             if (user.getUserRole().equalsIgnoreCase(UserRoles.CLIENT.name())) {
-                Customer customer = new Customer();
-                customer.setCustomerId(rs.getInt("Customer_ID"));
-                customer.setCustomerStatus(rs.getString("Customer_Status"));
+                Customer customer = new Customer(
+                    rs.getInt("Customer_ID"),
+                    rs.getString("Customer_Status"),
+                    user
+                );
                 Session.setLoggedInCustomer(customer);
             } else if (user.getUserRole().equalsIgnoreCase(UserRoles.ADMIN.name())) {
-                Admin admin = new Admin();
-                admin.setAdminId(rs.getInt("Admin_ID"));
-                admin.setAdminType(rs.getString("Admin_Type"));
+                Admin admin = new Admin(
+                    rs.getInt("Admin_ID"),
+                    rs.getString("Admin_Type"),
+                    user
+                );
                 Session.setLoggedInAdmin(admin);
             }
+            
+            
             
             return true;
         } catch (SQLException e) {
@@ -363,7 +368,7 @@ public class UserService implements IDatabaseOperators<User> {
         } finally {
             DBConnection.closeResources(rsUserInfo, pstUserInfo);
             DBConnection.closeResources(null, pstUser);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
             if (conn != null) conn.setAutoCommit(true);
         }
     }

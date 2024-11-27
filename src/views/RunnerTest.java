@@ -584,7 +584,9 @@ private static void showLowStock() {
                     }
                 } while (amountPayment < cart.getTotalAmount());
                 
-                 double change = amountPayment - cart.getTotalAmount();
+                 
+                 //set payment ammount
+                 cart.setPaymentAmount(amountPayment);
                 //proccess order
                 Response<Cart> cartOrderReponse = CART_CONTROLLER.checkOutOrder();
                 if (cartOrderReponse.isSuccess()) {
@@ -594,28 +596,32 @@ private static void showLowStock() {
                     Response<List<SalesDetails>> salesDetailsResponse = CART_CONTROLLER.getOrderReports();
                     if (salesDetailsResponse.isSuccess()) {
                         List<SalesDetails> salesDetails = salesDetailsResponse.getData();
+                        User customer = Session.getLoggedInUser();
                         
                         System.out.println("=====================REPORT=====================");
-                        System.out.println("Name: " + salesDetails.getFirst().getCustomer().getFullName());
-                        System.out.println("Address: " + salesDetails.getFirst().getCustomer().getFullAddress());
+                        System.out.println("Name: " + customer.getFullName());
+                        System.out.println("Address: " + customer.getFullAddress());
                         System.out.println("Date: " + Date.formatToReadableDate(salesDetails.getFirst().getSale().getSaleDate()));
                         System.out.println("Sales ID: " + salesDetails.getFirst().getSale().getSaleId());
                         
                         double subTotal = 0;
-                        double netTotal = 0;
                         System.out.printf("\n\n%-10s %-30s %-10s %-20s%n", "Food Name", "Price", "Quantity", "Subtotal");
-                        for(CartItem item : cart.getItems()) {
-                            subTotal = item.getQuantity() * item.getFoodPrice(); //subtotal
-                            netTotal += subTotal;
+                        for(SalesDetails saleDetail : salesDetails) {
+                            subTotal = saleDetail.getItemQuantity() * saleDetail.getFood().getPrice();//subtotal
                             System.out.printf("%-10s %-30s $%-10s %-20s%n", 
-                                item.getFoodName(), 
-                                item.getFoodPrice(), 
-                                item.getQuantity(), 
+                                saleDetail.getFood().getFoodName(), 
+                                saleDetail.getFood().getPrice(), 
+                                saleDetail.getItemQuantity(),
                                 subTotal
                             );
 }
-                       
-                        System.out.printf("Net Total: %.2f\nPayment: %.2f\nChange: %.2f\n", netTotal, amountPayment, change);
+                       double netTotal = salesDetails.getFirst().getSale().getNetTotal();
+                       double paymentAmount = salesDetails.getFirst().getSale().getPaymentAmount();
+                       double change = paymentAmount - netTotal;
+                        System.out.printf("Net Total: %.2f\nPayment: %.2f\nChange: %.2f\n",
+                            netTotal, 
+                            paymentAmount, 
+                            change);
                         System.out.println("================================================");
                         cart.getItems().clear();
                     } else {

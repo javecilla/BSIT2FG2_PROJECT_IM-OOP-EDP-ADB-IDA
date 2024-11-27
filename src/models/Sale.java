@@ -4,39 +4,35 @@ package models;
  * Extends the `Customer` class to associate sales with a specific customer.
  * Includes attributes for sale ID, date, and net total amount of the sale.
  */
-public class Sale extends Customer {
+public class Sale {
     private int id;
     private String date;
-    private double netTotal; // Total amount of the sale after any deductions.
-    private double paymentAmount;
+    private double netTotal;        // Total amount of the sale after any deductions.
+    private double paymentAmount;   // Total ammout nung binayad
     
+    private Customer customer;
+    private Courier courier;
+   
     // Constructors
     public Sale() {}
     
+    public Sale(String date, double netTotal, double paymentAmount) {
+        this.date = date;
+        this.netTotal = netTotal;
+        this.paymentAmount = paymentAmount;
+    }
+    
     public Sale(int id, String date, double netTotal) {
-        super();
         this.id = id;
         this.date = date;
         this.netTotal = netTotal;
     }
-    
-    public Sale(String date, double netTotal, Customer customer) {
-        super(
-            customer.getCustomerId(),
-            customer.getCustomerStatus()
-        );
-        this.date = date;
-        this.netTotal = netTotal;
-    }
-    
-    public Sale(int id, String date, double netTotal, Customer customer) {
-        super(
-            customer.getCustomerId(),
-            customer.getCustomerStatus()
-        );
+  
+    public Sale(int id, String date, double netTotal, double paymentAmount) {
         this.id = id;
         this.date = date;
         this.netTotal = netTotal;
+        this.paymentAmount = paymentAmount;
     }
     
     // Getters and setters for all fields
@@ -72,8 +68,19 @@ public class Sale extends Customer {
         this.paymentAmount = paymentAmount;
     }
     
-    @Override
-    public String display() {
-     return "Sale ID: " + getSaleId() + "\nSale Date: " + getSaleDate() + "\nNet Total: " + getNetTotal() + "\nCustomer Info: \n\n" + super.display();
-    }   
+    public Customer getCustomer() {
+        return customer;
+    }
+    
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+    
+    public Courier getCourier() {
+        return courier;
+    }
+    
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
 }

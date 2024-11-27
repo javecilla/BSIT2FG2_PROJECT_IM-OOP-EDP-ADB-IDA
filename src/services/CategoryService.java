@@ -43,7 +43,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         } finally {
             if (conn != null) conn.setAutoCommit(true);
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            ////if (conn != null) conn.close();
         }
     }
 
@@ -72,7 +72,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             return null;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
 
@@ -104,7 +104,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             return categories;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
 
@@ -126,7 +126,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             return pst.executeUpdate() > 0;
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -146,7 +146,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             return pst.executeUpdate() > 0;
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     

@@ -46,7 +46,7 @@ public class Customer extends User {
     public void setCustomerStatus(String customerStatus) {
         this.status = customerStatus;
     }
-    
+        
     @Override
     public String display() {      
         return "Customer ID: " + getCustomerId() + "\nCustomer Status: " + getCustomerStatus() + "\nCustomer Info: \n\n" + super.display();

@@ -73,7 +73,7 @@ public class RecipeService implements IDatabaseOperators<Recipe> {
         
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         } 
     }
     
@@ -137,7 +137,7 @@ public class RecipeService implements IDatabaseOperators<Recipe> {
         return recipe;
     } finally {
         DBConnection.closeResources(rs, pst);
-        if (conn != null) conn.close();
+        //if (conn != null) conn.close();
     }
 }
 

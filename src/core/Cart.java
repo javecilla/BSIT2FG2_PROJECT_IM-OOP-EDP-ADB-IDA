@@ -9,9 +9,11 @@ import java.util.List;
  */
 public class Cart {
     private List<CartItem> items; // List of CartItem objects representing the items in the cart
-
+    private double paymentAmount;
+    
     public Cart() {
         items = new ArrayList<>();
+        paymentAmount = 0.0;
     }
 
     public List<CartItem> getItems() {
@@ -46,5 +48,13 @@ public class Cart {
 
     public boolean hasItems() {
         return !items.isEmpty();
+    }
+    
+    public double getPaymentAmount() {
+        return paymentAmount;
+    }
+    
+    public void setPaymentAmount(double paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
 }

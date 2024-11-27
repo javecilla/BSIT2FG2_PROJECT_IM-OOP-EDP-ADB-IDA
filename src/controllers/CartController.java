@@ -13,12 +13,17 @@ import models.Ingredient;
 import models.Recipe;
 import models.Sale;
 import core.Session;
+import enums.CourierStatus;
 import services.RecipeService;
 import services.IngredientService;
 import services.SaleService;
 import services.SalesDetailsService;
 import helpers.Response;
 import helpers.Date;
+import helpers.Text;
+import java.util.Random;
+import models.Courier;
+import services.CourierService;
 
 
 public class CartController {
@@ -26,6 +31,7 @@ public class CartController {
     private final IngredientService ingredientService;
     private final SaleService saleService;
     private final SalesDetailsService salesDetailsService;
+    private final CourierService courierService;
     private final Cart cart;
     
     public CartController() {
@@ -33,6 +39,7 @@ public class CartController {
         this.ingredientService = new IngredientService();
         this.saleService = new SaleService();
         this.salesDetailsService = new SalesDetailsService();
+        this.courierService = new CourierService();
         this.cart = new Cart();
     }
     
@@ -126,17 +133,41 @@ public class CartController {
         }
 
         try {
+            //get all rider that are avaiable
+            List<Courier> couriers = courierService.getByStatus(Text.capitalizeFirstLetterInString(CourierStatus.AVAILABLE.name()));
+            if(couriers == null || couriers.isEmpty()) {
+                throw new SQLException("No couriers found");
+            }
+            
+            // Randomly select a rider
+            Random random = new Random();
+            int randomIndex = random.nextInt(couriers.size());  //get a random index from 0 to couriers.size() - 1
+            int selectedRiderId = couriers.get(randomIndex).getRiderId();
+            Courier courier = new Courier();
+            courier.setRiderId(selectedRiderId);
+            
             Customer customer = Session.getLoggedInCustomer();
             //Create a sale record (once for the entire checkout)
             Sale sale = new Sale(
                 Date.getCurrentDate(), 
-                cart.getTotalAmount(), 
-                customer
+                cart.getTotalAmount(),
+                cart.getPaymentAmount()
             );
+            sale.setCustomer(customer);
+            sale.setCourier(courier);
+            
 
             boolean isSaleCreated = saleService.create(sale);
             if(!isSaleCreated) {
                 return Response.error("Failed to create a new sale record.");
+            }
+            
+            boolean isCourierStatusUpdated = courierService.updateStatus(
+               courier.getRiderId(),
+               Text.capitalizeFirstLetterInString(CourierStatus.UNAVAILABLE.name())    
+            );
+            if(!isCourierStatusUpdated) {
+                return Response.error("Failed to update courier.");
             }
 
             //iterate over cart items
@@ -169,41 +200,36 @@ public class CartController {
                 }
             
                 //insert sales details for each item
-                boolean isSalesDetailsCreated = salesDetailsService.create(
-                    new SalesDetails(
-                        new Food(
-                            item.getFoodId(), 
-                            item.getFoodName(), 
-                            item.getFoodPrice()
-                        ),
-                        sale, 
-                        item.getQuantity()
-                    )
-                );
+                SalesDetails salesDetails = new SalesDetails(item.getQuantity());
+                salesDetails.setFood(new Food(
+                    item.getFoodId(), 
+                    item.getFoodName(), 
+                    item.getFoodPrice()
+                ));
+                salesDetails.setSale(sale);
+                boolean isSalesDetailsCreated = salesDetailsService.create(salesDetails);
                 if(!isSalesDetailsCreated) {
                     return Response.error("Failed to create sales details for food ID: " + item.getFoodId());
                 }
             }
             
             //clear the cart after successful ng checkout
-            
+            cart.clearCart();
             
             return Response.success("Your order is successfully checked out! Thank you for your order.", null);
         } catch (SQLException e) {
+            
             return Response.error("Something went wrong during checkout: " + e.getMessage());
         }
     }
     
     public Response<List<SalesDetails>> getOrderReports() {
         try {
-            Customer customer = Session.getLoggedInCustomer();
-            List<SalesDetails> salesDetals = salesDetailsService.getSalesDetailsByCustomer(customer.getCustomerId());
+            List<SalesDetails> salesDetals = salesDetailsService.getSalesDetails();
             
             if(salesDetals == null || salesDetals.isEmpty()) {
                 return Response.success("No foods found", Collections.emptyList());
             }
-            
-            //cart.getItems().clear();
             
             return Response.success("Sales details retrieved successfully", salesDetals);
         } catch(SQLException e) {

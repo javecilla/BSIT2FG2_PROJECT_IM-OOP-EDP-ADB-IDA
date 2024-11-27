@@ -48,7 +48,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         } finally {
             if (conn != null) conn.setAutoCommit(true);
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -84,7 +84,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             return null;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -122,7 +122,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             return foods;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -161,7 +161,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             return foods;
         } finally {
             DBConnection.closeResources(rs, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -185,7 +185,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             return pst.executeUpdate() > 0;
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
@@ -205,7 +205,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             return pst.executeUpdate() > 0;
         } finally {
             DBConnection.closeResources(null, pst);
-            if (conn != null) conn.close();
+            //if (conn != null) conn.close();
         }
     }
     
