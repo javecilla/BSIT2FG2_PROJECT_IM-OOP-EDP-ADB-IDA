@@ -82,7 +82,7 @@ public class CourierController implements IOperatorsValidators<Courier> {
     }
     
     // Update courier
-    public Response<Courier> updateFood(Courier courier) {
+    public Response<Courier> updateCourier(Courier courier) {
         Response<Courier> validationResponse = validateUpdate(courier);
         if(!validationResponse.isSuccess()) {
             return validationResponse;
