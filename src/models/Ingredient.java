@@ -21,14 +21,6 @@ public class Ingredient {
         this.quantity = quantity;
         this.reorderPoint = reorderPoint;
     }
-
-    public Ingredient(int id, String name, int quantity, int reorderPoint, Supplier supplier) {
-        setSupplier(supplier);
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-        this.reorderPoint = reorderPoint;
-    }
     
     // Getters and setters
     public int getIngredientId() {

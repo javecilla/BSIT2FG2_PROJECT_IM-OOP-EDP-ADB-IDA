@@ -7,17 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.Sale;
-import models.Food;
-import models.SalesDetails;
 import config.DBConnection;
-import helpers.Date;
+import models.*;
 import interfaces.IDatabaseOperators;
-import models.Category;
-import models.Courier;
-import models.Customer;
-import models.User;
-import models.UserInfo;
+import helpers.Date;
 
 public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
 
@@ -69,48 +62,16 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
                     
             conn = DBConnection.getConnection();  
             String query = """
-                SELECT 
-                    SALES_DETAIL.Item_Quantity, 
-                    SALES_DETAIL.Food_ID, 
-                    SALES_DETAIL.Sales_ID, 
-                    FOOD.Food_Name, 
-                    FOOD.Price, 
-                    FOOD.Category_ID, 
-                    CATEGORY.Category_Name, 
-                    SALE.Sales_Date, 
-                    SALE.Net_Total, 
-                    SALE.Payment_Amount, 
-                    SALE.Customer_ID, 
+                SELECT SALES_DETAIL.Item_Quantity, SALES_DETAIL.Food_ID, SALES_DETAIL.Sales_ID, 
+                    FOOD.Food_Name, FOOD.Price, FOOD.Category_ID, CATEGORY.Category_Name, 
+                    SALE.Sales_Date, SALE.Net_Total, SALE.Payment_Amount, SALE.Customer_ID, 
                     CUSTOMER.Customer_Status, 
-                    [USER].User_ID, 
-                    [USER].Username, 
-                    [USER].Password, 
-                    [USER].User_Role, 
-                    [USER].Email, 
-                    [USER].Contact_Number, 
-                    USER_INFO.UserInfo_ID, 
-                    USER_INFO.First_Name, 
-                    USER_INFO.Last_Name, 
-                    USER_INFO.Barangay, 
-                    USER_INFO.Street, 
-                    USER_INFO.House_Number, 
-                    USER_INFO.Region, 
-                    USER_INFO.Province, 
-                    USER_INFO.Municipality, 
-                    COURIER.Rider_ID, 
-                    COURIER.First_Name AS Courier_First_Name, 
-                    COURIER.Last_Name AS Courier_Last_Name, 
-                    COURIER.Courier_Company, 
-                    COURIER.Contact_Number AS Courier_Contact_Number, 
-                    COURIER.Status
-                FROM 
-                    COURIER 
-                    INNER JOIN ((USER_INFO 
-                    INNER JOIN [USER] ON USER_INFO.UserInfo_ID = [USER].UserInfo_ID) 
-                    INNER JOIN ((CUSTOMER 
-                    INNER JOIN SALE ON CUSTOMER.Customer_ID = SALE.Customer_ID) 
-                    INNER JOIN ((CATEGORY 
-                    INNER JOIN FOOD ON CATEGORY.Category_ID = FOOD.Category_ID) 
+                    [USER].User_ID, [USER].Username, [USER].Password, [USER].User_Role, [USER].Email, [USER].Contact_Number, 
+                    USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, USER_INFO.Barangay, USER_INFO.Street, USER_INFO.House_Number, USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality, 
+                    COURIER.Rider_ID, COURIER.First_Name AS Courier_First_Name, COURIER.Last_Name AS Courier_Last_Name, COURIER.Courier_Company, COURIER.Contact_Number AS Courier_Contact_Number, COURIER.Status
+                FROM COURIER INNER JOIN ((USER_INFO INNER JOIN [USER] ON USER_INFO.UserInfo_ID = [USER].UserInfo_ID) 
+                    INNER JOIN ((CUSTOMER INNER JOIN SALE ON CUSTOMER.Customer_ID = SALE.Customer_ID) 
+                    INNER JOIN ((CATEGORY INNER JOIN FOOD ON CATEGORY.Category_ID = FOOD.Category_ID) 
                     INNER JOIN SALES_DETAIL ON FOOD.Food_ID = SALES_DETAIL.Food_ID) 
                     ON SALE.Sales_ID = SALES_DETAIL.Sales_ID) 
                     ON [USER].User_ID = CUSTOMER.Customer_ID) 
@@ -154,9 +115,6 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
                     ) 
                 );
 
-                // Log customer name to check if it is populated correctly
-                System.out.println("[DEBUG] Sale customer: " + customer.getFirstName() + " " + customer.getLastName());
-                
                 Courier courier = new Courier(
                     rs.getInt("Rider_ID"),
                     rs.getString("Courier_First_Name"),

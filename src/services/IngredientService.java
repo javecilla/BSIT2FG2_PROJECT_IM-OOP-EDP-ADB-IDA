@@ -98,15 +98,14 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                     rs.getInt("Ingredient_ID"),
                     rs.getString("Ingredient_Name"),
                     rs.getInt("Ingredient_Quantity"),
-                    rs.getInt("Reorder_Point"),
-                    new Supplier(
-                        rs.getInt("Supplier_ID"),
-                        rs.getString("Supplier_Name"),
-                        rs.getString("Supplier_Address"),
-                        rs.getString("Contact_Number")
-                    )
+                    rs.getInt("Reorder_Point")
                 );
-                
+                ingredient.setSupplier(new Supplier(
+                    rs.getInt("Supplier_ID"),
+                    rs.getString("Supplier_Name"),
+                    rs.getString("Supplier_Address"),
+                    rs.getString("Contact_Number")
+                ));
                 ingredient.setAdmin(admin);
 
                 return ingredient;
@@ -162,15 +161,14 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                     rs.getInt("Ingredient_ID"),
                     rs.getString("Ingredient_Name"),
                     rs.getInt("Ingredient_Quantity"),
-                    rs.getInt("Reorder_Point"),
-                    new Supplier(
-                        rs.getInt("Supplier_ID"),
-                        rs.getString("Supplier_Name"),
-                        rs.getString("Supplier_Address"),
-                        rs.getString("Contact_Number")
-                    )
+                    rs.getInt("Reorder_Point")
                 );
-                
+                ingredient.setSupplier(new Supplier(
+                    rs.getInt("Supplier_ID"),
+                    rs.getString("Supplier_Name"),
+                    rs.getString("Supplier_Address"),
+                    rs.getString("Contact_Number")
+                ));
                 ingredient.setAdmin(admin);
                 ingredients.add(ingredient);
             }
@@ -225,15 +223,14 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
                     rs.getInt("Ingredient_ID"),
                     rs.getString("Ingredient_Name"),
                     rs.getInt("Ingredient_Quantity"),
-                    rs.getInt("Reorder_Point"),
-                    new Supplier(
-                        rs.getInt("Supplier_ID"),
-                        rs.getString("Supplier_Name"),
-                        rs.getString("Supplier_Address"),
-                        rs.getString("Contact_Number")
-                    )
+                    rs.getInt("Reorder_Point")
                 );
-                
+                ingredient.setSupplier(new Supplier(
+                    rs.getInt("Supplier_ID"),
+                    rs.getString("Supplier_Name"),
+                    rs.getString("Supplier_Address"),
+                    rs.getString("Contact_Number")
+                ));
                 ingredient.setAdmin(admin);
                 ingredients.add(ingredient);
             }

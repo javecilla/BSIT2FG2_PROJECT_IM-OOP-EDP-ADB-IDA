@@ -11,7 +11,7 @@ import helpers.Response;
 import interfaces.IOperatorsValidators;
 
 public class FoodController implements IOperatorsValidators<Food> {
-    protected final FoodService foodService;
+    private final FoodService foodService;
     
     public FoodController() {
         this.foodService = new FoodService();

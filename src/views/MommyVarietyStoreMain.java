@@ -1,15 +1,13 @@
-//eto
 package views;
+
 import java.util.List;
-import java.util.InputMismatchException;
+import javax.swing.*;
 
 import models.*;
 import controllers.*;
 import helpers.*;
 import enums.*;
-import helpers.*;
 import core.*;
-import javax.swing.*;
 
 public class MommyVarietyStoreMain {
     User userHolder;
@@ -897,7 +895,7 @@ public class MommyVarietyStoreMain {
     }
     
     void showCart() {
-    Object[] options = {"OK", "EDIT QUANTITY", "REMOVE ITEM", "CHECK OUT"};
+    Object[] options = {"ORDER AGAIN", "EDIT QUANTITY", "REMOVE ITEM", "CHECK OUT"};
     StringBuilder cartHolder = new StringBuilder();
 
     // Header

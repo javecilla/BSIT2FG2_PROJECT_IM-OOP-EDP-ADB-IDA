@@ -10,7 +10,7 @@ import interfaces.IOperatorsValidators;
 import helpers.Response;
 
 public class CategoryController implements IOperatorsValidators<Category> {
-    protected final CategoryService categoryService;
+    private final CategoryService categoryService;
     
     public CategoryController() {
         this.categoryService = new CategoryService();

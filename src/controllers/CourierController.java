@@ -8,10 +8,9 @@ import models.Courier;
 import services.CourierService;
 import helpers.Response;
 import interfaces.IOperatorsValidators;
-import javax.swing.JOptionPane;
 
 public class CourierController implements IOperatorsValidators<Courier> {
-    private CourierService courierService;
+    private final CourierService courierService;
     
     public CourierController() {
         this.courierService = new CourierService();
@@ -82,30 +81,30 @@ public class CourierController implements IOperatorsValidators<Courier> {
         }
     }
     
-        public Response<Courier> updateCourier(Courier courier) {
-            Response<Courier> validationResponse = validateUpdate(courier);
-            if (!validationResponse.isSuccess()) {
-                return validationResponse;  // Return validation error if fails
+    public Response<Courier> updateCourier(Courier courier) {
+        Response<Courier> validationResponse = validateUpdate(courier);
+        if (!validationResponse.isSuccess()) {
+            return validationResponse;  // Return validation error if fails
+        }
+
+        try {
+            // Check if the courier exists
+            Courier existingCourier = courierService.getById(courier.getRiderId());
+            if (existingCourier == null) {
+                return Response.error("Courier not found with ID: " + courier.getRiderId());
             }
 
-            try {
-                // Check if the courier exists
-                Courier existingCourier = courierService.getById(courier.getRiderId());
-                if (existingCourier == null) {
-                    return Response.error("Courier not found with ID: " + courier.getRiderId());
-                }
+            // Update courier details
+            boolean isUpdated = courierService.update(courier);
 
-                // Update courier details
-                boolean isUpdated = courierService.update(courier);
+            return (isUpdated)
+                    ? Response.success("Courier updated successfully", courier)
+                    : Response.error("Failed to update courier");
 
-                return (isUpdated)
-                        ? Response.success("Courier updated successfully", courier)
-                        : Response.error("Failed to update courier");
-
-            } catch (SQLException e) {
-                return Response.error("Something went wrong: " + e.getMessage());
-            }
-            }
+        } catch (SQLException e) {
+            return Response.error("Something went wrong: " + e.getMessage());
+        }
+    }
 
     
     // Update courier status

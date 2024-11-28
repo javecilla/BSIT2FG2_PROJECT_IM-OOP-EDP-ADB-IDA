@@ -91,8 +91,6 @@ public class UserService implements IDatabaseOperators<User> {
                 Session.setLoggedInAdmin(admin);
             }
             
-            
-            
             return true;
         } catch (SQLException e) {
             throw new SQLException("Login failed due to database error: " + e.getMessage());

@@ -8,14 +8,8 @@ import java.util.List;
 
 import models.Sale;
 import config.DBConnection;
-import enums.CourierStatus;
 import interfaces.IDatabaseOperators;
 import helpers.Date;
-import helpers.Response;
-import helpers.Text;
-import java.util.Collections;
-import java.util.Random;
-import models.Courier;
 
 public class SaleService implements IDatabaseOperators<Sale> {
     
@@ -49,9 +43,7 @@ public class SaleService implements IDatabaseOperators<Sale> {
         try {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
-            
-            
-
+                     
             String query = """
                 INSERT INTO SALE (Sales_Date, Customer_ID, Net_Total, Payment_Amount, Rider_ID) VALUES (?, ?, ?, ?, ?)
             """;

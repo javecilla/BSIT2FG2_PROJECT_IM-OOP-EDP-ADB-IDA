@@ -15,9 +15,9 @@ import helpers.Response;
 import interfaces.IOperatorsValidators;
 
 public class IngredientController implements IOperatorsValidators<Ingredient> {
-    protected final IngredientService ingredientService;
-    protected final SupplierService supplierService;
-    protected final UserService userService;
+    private final IngredientService ingredientService;
+    private final SupplierService supplierService;
+    private final UserService userService;
    
     public IngredientController() {
         this.ingredientService = new IngredientService();
@@ -37,10 +37,9 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             0, 
             ingredientName.trim(),
             quantity,
-            reorderPoint,
-            new Supplier(supplierId, null, null, null) 
+            reorderPoint
         );
-
+        newIngredient.setSupplier(new Supplier(supplierId, null, null, null));
         newIngredient.setAdmin(admin);
 
         // Validate before creating
@@ -160,10 +159,9 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             0, 
             ingredientName.trim(),
             quantity,
-            reorderPoint,
-            new Supplier(supplierId, null, null, null) 
+            reorderPoint
         );
-
+        updatedIngredient.setSupplier(new Supplier(supplierId, null, null, null));
         updatedIngredient.setAdmin(admin);
 
         // Validate before updating

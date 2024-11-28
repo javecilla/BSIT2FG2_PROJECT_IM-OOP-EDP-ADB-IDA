@@ -1,5 +1,8 @@
 package models;
-
+/**
+ * Represents the `Courier` table in the database.
+ * This mean that this class is a rider who deliver the food of customer
+ */
 public class Courier {
     private int riderId;
     private String firstName;
