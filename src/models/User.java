@@ -1,8 +1,10 @@
 package models;
 /**
  * Represents the `User` table in the database.
- * Extends the `UserInfo` class to include additional fields specific to user accounts.
- * Includes attributes for user ID, username, password, and role.
+ * Building on UserInfo, the User class extends it by adding account-specific attributes such as username, 
+ * password, email, and role. This design allows us to differentiate between users at the account level 
+ * while inheriting general user details. User serves as a bridge for further specialization into distinct user 
+ * roles.
  */
 public class User extends UserInfo {
     private int id;

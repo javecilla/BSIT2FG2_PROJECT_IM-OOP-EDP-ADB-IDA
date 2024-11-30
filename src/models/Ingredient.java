@@ -1,7 +1,9 @@
 package models;
 /**
- * Represents the `Ingredient` entity with details about an ingredient,
- * including its name, quantity, reorder points, and associated supplier.
+ * Represents the `Ingredient` table in the database.
+ * The Ingredient class encapsulates details about individual ingredients, such as name, quantity, and 
+ * reorderPoint. It establishes relationships with Supplier and Admin classes to manage sourcing and 
+ * oversight.
  */
 public class Ingredient {
     private int id;

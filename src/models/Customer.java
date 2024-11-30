@@ -1,8 +1,9 @@
 package models;
 /**
  * Represents the `Customer` table in the database.
- * Extends the `User` class to include fields specific to customers.
- * Includes attributes for customer ID and status (e.g., active, inactive).
+ * Similarly, the Customer class extends User to represent customers, introducing attributes like status to 
+ * define their account state (e.g., active or inactive). This approach ensures that customer-specific 
+ * attributes and behaviors are separated while still inheriting common user account functionalities.
  */
 public class Customer extends User {
     private int id;

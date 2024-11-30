@@ -1,8 +1,9 @@
 package models;
 /**
  * Represents the `Admin` table in the database.
- * Extends the `User` class to include fields specific to administrators.
- * Includes attributes for admin ID, admin type, and associated `User` and `UserInfo` details.
+ * The Admin class extends User to represent administrative users, adding attributes like type to 
+ * distinguish different types of administrators (e.g., super admin, manager). By doing so, we encapsulate 
+ * admin-specific responsibilities while leveraging the shared functionality of the User class.
  */
 public class Admin extends User {
     private int id;

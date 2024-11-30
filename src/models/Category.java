@@ -3,7 +3,10 @@ package models;
 import javax.swing.JOptionPane;
 
 /**
- * Represents a category in the system, typically used to classify food items.
+ * Represents the `Category` table in the database.
+ * For product categorization, the Category class serves as a base class to manage shared attributes like 
+ * id and name. The Food class extends Category to represent specific food items, adding fields such as 
+ * price and name.
  */
 public class Category {
     private int id;

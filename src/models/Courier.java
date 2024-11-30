@@ -1,7 +1,9 @@
 package models;
 /**
  * Represents the `Courier` table in the database.
- * This mean that this class is a rider who deliver the food of customer
+ * The Courier class represents the riders responsible for delivering food to customers. It includes 
+ * attributes like riderId, firstName, lastName, company, contactNumber, and status, encapsulating 
+ * essential details about the delivery personnel.
  */
 public class Courier {
     private int riderId;

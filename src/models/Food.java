@@ -3,7 +3,8 @@ package models;
 import javax.swing.JOptionPane;
 
 /**
- * Represents a `Food` item, inheriting from the `Category` class.
+ * Represents the `Food` table in the database.
+ * `Food` item, inheriting from the `Category` class.
  * Includes details about the food item such as name, price, and category.
  */
 public class Food extends Category {

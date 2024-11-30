@@ -1,7 +1,9 @@
 package models;
 /**
- * Represents the `Supplier` entity with information about a supplier's 
- * contact details and address.
+ * Represents the `Supplier` table in the database.
+ * The Supplier class encapsulates information about suppliers, such as name, contactNumber, and 
+ * address. It links directly to the Ingredient class, emphasizing the interconnected and describing whose 
+ * supplies those ingredients. 
  */
 public class Supplier {
     private int id;                 

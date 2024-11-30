@@ -1,8 +1,9 @@
 package models;
 /**
  * Represents the `Sale` table in the database.
- * Extends the `Customer` class to associate sales with a specific customer.
- * Includes attributes for sale ID, date, and net total amount of the sale.
+ * The Sale class links to the Customer class to associate sales with a specific customer, adding attributes
+ * like saleId, date, and netTotal for the transaction. It also establishes a relationship with the Courier 
+ * class, linking a sale to the rider responsible for delivering the purchased items.
  */
 public class Sale {
     private int id;

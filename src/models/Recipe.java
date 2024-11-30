@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a Recipe that contains a list of ingredients and food details.
- * It supports both single and multiple ingredients.
+ * Represents the `Recipe` table in the database.
+ * The Recipe class abstracts the concept of recipes, linking Food items to their required Ingredient 
+ * objects. It supports both single and multiple ingredients, allowing for flexibility in representing simple 
+ * or complex recipes.
  */
 public class Recipe {
     private int quantity;

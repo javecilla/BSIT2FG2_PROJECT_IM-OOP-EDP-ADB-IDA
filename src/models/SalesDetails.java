@@ -1,8 +1,10 @@
 package models;
 /**
  * Represents the `SalesDetails` table in the database.
- * Stores detailed information about items in a sale, including the quantity, associated food, category,
- * and references to the customer, user, and their user information involved in the sale.
+ * The SalesDetails class provides detailed information about items included in a sale, such as the 
+ * quantity of each item, the associated Food object, and the specific Sale it is part of. This class 
+ * encapsulates the transactional details of each sale while maintaining relationships with the relevant 
+ * entities like Customer and Food.
  */
 public class SalesDetails {
     private int quantity;           // Quantity of food items sold.

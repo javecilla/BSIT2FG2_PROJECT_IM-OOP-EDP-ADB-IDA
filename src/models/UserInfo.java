@@ -1,9 +1,9 @@
 package models;
 /**
- * Represents a user's detailed information such as name, address, and location details.
- * This class is part of the Model layer in the MVC architecture, encapsulating the 
- * structure of the `UserInfo` database table. It provides methods for accessing and 
- * manipulating user information while maintaining data consistency.
+ * Represents the `UserInfo` table in the database.
+ * We used inheritance to define a base class UserInfo for shared attributes and behaviors, 
+ * such as the user's name, address, and location details. This class encapsulates the structure 
+ * of a user’s general information.
  */
 public class UserInfo {
     // Attributes (represent column name in the database)
