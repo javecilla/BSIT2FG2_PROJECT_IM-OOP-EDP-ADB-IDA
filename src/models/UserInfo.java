@@ -1,7 +1,7 @@
 package models;
 /**
  * Represents the `UserInfo` table in the database.
- * We used inheritance to define a base class UserInfo for shared attributes and behaviors, 
+ * Define a base class UserInfo for shared attributes and behaviors, 
  * such as the user's name, address, and location details. This class encapsulates the structure 
  * of a user’s general information.
  */

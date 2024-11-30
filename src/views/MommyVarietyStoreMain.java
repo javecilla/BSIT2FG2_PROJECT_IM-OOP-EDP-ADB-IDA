@@ -10,11 +10,15 @@ import enums.*;
 import core.*;
 
 public class MommyVarietyStoreMain {
-    User userHolder;
-    double balance = 0;
-    
-    String userRole = "";
-    String quantityType = "add";
+    public double balance = 0;
+    public String userRole = "";
+    public String quantityType = "add";
+    public int userPayment;
+    public static int categoriesCounter = 0;
+    public static int foodsCounter = 0;
+    public int foodCounter = 0;
+    public boolean startPanel = true;
+    public boolean loggedIn = false;
     
     protected static final UserController USER_CONTROLLER = new UserController();
     protected static final IngredientController INGREDIENT_CONTROLLER = new IngredientController();
@@ -23,16 +27,9 @@ public class MommyVarietyStoreMain {
     protected static final CartController CART_CONTROLLER = new CartController();
     protected static final CourierController COURIER_CONTROLLER = new CourierController();
     
-     static int categoriesCounter = 0;
-     static int foodsCounter = 0;
-     int foodCounter = 0;
-    
-    boolean startPanel = true;
-    boolean loggedIn = false;
-    
-    int userPayment;
-    
-    Cart found;
+    private Cart found;
+    private User userHolder;
+   
     
     public static void main(String[] args) {
         MommyVarietyStoreMain store = new MommyVarietyStoreMain();
@@ -238,15 +235,15 @@ public class MommyVarietyStoreMain {
     
      void navigateToDashboard(User user) {
     
-    if (user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.CLIENT.name()))) {
-        clientDashboard(user);
-    } else if (user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.ADMIN.name()))) {
-        adminSection(user);
-    } else {
-        //System.out.println("No dashboard found for this user role.");
-        JOptionPane.showMessageDialog(null, "No dashboard found for this user role.", "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-    }
-}
+            if (user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.CLIENT.name()))) {
+                clientDashboard(user);
+            } else if (user.getUserRole().equals(Text.capitalizeFirstLetterInString(UserRoles.ADMIN.name()))) {
+                adminSection(user);
+            } else {
+                //System.out.println("No dashboard found for this user role.");
+                JOptionPane.showMessageDialog(null, "No dashboard found for this user role.", "MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     
     
      void showAllCouriers() {
@@ -302,14 +299,14 @@ public class MommyVarietyStoreMain {
     }
      
      void showCourierById() {
-    String input = JOptionPane.showInputDialog(null, 
-        "Enter Courier ID:", 
-        "MOMMY'S VARIETY STORE", 
-        JOptionPane.PLAIN_MESSAGE);
+        String input = JOptionPane.showInputDialog(null, 
+            "Enter Courier ID:", 
+            "MOMMY'S VARIETY STORE", 
+            JOptionPane.PLAIN_MESSAGE);
 
-    if (input == null) {
-        return; 
-    }
+        if (input == null) {
+            return; 
+        }
 
             try {
                 int id = Integer.parseInt(input); 
@@ -452,10 +449,6 @@ public class MommyVarietyStoreMain {
     }
 }
 
-
-
-
-       
        void addNewCourier() {
     try {
         

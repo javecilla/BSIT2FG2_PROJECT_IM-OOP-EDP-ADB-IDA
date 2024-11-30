@@ -8,8 +8,6 @@ package models;
 public class Admin extends User {
     private int id;
     private String type;        // Type of admin (e.g., super admin, manager).
-    ///private User user;          // Associated user account details.
-    //private UserInfo userInfo;  // Detailed user information for the admin.
     
     public Admin() {
         super();
@@ -49,14 +47,6 @@ public class Admin extends User {
     public void setAdminType(String type) {
         this.type = type;
     }
-//    
-//    public UserInfo getUserInfo() {
-//        return userInfo;
-//    }
-//     
-//     public void setUserInfo(UserInfo userInfo) {
-//        this.userInfo = userInfo;
-//    }
     
     @Override
     public String display() {
