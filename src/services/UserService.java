@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import config.DBConnection;
+import config.MSACCESSConnection;
 import interfaces.IDatabaseOperators;
 import models.User;
 import models.Admin;
@@ -23,7 +23,7 @@ public class UserService implements IDatabaseOperators<User> {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             
             String query = """
                 SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role, USER.Email, USER.Contact_Number,
@@ -95,7 +95,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Login failed due to database error: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(rs, pst); 
+            MSACCESSConnection.closeResources(rs, pst); 
         }
     }
     
@@ -106,7 +106,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
 
             String query = """
                 SELECT COUNT(*) FROM [USER] WHERE Username = ?
@@ -119,7 +119,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Checking username availability failed: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 
@@ -130,7 +130,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
 
             String query = """
                 SELECT COUNT(*) FROM [USER] WHERE Email = ?
@@ -143,7 +143,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Checking email availability failed: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
     
@@ -153,7 +153,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
 
             String query = """
                 SELECT COUNT(*) FROM [USER] WHERE Contact_Number = ?
@@ -166,7 +166,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Checking contact number availability failed: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 
@@ -177,7 +177,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             
             String query = """
                 SELECT COUNT(*) FROM ADMIN WHERE Admin_ID = ?
@@ -190,7 +190,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Checking admin id failed due to database error: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(rs, pst); 
+            MSACCESSConnection.closeResources(rs, pst); 
         }
     }
     
@@ -204,7 +204,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
 
             String query = "SELECT MAX(Customer_ID) AS last_customer_id FROM CUSTOMER";
             pst = conn.prepareStatement(query);
@@ -215,7 +215,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Error retrieving last customer ID: " + e.getMessage(), e);
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 
@@ -225,7 +225,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
 
             String query = "SELECT MAX(Admin_ID) AS last_admin_id FROM ADMIN";
             pst = conn.prepareStatement(query);
@@ -235,7 +235,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Error retrieving last admin ID: " + e.getMessage(), e);
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
     
@@ -245,7 +245,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
 
             String query = "SELECT MAX(UserInfo_ID) AS last_user_info_id FROM USER_INFO";
             pst = conn.prepareStatement(query);
@@ -255,7 +255,7 @@ public class UserService implements IDatabaseOperators<User> {
         } catch (SQLException e) {
             throw new SQLException("Error retrieving last userInfo ID: " + e.getMessage(), e);
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 
@@ -268,7 +268,7 @@ public class UserService implements IDatabaseOperators<User> {
         ResultSet rsUser = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
             
             int userInfoId = getLastUserInfoId() + 1;
@@ -364,8 +364,8 @@ public class UserService implements IDatabaseOperators<User> {
             if (conn != null) conn.rollback();
             throw new SQLException("Registration failed due to database error: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(rsUserInfo, pstUserInfo);
-            DBConnection.closeResources(null, pstUser);
+            MSACCESSConnection.closeResources(rsUserInfo, pstUserInfo);
+            MSACCESSConnection.closeResources(null, pstUser);
             //if (conn != null) conn.close();
             if (conn != null) conn.setAutoCommit(true);
         }

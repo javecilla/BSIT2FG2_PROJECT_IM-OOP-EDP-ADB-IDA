@@ -9,7 +9,7 @@ import java.util.List;
 
 import models.Food;
 import models.Category;
-import config.DBConnection;
+import config.MSACCESSConnection;
 import interfaces.IDatabaseOperators;
 
 public class FoodService implements IDatabaseOperators<Food> {
@@ -20,7 +20,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         boolean success = false;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
               
             String query = """
@@ -47,7 +47,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             throw e;
         } finally {
             if (conn != null) conn.setAutoCommit(true);
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -59,7 +59,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
                FROM FOOD 
@@ -83,7 +83,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             }
             return null;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -96,7 +96,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();  
+            conn = MSACCESSConnection.getConnection();  
             String query = """
                 SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
                 FROM FOOD 
@@ -121,7 +121,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             }
             return foods;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -133,7 +133,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
                FROM FOOD 
@@ -160,7 +160,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             }
             return foods;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -171,7 +171,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         PreparedStatement pst = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ?
             """;
@@ -184,7 +184,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             
             return pst.executeUpdate() > 0;
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -195,7 +195,7 @@ public class FoodService implements IDatabaseOperators<Food> {
         PreparedStatement pst = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 DELETE FROM FOOD WHERE Food_ID = ?
             """;
@@ -204,7 +204,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             
             return pst.executeUpdate() > 0;
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -223,7 +223,7 @@ public class FoodService implements IDatabaseOperators<Food> {
             rs = pst.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 }

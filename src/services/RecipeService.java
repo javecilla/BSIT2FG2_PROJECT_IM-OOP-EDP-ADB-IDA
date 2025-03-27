@@ -10,7 +10,7 @@ import java.util.List;
 import models.Recipe;
 import models.Food;
 import models.Ingredient;
-import config.DBConnection;
+import config.MSACCESSConnection;
 import interfaces.IDatabaseOperators;
 
 public class RecipeService implements IDatabaseOperators<Recipe> {
@@ -31,7 +31,7 @@ public class RecipeService implements IDatabaseOperators<Recipe> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             //get all ingredients information  base on the food id
             String query = """
                 SELECT RECIPE.*, 
@@ -72,7 +72,7 @@ public class RecipeService implements IDatabaseOperators<Recipe> {
             return null;
         
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         } 
     }
@@ -83,7 +83,7 @@ public class RecipeService implements IDatabaseOperators<Recipe> {
     ResultSet rs = null;
     
     try {
-        conn = DBConnection.getConnection();
+        conn = MSACCESSConnection.getConnection();
         String query = """
             SELECT RECIPE.*, 
                 FOOD.Food_Name, 
@@ -136,7 +136,7 @@ public class RecipeService implements IDatabaseOperators<Recipe> {
 
         return recipe;
     } finally {
-        DBConnection.closeResources(rs, pst);
+        MSACCESSConnection.closeResources(rs, pst);
         //if (conn != null) conn.close();
     }
 }

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import config.DBConnection;
+import config.MSACCESSConnection;
 import models.*;
 import interfaces.IDatabaseOperators;
 import helpers.Date;
@@ -21,7 +21,7 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
         boolean success = false;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
               
             String query = """
@@ -46,7 +46,7 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
             throw e;
         } finally {
             if (conn != null) conn.setAutoCommit(true);
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -60,7 +60,7 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
         try {
             int salesId = new SaleService().getLastSaleId();
                     
-            conn = DBConnection.getConnection();  
+            conn = MSACCESSConnection.getConnection();  
             String query = """
                 SELECT SALES_DETAIL.Item_Quantity, SALES_DETAIL.Food_ID, SALES_DETAIL.Sales_ID, 
                     FOOD.Food_Name, FOOD.Price, FOOD.Category_ID, CATEGORY.Category_Name, 
@@ -149,7 +149,7 @@ public class SalesDetailsService implements IDatabaseOperators<SalesDetails>{
             }
             return salesDetails;
         } finally { 
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }

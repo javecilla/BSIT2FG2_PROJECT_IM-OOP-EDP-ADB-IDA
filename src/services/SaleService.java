@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import models.Sale;
-import config.DBConnection;
+import config.MSACCESSConnection;
 import interfaces.IDatabaseOperators;
 import helpers.Date;
 
@@ -19,7 +19,7 @@ public class SaleService implements IDatabaseOperators<Sale> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
 
             String query = "SELECT MAX(Sales_ID) AS last_sales_id FROM SALE";
             pst = conn.prepareStatement(query);
@@ -29,7 +29,7 @@ public class SaleService implements IDatabaseOperators<Sale> {
         } catch (SQLException e) {
             throw new SQLException("Error retrieving last sale ID: " + e.getMessage(), e);
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 
@@ -41,7 +41,7 @@ public class SaleService implements IDatabaseOperators<Sale> {
         boolean success = false;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
                      
             String query = """
@@ -77,7 +77,7 @@ public class SaleService implements IDatabaseOperators<Sale> {
             throw e;
         } finally {
             if (conn != null) conn.setAutoCommit(true);
-            DBConnection.closeResources(generatedKeys, pst);
+            MSACCESSConnection.closeResources(generatedKeys, pst);
             //if (conn != null) conn.close();
         }
     }

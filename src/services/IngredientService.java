@@ -11,7 +11,7 @@ import models.Ingredient;
 import models.Supplier;
 import models.Admin;
 import models.User;
-import config.DBConnection;
+import config.MSACCESSConnection;
 import interfaces.IDatabaseOperators;
 
 public class IngredientService implements IDatabaseOperators<Ingredient> { 
@@ -22,7 +22,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         boolean success = false;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
             
             String query = """
@@ -51,7 +51,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             throw e;
         } finally {
             if (conn != null) conn.setAutoCommit(true);
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -63,7 +63,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 SELECT TOP 1 *            
                 FROM USER_INFO
@@ -113,7 +113,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
             return null; //no record found
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -127,7 +127,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 SELECT *            
                 FROM USER_INFO
@@ -175,7 +175,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
             return ingredients;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -187,7 +187,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 SELECT *            
                 FROM USER_INFO
@@ -237,7 +237,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             
             return ingredients;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -248,7 +248,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         PreparedStatement pst = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 UPDATE INGREDIENT 
                 SET Ingredient_Name = ?,
@@ -268,7 +268,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
             return pst.executeUpdate() > 0;
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -278,7 +278,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         PreparedStatement pst = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 UPDATE INGREDIENT
                 SET Ingredient_Quantity = ?
@@ -291,7 +291,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
             return pst.executeUpdate() > 0;  
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -301,7 +301,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         PreparedStatement pst = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 UPDATE INGREDIENT
                 SET Reorder_Point = ?
@@ -314,7 +314,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
             return pst.executeUpdate() > 0;  
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -326,7 +326,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
         PreparedStatement pst = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                DELETE FROM INGREDIENT WHERE Ingredient_ID = ?
             """;
@@ -335,7 +335,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
 
             return pst.executeUpdate() > 0;
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -354,7 +354,7 @@ public class IngredientService implements IDatabaseOperators<Ingredient> {
             rs = pst.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 }

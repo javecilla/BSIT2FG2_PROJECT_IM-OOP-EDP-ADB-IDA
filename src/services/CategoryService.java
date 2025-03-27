@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.Category;
-import config.DBConnection;
+import config.MSACCESSConnection;
 import interfaces.IDatabaseOperators;
 
 public class CategoryService implements IDatabaseOperators<Category> {
@@ -19,7 +19,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         boolean success = false;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
            
             String query = """
@@ -42,7 +42,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             throw e;
         } finally {
             if (conn != null) conn.setAutoCommit(true);
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             ////if (conn != null) conn.close();
         }
     }
@@ -54,7 +54,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 SELECT * FROM CATEGORY WHERE Category_ID = ?
             """;
@@ -71,7 +71,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             }
             return null;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -84,7 +84,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 SELECT * FROM CATEGORY
             """;
@@ -103,7 +103,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             }
             return categories;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -114,7 +114,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         PreparedStatement pst = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 UPDATE CATEGORY SET Category_Name = ? WHERE Category_ID = ? 
             """;
@@ -125,7 +125,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             
             return pst.executeUpdate() > 0;
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -136,7 +136,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
         PreparedStatement pst = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 DELETE FROM CATEGORY WHERE Category_ID = ? 
             """;
@@ -145,7 +145,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             
             return pst.executeUpdate() > 0;
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -164,7 +164,7 @@ public class CategoryService implements IDatabaseOperators<Category> {
             rs = pst.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
         }
     }
 }

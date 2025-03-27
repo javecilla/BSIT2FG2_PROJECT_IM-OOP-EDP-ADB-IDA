@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import config.DBConnection;
+import config.MSACCESSConnection;
 import interfaces.IDatabaseOperators;
 import models.Courier;
 import enums.CourierStatus;
@@ -23,7 +23,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
         boolean isCreated = false;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
               
             String query = """
@@ -52,7 +52,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             if (conn != null) conn.rollback();
             throw new SQLException("Creation of courirer failed due to database error: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
             if (conn != null) conn.setAutoCommit(true);
         }
@@ -66,7 +66,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
         ResultSet rs = null;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                SELECT * FROM COURIER
                WHERE Rider_ID = ?
@@ -89,7 +89,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             
             return null;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -103,7 +103,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
         
         
         try {
-            conn = DBConnection.getConnection();  
+            conn = MSACCESSConnection.getConnection();  
             String query = """
                 SELECT * FROM COURIER
             """;
@@ -126,7 +126,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             }
             return couriers;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -139,7 +139,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
         
         
         try {
-            conn = DBConnection.getConnection();  
+            conn = MSACCESSConnection.getConnection();  
             String query = """
                 SELECT * FROM COURIER 
                 WHERE Status = ?
@@ -164,7 +164,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             }
             return couriers;
         } finally {
-            DBConnection.closeResources(rs, pst);
+            MSACCESSConnection.closeResources(rs, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -174,7 +174,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
         PreparedStatement pst = null;
 
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             String query = """
                 UPDATE COURIER
                 SET Status = ?
@@ -187,7 +187,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
 
             return pst.executeUpdate() > 0;  
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
         }
     }
@@ -198,7 +198,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             PreparedStatement pst = null;
 
             try {
-                conn = DBConnection.getConnection();
+                conn = MSACCESSConnection.getConnection();
                 String query = """
                     UPDATE COURIER
                     SET First_Name = ?, 
@@ -219,7 +219,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
 
                 return pst.executeUpdate() > 0;
             } finally {
-                DBConnection.closeResources(null, pst);
+                MSACCESSConnection.closeResources(null, pst);
             }
         }
 
@@ -230,7 +230,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
         boolean isDeleted = false;
         
         try {
-            conn = DBConnection.getConnection();
+            conn = MSACCESSConnection.getConnection();
             conn.setAutoCommit(false);
             
             String query = """
@@ -252,7 +252,7 @@ public class CourierService implements IDatabaseOperators<Courier> {
             if (conn != null) conn.rollback();
             throw new SQLException("Deletion of courirer failed due to database error: " + e.getMessage());
         } finally {
-            DBConnection.closeResources(null, pst);
+            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
             if (conn != null) conn.setAutoCommit(true);
         }
