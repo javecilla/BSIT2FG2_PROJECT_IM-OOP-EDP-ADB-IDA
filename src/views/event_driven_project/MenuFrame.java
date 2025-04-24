@@ -4,12 +4,14 @@
  */
 package views.event_driven_project;
 
+import config.MSSQLConnection;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import javax.swing.*;
 import javax.swing.border.*;
+import java.sql.*;
 /**
  *
  * @author Admin
@@ -20,6 +22,7 @@ public class MenuFrame extends JFrame implements ActionListener{
         this.controller = eventController;
         menuFrameConfig();
         buttonRegister();
+        setCartItemCount();
     }
     //INITIALIZATION OF COMPONENTS
     
@@ -192,9 +195,35 @@ public class MenuFrame extends JFrame implements ActionListener{
         if(e.getSource() == drinksButton){
             controller.showDrinksFrame(this);
         }
+        
+        if(e.getSource() == cartButton){
+            controller.showCartFrame(this);
+        }
     }
     
-        private void setupButton(JButton button, ImageIcon icon) {
+    public void setCartItemCount(){
+        cartLabel.setText(getCartItemCount() + "");
+    }
+    
+    public int getCartItemCount() {
+        String sql = "SELECT COUNT(*) AS total FROM CART_ITEM";
+        int count = 0;
+
+        try (Connection conn = MSSQLConnection.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt("total"); // or rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // or log the error
+        }
+        return count;
+    }
+    
+    private void setupButton(JButton button, ImageIcon icon) {
         button.setIcon(icon);                      // Set the icon for the button
         button.setBorder(new EmptyBorder(0, 0, 0, 0));  // Remove the button's default border
         button.setFocusPainted(false);             // Disable the focus highlight when the button is clicked

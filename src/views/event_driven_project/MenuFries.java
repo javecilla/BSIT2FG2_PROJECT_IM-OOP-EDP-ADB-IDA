@@ -1,18 +1,23 @@
 package views.event_driven_project;
 
+import config.MSSQLConnection;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.image.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MenuFries extends JFrame implements ActionListener {
     private EventController controller;
         public MenuFries(EventController eventController){
             this.controller = eventController;
             friesFrameConfig();
-            buttonRegister();
+            setCartItemCount();
     }
     // Image Icons
     ImageIcon logo = new ImageIcon(getClass().getResource("/views/Images/logo.png"));
@@ -141,11 +146,6 @@ public class MenuFries extends JFrame implements ActionListener {
         this.setVisible(false);
     }
     
-    public void buttonRegister(){
-        homeButton.addActionListener(this);
-        browseButton.addActionListener(this);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         // Example: handle button clicks here if needed
@@ -167,6 +167,31 @@ public class MenuFries extends JFrame implements ActionListener {
             FriesFlavorChoices flavor = new FriesFlavorChoices(0);
             flavor.setVisible(true);
         }
+        if(e.getSource() == cartButton){
+            controller.showCartFrame(this);
+        }
+    }
+    
+    public void setCartItemCount(){
+        cartLabel.setText(getCartItemCount() + "");
+    }
+    
+    public int getCartItemCount() {
+        String sql = "SELECT COUNT(*) AS total FROM CART_ITEM";
+        int count = 0;
+
+        try (Connection conn = MSSQLConnection.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt("total"); // or rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // or log the error
+        }
+        return count;
     }
 
     private void setupButton(JButton button, ImageIcon icon) {
