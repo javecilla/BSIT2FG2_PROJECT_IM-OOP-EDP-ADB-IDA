@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/MenuFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/MSACCESSConnection.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/EventController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Main.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/DatabaseConnection.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Cart.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Payment.java</file>
+        </group>
     </open-files>
 </project-private>

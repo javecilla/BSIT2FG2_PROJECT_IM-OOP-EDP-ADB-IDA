@@ -29,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -43,7 +44,6 @@ public class RegisterForm2 extends JFrame implements ActionListener{
     public RegisterForm2(EventController eventController){
         this.controller = eventController;
         registerFrame2();
-        buttonRegister();
     }
     
     ImageIcon backgroundIcon2 = new ImageIcon(getClass().getResource("/views/Images/form/register-bg-address.png"));
@@ -64,7 +64,7 @@ public class RegisterForm2 extends JFrame implements ActionListener{
     
     JButton registerButton = new JButton();
     
-       public void registerFrame2() {
+public void registerFrame2() {
     // Panel with background image
     JPanel contentPanel = new JPanel() {
         @Override
@@ -168,7 +168,42 @@ public class RegisterForm2 extends JFrame implements ActionListener{
     gbc.insets = new Insets(100, 0, 0, 0); // Move it down by 80 pixels
     contentPanel.add(formPanel, gbc);
 
-
+    registerButton.setEnabled(false);
+    
+    houseNumberField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    streetField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    regionField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    provinceField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    cityField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    
+    registerButton.addMouseListener(new MouseAdapter() {
+        public void mouseEntered(MouseEvent e) {
+            if (!registerButton.isEnabled()) {
+                JOptionPane.showMessageDialog(null, "Please complete your address to proceed", "Cannot Proceed", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    });
+    
     // Frame config
     this.setContentPane(contentPanel);
     this.setSize(backgroundIcon2.getIconWidth(), backgroundIcon2.getIconHeight());
@@ -176,18 +211,24 @@ public class RegisterForm2 extends JFrame implements ActionListener{
     this.setLocationRelativeTo(null);
     this.setVisible(false);
     }
-       
-    public void buttonRegister(){
-        registerButton.addActionListener(this);
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == registerButton){
-            registerFrame2();
             controller.showHomeFrame(this);
         }
     }
+    
+    private void checkAllFieldsValid() {
+        boolean allFilled = !houseNumberField.getText().trim().isEmpty() &&
+                            !streetField.getText().trim().isEmpty() &&
+                            !regionField.getText().trim().isEmpty() &&
+                            !provinceField.getText().trim().isEmpty() &&
+                            !cityField.getText().trim().isEmpty();
+
+        registerButton.setEnabled(allFilled);
+    }
+    
     private void setupButton(JButton button, ImageIcon icon) {
         button.setIcon(icon);                      // Set the icon for the button
         button.setBorder(new EmptyBorder(0, 0, 0, 0));  // Remove the button's default border

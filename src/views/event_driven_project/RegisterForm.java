@@ -19,7 +19,6 @@ public class RegisterForm extends JFrame implements ActionListener{
     public RegisterForm(EventController eventController){
         this.controller = eventController;
         registerFrame();
-        buttonRegister();
     }
     //INITIALIZATION OF COMPONENTS
     
@@ -38,11 +37,12 @@ public class RegisterForm extends JFrame implements ActionListener{
     RoundedTextField contactField = new RoundedTextField(20, fieldIcon);
     
     //Labels
-    JLabel usernameLabel = new JLabel("Email address:");
+    JLabel usernameLabel = new JLabel("Username:");
     JLabel passwordLabel = new JLabel("Password:");
     JLabel firstNameLabel = new JLabel("First name:");
     JLabel lastNameLabel = new JLabel("Last name:");
     JLabel contactLabel = new JLabel("Contact number:");
+    JLabel contactErrorLabel = new JLabel("Invalid Contact Number. It must begin with 09 and 11 digits.");
 
     //Buttons
     JButton loginButton = new JButton();
@@ -134,11 +134,16 @@ public class RegisterForm extends JFrame implements ActionListener{
     
     gbc.gridx = 0;
     gbc.gridy = 8;
+    gbc.anchor = GridBagConstraints.CENTER; 
+    formPanel.add(contactErrorLabel, gbc);
+    
+    gbc.gridx = 0;
+    gbc.gridy = 9;
     gbc.anchor = GridBagConstraints.WEST; 
     formPanel.add(passwordLabel, gbc);
     
     gbc.gridx = 0;
-    gbc.gridy = 9;
+    gbc.gridy = 10;
     gbc.anchor = GridBagConstraints.CENTER; 
     formPanel.add(passwordField, gbc);
     
@@ -155,7 +160,56 @@ public class RegisterForm extends JFrame implements ActionListener{
     gbc.insets = new Insets(100, 0, 0, 0); // Move it down by 80 pixels
     contentPanel.add(formPanel, gbc);
 
+    nextButton.setEnabled(false);
+    contactErrorLabel.setVisible(false);
+    
+    firstNameField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    
+    lastNameField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    
+    passwordField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    
+    usernameField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    
+    contactField.addFocusListener(new FocusAdapter() {
+    @Override
+    public void focusLost(FocusEvent e) {
+        String contact = contactField.getText();
+        if (!contact.matches("^09\\d{9}$")) {
+            contactErrorLabel.setForeground(Color.red);
+            contactErrorLabel.setVisible(true);
+            nextButton.setEnabled(false);
+        } else {
+            contactErrorLabel.setVisible(false);
+            checkAllFieldsValid(); // enable button if all fields are valid
+        }
+        }
+    });
 
+    nextButton.addMouseListener(new MouseAdapter() {
+        public void mouseEntered(MouseEvent e) {
+            if (!nextButton.isEnabled()) {
+                JOptionPane.showMessageDialog(null, "Please complete all the informations to proceed", "Cannot Proceed", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    });
+    
     // Frame config
     this.setContentPane(contentPanel);
     this.setSize(backgroundIcon1.getIconWidth(), backgroundIcon1.getIconHeight());
@@ -164,16 +218,23 @@ public class RegisterForm extends JFrame implements ActionListener{
     this.setVisible(false);
 }
     
-    public void buttonRegister(){
-        nextButton.addActionListener(this);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == nextButton){
             controller.showRegisterFrame2(this);
         }
     }
+
+    private void checkAllFieldsValid() {
+    boolean allFilled = !firstNameField.getText().trim().isEmpty() &&
+                        !lastNameField.getText().trim().isEmpty() &&
+                        !usernameField.getText().trim().isEmpty() &&
+                        !String.valueOf(passwordField.getPassword()).trim().isEmpty() &&
+                        contactField.getText().matches("^09\\d{9}$");
+
+    nextButton.setEnabled(allFilled);
+}
+
     
     private void setupButton(JButton button, ImageIcon icon) {
         button.setIcon(icon);                      // Set the icon for the button

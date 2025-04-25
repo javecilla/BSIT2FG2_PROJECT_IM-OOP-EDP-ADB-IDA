@@ -14,6 +14,8 @@ public class EventController{
     private RegisterForm registerFrame;
     private RegisterForm2 registerFrame2;
     private OrderFrame orderFrame;
+    private Cart cartFrame;
+    private Payment paymentFrame;
 
     public EventController() {
         homeFrame = new Home(this);
@@ -25,6 +27,8 @@ public class EventController{
         loginFrame = new LoginForm(this);
         registerFrame = new RegisterForm(this);
         registerFrame2 = new RegisterForm2(this);
+        cartFrame = new Cart(this);
+        paymentFrame = new Payment(this);
     }
 
     public void showHomeFrame(JFrame currentFrame) {
@@ -70,6 +74,16 @@ public class EventController{
     public void showRegisterFrame2(JFrame currentFrame) {
         currentFrame.setVisible(false);
         registerFrame2.setVisible(true);
+    }
+    
+    public void showCartFrame(JFrame currentFrame) {
+        currentFrame.setVisible(true);
+        cartFrame.setVisible(true);
+    }
+        
+    public void showPaymentFrame(JFrame currentFrame) {
+        currentFrame.setVisible(false);
+        paymentFrame.setVisible(true);
     }
     
 }

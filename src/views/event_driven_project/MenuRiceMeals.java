@@ -1,17 +1,23 @@
 package views.event_driven_project;
 
+import config.MSSQLConnection;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.image.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MenuRiceMeals extends JFrame implements ActionListener {
     private EventController controller;
         public MenuRiceMeals(EventController eventController){
             this.controller = eventController;
             riceMealFrameConfig();
+            setCartItemCount();
     }
     // Image Icons
     ImageIcon logo = new ImageIcon(getClass().getResource("/views/Images/logo.png"));
@@ -190,6 +196,31 @@ public class MenuRiceMeals extends JFrame implements ActionListener {
             OrderFrame orderFrame = new OrderFrame(0);
             orderFrame.setVisible(true);
         }
+        if(e.getSource() == cartButton){
+            controller.showCartFrame(this);
+        }
+    }
+    
+    public void setCartItemCount(){
+        cartLabel.setText(getCartItemCount() + "");
+    }
+    
+    public int getCartItemCount() {
+        String sql = "SELECT COUNT(*) AS total FROM CART_ITEM";
+        int count = 0;
+
+        try (Connection conn = MSSQLConnection.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt("total"); // or rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // or log the error
+        }
+        return count;
     }
 
     private void setupButton(JButton button, ImageIcon icon) {
