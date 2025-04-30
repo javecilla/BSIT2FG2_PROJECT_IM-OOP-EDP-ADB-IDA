@@ -125,6 +125,9 @@ public class Home extends JFrame implements ActionListener{
             controller.showLoginFrame(this);
         }
         
+        if(e.getSource() == admin){
+            controller.showAdminNavFrame(this);
+        }
     }
     
     private void setupButton(JButton button, ImageIcon icon) {
