@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import config.MSACCESSConnection;
+import config.MSSQLConnection;
 import interfaces.IDatabaseOperators;
 import models.User;
 import models.Admin;
@@ -23,21 +24,24 @@ public class UserService implements IDatabaseOperators<User> {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = MSACCESSConnection.getConnection();
+            //conn = MSACCESSConnection.getConnection();
+            conn = MSSQLConnection.getConnection();
             
-            String query = """
-                SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role, USER.Email, USER.Contact_Number,
-                    USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, 
-                    USER_INFO.Barangay, USER_INFO.Street, USER_INFO.House_Number, 
-                    USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality,
-                    CUSTOMER.Customer_ID, CUSTOMER.Customer_Status,
-                    ADMIN.Admin_ID, ADMIN.Admin_Type
-                FROM [USER]
-                INNER JOIN USER_INFO ON USER_INFO.UserInfo_ID = USER.UserInfo_ID
-                LEFT JOIN CUSTOMER ON USER.User_ID = CUSTOMER.Customer_ID
-                LEFT JOIN ADMIN ON USER.User_ID = ADMIN.Admin_ID
-                WHERE USER.Username = ? OR USER.Email = ? OR USER.Contact_Number = ?
-            """;
+//            String query = """
+//                SELECT USER.User_ID, USER.Username, USER.Password, USER.User_Role, USER.Email, USER.Contact_Number,
+//                    USER_INFO.UserInfo_ID, USER_INFO.First_Name, USER_INFO.Last_Name, 
+//                    USER_INFO.Barangay, USER_INFO.Street, USER_INFO.House_Number, 
+//                    USER_INFO.Region, USER_INFO.Province, USER_INFO.Municipality,
+//                    CUSTOMER.Customer_ID, CUSTOMER.Customer_Status,
+//                    ADMIN.Admin_ID, ADMIN.Admin_Type
+//                FROM [USER]
+//                INNER JOIN USER_INFO ON USER_INFO.UserInfo_ID = USER.UserInfo_ID
+//                LEFT JOIN CUSTOMER ON USER.User_ID = CUSTOMER.Customer_ID
+//                LEFT JOIN ADMIN ON USER.User_ID = ADMIN.Admin_ID
+//                WHERE USER.Username = ? OR USER.Email = ? OR USER.Contact_Number = ?
+//            """;
+
+            String query = "SELECT TOP 1 * FROM USER_WITH_PROFILE WHERE Username = ? OR Email = ? OR Contact_Number = ?";
             
             pst = conn.prepareStatement(query);
             pst.setString(1, user.getUsername());
@@ -109,7 +113,7 @@ public class UserService implements IDatabaseOperators<User> {
             conn = MSACCESSConnection.getConnection();
 
             String query = """
-                SELECT COUNT(*) FROM [USER] WHERE Username = ?
+                SELECT COUNT(UserID) FROM USER_ WHERE Username = ?;
             """;
             pst = conn.prepareStatement(query);
             pst.setString(1, username);
