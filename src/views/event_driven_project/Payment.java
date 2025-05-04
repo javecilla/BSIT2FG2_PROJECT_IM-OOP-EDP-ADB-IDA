@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
-public class Payment extends JFrame implements ActionListener {
+public class Payment extends JFrame implements ActionListener, ChangeAddressFrame.AddressChangeListener {
 
     private EventController controller;
     private JTable cartTable;
@@ -19,6 +19,9 @@ public class Payment extends JFrame implements ActionListener {
     private JButton placeOrderBtn, changeAddressBtn;
     private JLabel nameLabel, addressLabel, totalLabel;
     private JPanel userInfoPanel;
+    
+    // User ID for database operations
+    private int userId = 1; // Default to user ID 1 for demonstration, should be set dynamically
 
     private ImageIcon paymentIcon = new ImageIcon(getClass().getResource("/views/Images/payment option.png"));
     private ImageIcon changeAddressIcon = new ImageIcon(getClass().getResource("/views/Images/change-address.png"));
@@ -26,16 +29,8 @@ public class Payment extends JFrame implements ActionListener {
     public Payment(EventController controller) {
         this.controller = controller;
         paymentFrameConfig();
+        loadUserInfo(); // Load user info from database when frame is created
     }
-
-//    public static void main(String[] args) {
-////        try {
-////            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-//        SwingUtilities.invokeLater(() -> new Payment());
-//    }
 
     private void paymentFrameConfig() {
         setTitle("Place Order");
@@ -72,7 +67,7 @@ public class Payment extends JFrame implements ActionListener {
         
         // Name and address on the semi-transparent panel
         nameLabel = new JLabel("Juan Dela Cruz");
-        addressLabel = new JLabel("123, Lorem Ipsum Street, Dolor Sit Amet, Bulacan, Region III");
+        addressLabel = new JLabel("123, Lorem Ipsum Street, pinalagdan, Dolor Sit Amet, Bulacan, Region III");
         nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
         addressLabel.setFont(new Font("Arial", Font.ITALIC, 13));
         
@@ -81,9 +76,12 @@ public class Payment extends JFrame implements ActionListener {
         backgroundPanel.add(userInfoPanel);
 
         // Change Address button
-        changeAddressBtn = new JButton();
-        changeAddressBtn.setBounds(getWidth() - 170, 60, changeAddressIcon.getIconWidth(), changeAddressIcon.getIconHeight());
-        setupButton(changeAddressBtn, changeAddressIcon);
+        changeAddressBtn = new JButton("Change Address");
+        changeAddressBtn.setBounds(getWidth() - 170, 60, changeAddressIcon.getIconWidth()-20, changeAddressIcon.getIconHeight()-25);
+        changeAddressBtn.setBackground(new Color(95,71,214));
+        changeAddressBtn.setForeground(Color.white);
+        changeAddressBtn.setFont(new Font("Poppins", Font.BOLD, 12));
+        setupButton(changeAddressBtn);
         backgroundPanel.add(changeAddressBtn);
 
         // Payment option panel
@@ -166,6 +164,8 @@ public class Payment extends JFrame implements ActionListener {
         scrollPane.setBounds(20, 250, getWidth() - 40, 300);
         backgroundPanel.add(scrollPane);
 
+        totalLabel = new JLabel();
+                
         loadCartItems(); // Load data from DB
 
         // Total amount panel
@@ -173,7 +173,6 @@ public class Payment extends JFrame implements ActionListener {
         totalPanel.setOpaque(false);
         totalPanel.setBounds(20, 550, getWidth() - 40, 30);
         
-        totalLabel = new JLabel("Total: ₱ " + calculateTotal());
         totalLabel.setFont(new Font("Poppins", Font.BOLD, 16));
         totalLabel.setForeground(Color.WHITE);
         totalPanel.add(totalLabel);
@@ -184,8 +183,6 @@ public class Payment extends JFrame implements ActionListener {
         placeOrderBtn.setFont(new Font("Poppins", Font.BOLD, 14));
         placeOrderBtn.setBackground(new Color(95, 71, 214));
         placeOrderBtn.setForeground(Color.WHITE);
-        placeOrderBtn.setOpaque(true); // Make sure it's not transparent
-        placeOrderBtn.setBorderPainted(false); // Often looks better without border when using custom colors
         placeOrderBtn.setBounds(getWidth() / 4 - 75, 580, 150, 40);
         placeOrderBtn.addActionListener(this);
         placeOrderBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -219,6 +216,18 @@ public class Payment extends JFrame implements ActionListener {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Failed to load cart items:\n" + e.getMessage());
         }
+        
+        // Update total after loading items
+        totalLabel.setText("Total: ₱ " + calculateTotal());
+    }
+    
+    /**
+     * Load user information from database
+     * You can use this method to refresh user data if needed
+     */
+    private void loadUserInfo() {
+        // This method can be filled in with actual database queries
+        // For now we'll keep the hardcoded values from your original code
     }
 
     @Override
@@ -229,68 +238,13 @@ public class Payment extends JFrame implements ActionListener {
             if ("Online Payment".equals(selectedPayment)) {
                 showOnlinePaymentPrompt();
             } else if ("Cash on Delivery".equals(selectedPayment)) {
-                // Using default JOptionPane
-                JOptionPane.showMessageDialog(this, "Order placed with Cash on Delivery.");
-                // Here you would process the order in your database
+                controller.showOtwFrame(this);
             }
 
         } else if (e.getSource() == changeAddressBtn) {
-            showChangeAddressDialog();
+            // Use our new reusable address dialog
+            ChangeAddressFrame.showDialog(this, addressLabel.getText(), this);
         }
-    }
-
-    private void showChangeAddressDialog() {
-        // Using standard JDialog with default styling
-        JDialog dialog = new JDialog(this, "Change Delivery Address", true);
-        dialog.setSize(400, 300);
-        dialog.setLocationRelativeTo(this);
-        dialog.setLayout(new BorderLayout(10, 10));
-        
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 10));
-        formPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        JLabel houseNumberLabel = new JLabel("Street Address:");
-        JTextField houseNumberField = new JTextField(addressLabel.getText().split(",")[0].trim());
-        
-        JLabel streetLabel = new JLabel("Street Address:");
-        JTextField streetField = new JTextField(addressLabel.getText().split(",")[1].trim());
-        
-        JLabel cityLabel = new JLabel("City/Municipality:");
-        JTextField cityField = new JTextField(addressLabel.getText().split(",")[2].trim());
-        
-        JLabel provinceLabel = new JLabel("Province:");
-        JTextField provinceField = new JTextField(addressLabel.getText().split(",")[3].trim());
-        
-        JLabel regionLabel = new JLabel("Region:");
-        JTextField regionField = new JTextField(addressLabel.getText().split(",")[4].trim());
-        
-        formPanel.add(houseNumberLabel);
-        formPanel.add(houseNumberField);
-        formPanel.add(streetLabel);
-        formPanel.add(streetField);
-        formPanel.add(cityLabel);
-        formPanel.add(cityField);
-        formPanel.add(provinceLabel);
-        formPanel.add(provinceField);
-        formPanel.add(regionLabel);
-        formPanel.add(regionField);
-        
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton saveBtn = new JButton("Save Address");
-        saveBtn.addActionListener(e -> {
-            String newAddress = houseNumberField.getText() + ", " 
-                              + streetField.getText() + ", " 
-                              + cityField.getText() + ", " 
-                              + provinceField.getText() + ", "
-                              + regionField.getText();
-            addressLabel.setText(newAddress);
-            dialog.dispose();
-        });
-        buttonPanel.add(saveBtn);
-        
-        dialog.add(formPanel, BorderLayout.CENTER);
-        dialog.add(buttonPanel, BorderLayout.SOUTH);
-        dialog.setVisible(true);
     }
 
     private void showOnlinePaymentPrompt() {
@@ -326,16 +280,19 @@ public class Payment extends JFrame implements ActionListener {
                 double paid = Double.parseDouble(amount);
                 double total = calculateTotal();
                 
-                if (paid >= total) {
+                if (paid == total) {
                     // Using default JOptionPane
                     JOptionPane.showMessageDialog(dialog, 
-                        String.format("Payment of ₱%.2f accepted.\nChange: ₱%.2f", 
-                        paid, paid - total));
+                        String.format("Payment of ₱%.2f accepted.", paid));
+                    controller.showOtwFrame(this);
                     dialog.dispose();
+                }else if(paid > total){
+                    JOptionPane.showMessageDialog(dialog, 
+                        "Over payment. Please enter exact amount to continue. Total: ₱" + total);
                 } else {
                     // Using default JOptionPane
                     JOptionPane.showMessageDialog(dialog, 
-                        "Insufficient payment. Please enter at least ₱" + total);
+                        "Insufficient payment. Please enter exactly ₱" + total);
                 }
             } else {
                 // Using default JOptionPane
@@ -353,37 +310,18 @@ public class Payment extends JFrame implements ActionListener {
         dialog.setVisible(true);
     }
 
-    private void setupButton(JButton button, ImageIcon icon) {
-        button.setIcon(icon);
-        button.setBorder(new EmptyBorder(0, 0, 0, 0));
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
+    private void setupButton(JButton button) {
         button.addActionListener(this);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                button.setIcon(darkenImageIcon(icon));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                button.setIcon(icon);
-            }
-        });
     }
-
-    private ImageIcon darkenImageIcon(ImageIcon icon) {
-        Image img = icon.getImage();
-        BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = bufferedImage.createGraphics();
-        g2d.drawImage(img, 0, 0, null);
-
-        RescaleOp rescaleOp = new RescaleOp(0.7f, 0, null);
-        rescaleOp.filter(bufferedImage, bufferedImage);
-
-        g2d.dispose();
-        return new ImageIcon(bufferedImage);
+    
+    /**
+     * Implementation of AddressChangeListener interface
+     * This method will be called when the address is changed in ChangeAddressFrame
+     */
+    @Override
+    public void onAddressChanged(String newAddress) {
+        // Update the address label in this frame
+        addressLabel.setText(newAddress);
     }
 }

@@ -16,7 +16,7 @@ import java.sql.*;
  *
  * @author Admin
  */
-public class MenuFrame extends JFrame implements ActionListener{
+public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFrame.AddressChangeListener, ChangeInfoFrame.InfoChangeListener{
     private EventController controller;
     public MenuFrame(EventController eventController){
         this.controller = eventController;
@@ -26,7 +26,13 @@ public class MenuFrame extends JFrame implements ActionListener{
     }
     //INITIALIZATION OF COMPONENTS
     
-    //Frames
+    //String
+    String address;
+    String firstname;
+    String lastname;
+    String username;
+    String password;
+    String phone;
     
     //Image Icon
     ImageIcon logo = new ImageIcon(getClass().getResource("/views/Images/logo.png"));
@@ -205,6 +211,21 @@ public class MenuFrame extends JFrame implements ActionListener{
         if(e.getSource() == cartButton){
             controller.showCartFrame(this);
         }
+        
+        if(e.getSource() == changeAddressButton){
+            address = "454, Sitio Uli-Uli, Pinalagdan, Paombong, Bulacan";
+            ChangeAddressFrame.showDialog(this, address, this);
+        }
+        
+        if(e.getSource() == changeInfoButton){
+            firstname = "jerson";
+            lastname = "valdez";
+            phone = "09091805447";
+            username = "jerson";
+            password = "123";
+            int userId = 1;
+            ChangeInfoFrame.showDialog(this, userId, firstname, lastname, phone, username, this);
+        }
     }
     
     public void setCartItemCount(){
@@ -263,5 +284,36 @@ public class MenuFrame extends JFrame implements ActionListener{
 
         g2d.dispose();
         return new ImageIcon(bufferedImage);  // Return the modified darkened image icon
+    }
+
+    @Override
+    public void onAddressChanged(String newAddress) {
+        address = newAddress;
+        System.out.println(address);
+    }
+
+    @Override
+    public void onNameChanged(String firstName, String lastName) {
+        firstname = firstName;
+        lastname = lastName;
+        System.out.println(firstname+lastname);
+    }
+
+    @Override
+    public void onPhoneChanged(String newPhone) {
+        phone = newPhone;
+        System.out.println(phone);
+    }
+
+    @Override
+    public void onUsernameChanged(String newUsername) {
+        username= newUsername;
+        System.out.println(username);
+    }
+
+    @Override
+    public void onPasswordChanged(String newPassword) {
+        password = newPassword;
+        System.out.println(password);
     }
 }

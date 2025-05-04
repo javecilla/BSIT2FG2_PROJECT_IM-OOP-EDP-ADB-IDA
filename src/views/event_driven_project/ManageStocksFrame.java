@@ -179,7 +179,7 @@ public class ManageStocksFrame extends JFrame implements ActionListener {
             loadIngredientsData(true);
         }
         if(e.getSource() == backButton){
-            controller.showAdminNavFrame(this);
+            controller.showDashboardFrame(this);
         }
     }
     

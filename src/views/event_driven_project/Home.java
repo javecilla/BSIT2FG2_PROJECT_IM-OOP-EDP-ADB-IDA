@@ -126,7 +126,8 @@ public class Home extends JFrame implements ActionListener{
         }
         
         if(e.getSource() == admin){
-            controller.showAdminNavFrame(this);
+            controller.showDashboardFrame(this);
+            //controller.showAdminNavFrame(this);
         }
     }
     
