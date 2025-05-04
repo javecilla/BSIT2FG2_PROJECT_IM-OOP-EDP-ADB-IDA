@@ -43,7 +43,8 @@ public class MenuFrame extends JFrame implements ActionListener{
     ImageIcon drinkHover = new ImageIcon(getClass().getResource("/views/Images/categoryMenu/drinks-hover.png"));
     
     ImageIcon homeButtonIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/home button.png"));
-    ImageIcon browseButtonIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/browse button.png"));
+    ImageIcon changeInfoIcon = new ImageIcon(getClass().getResource("/views/Images/change-info.png"));
+    ImageIcon changeAddressIcon = new ImageIcon(getClass().getResource("/views/Images/change-address.png"));
     ImageIcon cartButtonIcon = new ImageIcon(getClass().getResource("/views/Images/shopping Basket.png"));
     
     //Labels
@@ -59,6 +60,8 @@ public class MenuFrame extends JFrame implements ActionListener{
     JButton drinksButton = new JButton();
     JButton homeButton = new JButton();
     JButton cartButton = new JButton();
+    JButton changeInfoButton = new JButton();
+    JButton changeAddressButton = new JButton();
     
     //TextField
     
@@ -74,7 +77,7 @@ public class MenuFrame extends JFrame implements ActionListener{
         
         navPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         navPanel.setOpaque(false);
-        navPanel.setBounds(0, 160, categoryIcon.getIconWidth()-10, homeButtonIcon.getIconHeight());
+        navPanel.setBounds(0, 160, categoryIcon.getIconWidth()-10, homeButtonIcon.getIconHeight() + 5);
         
         cartButton.setOpaque(false);
         cartButton.setBounds(categoryIcon.getIconWidth()-150, 222, cartButtonIcon.getIconWidth(), cartButtonIcon.getIconHeight());
@@ -91,10 +94,14 @@ public class MenuFrame extends JFrame implements ActionListener{
         
         setupButton(homeButton, homeButtonIcon);
         setupButton(cartButton, cartButtonIcon);
+        setupButton(changeInfoButton, changeInfoIcon);
+        setupButton(changeAddressButton, changeAddressIcon);
         
         cartButton.add(cartLabel);
         
         navPanel.add(homeButton);
+        navPanel.add(changeInfoButton);
+        navPanel.add(changeAddressButton);
         
         //rice meal button
         riceMealButton.setIcon(riceMealStat);
@@ -168,7 +175,6 @@ public class MenuFrame extends JFrame implements ActionListener{
     
     public void buttonRegister(){
         riceMealButton.addActionListener(this);
-        homeButton.addActionListener(this);
         sandwichButton.addActionListener(this);
         friesButton.addActionListener(this);
         drinksButton.addActionListener(this);

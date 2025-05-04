@@ -16,6 +16,9 @@ public class EventController{
     private OrderFrame orderFrame;
     private Cart cartFrame;
     private Payment paymentFrame;
+    private AdminNavigationFrame adminNavFrame;
+    private ManageStocksFrame manageStockFrame;
+    private ManageCouriersFrame manageCourierFrame;
 
     public EventController() {
         homeFrame = new Home(this);
@@ -29,6 +32,9 @@ public class EventController{
         registerFrame2 = new RegisterForm2(this);
         cartFrame = new Cart(this);
         paymentFrame = new Payment(this);
+        adminNavFrame = new AdminNavigationFrame(this);
+        manageStockFrame = new ManageStocksFrame(this);
+        manageCourierFrame = new ManageCouriersFrame(this);
     }
 
     public void showHomeFrame(JFrame currentFrame) {
@@ -84,6 +90,21 @@ public class EventController{
     public void showPaymentFrame(JFrame currentFrame) {
         currentFrame.setVisible(false);
         paymentFrame.setVisible(true);
+    }
+    
+    public void showAdminNavFrame(JFrame currentFrame) {
+        currentFrame.setVisible(false);
+        adminNavFrame.setVisible(true);
+    }
+    
+    public void showManageStockFrame(JFrame currentFrame) {
+        currentFrame.setVisible(false);
+        manageStockFrame.setVisible(true);
+    }
+    
+    public void showManageCourierFrame(JFrame currentFrame) {
+        currentFrame.setVisible(false);
+        manageCourierFrame.setVisible(true);
     }
     
 }
