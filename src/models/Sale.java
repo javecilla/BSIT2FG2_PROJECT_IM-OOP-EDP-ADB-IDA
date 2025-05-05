@@ -11,7 +11,8 @@ public class Sale {
     private double netTotal;        // Total amount of the sale after any deductions.
     private double paymentAmount;   // Total ammout nung binayad
     
-    private Customer customer;
+    //private Customer customer;
+    private User customer;
     private Courier courier;
    
     // Constructors
@@ -69,11 +70,14 @@ public class Sale {
         this.paymentAmount = paymentAmount;
     }
     
-    public Customer getCustomer() {
+//    public Customer getCustomer() {
+//        return customer;
+//    }
+    public User getCustomer() {
         return customer;
     }
     
-    public void setCustomer(Customer customer) {
+    public void setCustomer(User customer) {
         this.customer = customer;
     }
     

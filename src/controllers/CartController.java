@@ -5,15 +5,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import core.*;
-import models.*;
+import core.Cart;
+import core.CartItem;
+import core.Session;
+import models.Recipe;
+import models.Ingredient;
+import models.Sale;
+import models.SalesDetails;
+//import models.Customer;
+import models.Courier;
 import services.*;
 import enums.*;
 import helpers.*;
+import models.Food;
+import models.User;
 
 public class CartController {
     private final RecipeService recipeService;
-    private final IngredientService ingredientService;
+    //private final IngredientService ingredientService;
     private final SaleService saleService;
     private final SalesDetailsService salesDetailsService;
     private final CourierService courierService;
@@ -21,7 +30,7 @@ public class CartController {
     
     public CartController() {
         this.recipeService = new RecipeService();
-        this.ingredientService = new IngredientService();
+        //this.ingredientService = new IngredientService();
         this.saleService = new SaleService();
         this.salesDetailsService = new SalesDetailsService();
         this.courierService = new CourierService();
@@ -41,8 +50,7 @@ public class CartController {
             if(recipe == null) return Response.error("Failed to fetch recipe details for food ID: " + foodId);
             
             for(Ingredient ingredient : recipe.getIngredients()) {
-                Response<String> reorderCheckResponse = 
-                        new IngredientController().checkReorderNeed(ingredient.getIngredientId());
+                Response<String> reorderCheckResponse = new IngredientController().checkReorderNeed(ingredient.getIngredientId());
                 if(!reorderCheckResponse.isSuccess()) {
                     //System.out.println(reorderCheckResponse.getMessage());
                     return Response.error("Opps sorry, The food " + foodName + " you selected is currently not available.");
@@ -131,7 +139,7 @@ public class CartController {
             Courier courier = new Courier();
             courier.setRiderId(selectedRiderId);
             
-            Customer customer = Session.getLoggedInCustomer();
+            User customer = Session.getLoggedInUser();//Session.getLoggedInCustomer();
             //Create a sale record (once for the entire checkout)
             Sale sale = new Sale(
                 Date.getCurrentDate(), 

@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import models.Ingredient;
 import models.Supplier;
-import models.Admin;
+//import models.Admin;
 import models.User;
 import services.IngredientService;
 import services.SupplierService;
@@ -25,43 +25,57 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         this.userService = new UserService();    
     }
 
-    // Add a new ingredient
     public Response<Ingredient> addIngredient(String ingredientName, int quantity, int reorderPoint, int supplierId, int adminId) {
-        Admin admin = new Admin(
-            adminId,
-            null,
-            new User(0, "", "", "", "", "")
-        );
+//        Admin admin = new Admin(
+//            adminId,
+//            null,
+//            new User(0, "", "", "", "", "")
+//        );
+//
+//        Ingredient newIngredient = new Ingredient(
+//            0, 
+//            ingredientName.trim(),
+//            quantity,
+//            reorderPoint
+//        );
+//        newIngredient.setSupplier(new Supplier(supplierId, null, null, null));
+//        newIngredient.setAdmin(admin);
 
-        Ingredient newIngredient = new Ingredient(
-            0, 
-            ingredientName.trim(),
-            quantity,
-            reorderPoint
-        );
-        newIngredient.setSupplier(new Supplier(supplierId, null, null, null));
-        newIngredient.setAdmin(admin);
+        Ingredient newIngredient = new Ingredient();
+        newIngredient.setIngredientName(ingredientName);
+        newIngredient.setQuantity(quantity);
+        newIngredient.setReorderPoint(reorderPoint);
+        
+        Supplier s = new Supplier();
+        s.setSupplierId(supplierId);
+        newIngredient.setSupplier(s);
+        
+        User a = new User();
+        a.setUserId(adminId);
+        newIngredient.setUserAdmin(a);
 
-        // Validate before creating
         Response<Ingredient> validationResponse = validateCreate(newIngredient);
         if (!validationResponse.isSuccess()) {
             return validationResponse;
         }
 
         try {
-            
-            //validate if ingredient already exists
             if(ingredientService.isIngredientExistsByName(ingredientName)) {
                return Response.error("Error: Ingredient '" + ingredientName + "' already exists!");
             }
-            if(!supplierService.isSupplierExistsById(supplierId)) {
-                return Response.error("Error: Supplier with ID " + supplierId + " does not exist!");
-            }
-            if(!userService.isAdminExistsById(adminId)) {
-              return Response.error("Error: Admin with ID " + adminId + " does not exist!");
-            }
+            
+//            if(!supplierService.isSupplierExistsById(supplierId)) {
+//                return Response.error("Error: Supplier with ID " + supplierId + " does not exist!");
+//            }
+            Supplier supplier  = supplierService.getById(supplierId);
+            if (supplier == null) return Response.error("Supplier not found with ID: " + supplierId);
+            
+//            if(!userService.isUserExistsById(adminId)) {
+//              return Response.error("Error: Admin with ID " + adminId + " does not exist!");
+//            }
+            User admin  = userService.getById(adminId);
+            if (admin == null) return Response.error("User admin not found with ID: " + adminId);
 
-            // Create the ingredient
             boolean isCreated = ingredientService.create(newIngredient);
             
             return (isCreated) 
@@ -72,7 +86,6 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         }
     }
 
-    // Get all ingredients
     public Response<List<Ingredient>> getAllIngredients() {
         try {
             List<Ingredient> ingredients = ingredientService.getAll();
@@ -88,14 +101,11 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
     }
     
     
-    // Get all ingredients with low stock or quantity
     public Response<List<Ingredient>> getAllIngredientsLowStocks() {
         try {
             List<Ingredient> ingredients = ingredientService.getAllLowStock();
 
             if (ingredients == null || ingredients.isEmpty()) {
-                //System.out.println("No ingredients found or response is empty.");
-                //JOptionPane.showMessageDialog(null, "No ingredients found or response is empty.", "MOMMY'S VARIETY STORE", JOptionPane.INFORMATION_MESSAGE);
                 return Response.success("No ingredients found", Collections.emptyList());
             }
 
@@ -105,8 +115,6 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         }
     }
 
-
-    // Get ingredient by ID
     public Response<Ingredient> getIngredientById(int id) {
         try {
             Ingredient ingredient = ingredientService.getById(id);
@@ -133,12 +141,11 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
             int currentQuantity = ingredient.getQuantity();
             int reorderPoint = ingredient.getReorderPoint();
 
-            //check if the current stock is less than or nag equal sa reorder point
             if(currentQuantity <= reorderPoint) {
                 //if current stock is less than reorder point, notify that reorder is needed
                 return Response.success("Reorder needed: Current stock is below reorder point. Current stock: " + currentQuantity + ", Reorder point: " + reorderPoint);
             } else {
-                //if the stock is sufficient, notify that no reorder is needed
+                //else the stock is sufficient, notify that no reorder is needed
                 return Response.success("No reorder needed: Current stock is sufficient. Current stock: " + currentQuantity + ", Reorder point: " + reorderPoint);
             }
         } catch (SQLException e) {
@@ -149,36 +156,60 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
 
     // Update ingredient
     public Response<Ingredient> updateIngredient(int ingredientId, String ingredientName, int quantity, int reorderPoint, int supplierId, int adminId) {
-        Admin admin = new Admin(
-            adminId,
-            null,
-            new User(0, "", "", "", "", "")
-        );
+//        Admin admin = new Admin(
+//            adminId,
+//            null,
+//            new User(0, "", "", "", "", "")
+//        );
+//
+//        Ingredient updatedIngredient = new Ingredient(
+//            0, 
+//            ingredientName.trim(),
+//            quantity,
+//            reorderPoint
+//        );
+//        updatedIngredient.setSupplier(new Supplier(supplierId, null, null, null));
+//        updatedIngredient.setAdmin(admin);
 
-        Ingredient updatedIngredient = new Ingredient(
-            0, 
-            ingredientName.trim(),
-            quantity,
-            reorderPoint
-        );
-        updatedIngredient.setSupplier(new Supplier(supplierId, null, null, null));
-        updatedIngredient.setAdmin(admin);
+        Ingredient updatedIngredient = new Ingredient();
+        updatedIngredient.setIngredientId(ingredientId);
+        updatedIngredient.setIngredientName(ingredientName);
+        updatedIngredient.setQuantity(quantity);
+        updatedIngredient.setReorderPoint(reorderPoint);
+        
+        Supplier s = new Supplier();
+        s.setSupplierId(supplierId);
+        updatedIngredient.setSupplier(s);
+        
+        User a = new User();
+        a.setUserId(adminId);
+        updatedIngredient.setUserAdmin(a);
 
-        // Validate before updating
         Response<Ingredient> validationResponse = validateUpdate(updatedIngredient);
         if (!validationResponse.isSuccess()) {
             return validationResponse;
         }
 
         try {
-            // Check if the ingredient exists
-            Ingredient existingIngredient = ingredientService.getById(ingredientId);
-            if (existingIngredient == null) {
-                return Response.error("Ingredient not found with ID: " + ingredientId);
-            }
-
-            boolean isUpdated = ingredientService.update(updatedIngredient);
+//            if(!ingredientService.isIngredientExistsById(ingredientId)) {
+//               return Response.error("Error: Ingredient with ID " + ingredientId + " does not exist!");
+//            }
+            Ingredient ingredient = ingredientService.getById(ingredientId);
+            if (ingredient == null) return Response.error("Ingredient not found with ID: " + ingredientId);
             
+//            if(!supplierService.isSupplierExistsById(supplierId)) {
+//                return Response.error("Error: Supplier with ID " + supplierId + " does not exist!");
+//            }
+            Supplier supplier  = supplierService.getById(supplierId);
+            if (supplier == null) return Response.error("Supplier not found with ID: " + supplierId);
+            
+//            if(!userService.isUserExistsById(adminId)) {
+//              return Response.error("Error: Admin with ID " + adminId + " does not exist!");
+//            }
+            User admin  = userService.getById(adminId);
+            if (admin == null) return Response.error("User admin not found with ID: " + adminId);
+            
+            boolean isUpdated = ingredientService.update(updatedIngredient);
             return (isUpdated)
                 ? Response.success("Ingredient updated successfully", updatedIngredient)
                 : Response.error("Failed to update ingredient.");
@@ -192,17 +223,13 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         if (quantity == 0) return Response.error("Quantity change cannot be zero.");
 
         try {
-            // Check the current ingredient to get the current quantity
             Ingredient ingredient = ingredientService.getById(id);
             if (ingredient == null) return Response.error("Ingredient not found with ID: " + id);
 
             int currentQuantity = ingredient.getQuantity();
             int newQuantity = currentQuantity + quantity;
 
-            // Check if the new quantity is negative or exceeds available stock
-            if (newQuantity < 0) {
-                return Response.error("New quantity cannot be negative. Current stock: " + currentQuantity + ", Attempted change: " + quantity);
-            }
+            if (newQuantity < 0) return Response.error("New quantity cannot be negative. Current stock: " + currentQuantity + ", Attempted change: " + quantity);
 
             boolean isUpdated = ingredientService.updateQuantity(id, newQuantity);
 
@@ -220,11 +247,9 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         if (reorderPoints == 0) return Response.error("Reorder points change cannot be zero.");
 
         try {
-            // Check the current ingredient to get the current reorder points
             Ingredient ingredient = ingredientService.getById(id);
             if (ingredient == null) return Response.error("Ingredient not found with ID: " + id);
 
-            // Calculate the new reorder points
             int currentReorderPoints = ingredient.getReorderPoint();
             int newReorderPoints = currentReorderPoints + reorderPoints;
 
@@ -241,7 +266,6 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         }
     }
 
-    // Delete ingredient
     public Response<Boolean> deleteIngredient(int id) {
         Response<Boolean> validationResponse = validateDelete(id);
         if (!validationResponse.isSuccess()) {
@@ -250,14 +274,12 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
 
         try {
             Ingredient ingredient = ingredientService.getById(id);
-            if (ingredient == null) {
-                return Response.error("Ingredient not found with ID: " + id);
-            }
+            if (ingredient == null) return Response.error("Ingredient not found with ID: " + id);
 
             boolean isDeleted = ingredientService.delete(id);
 
             return (isDeleted)
-                ? Response.success("Ingredient deleted successfully", true)
+                ? Response.success("Ingredient deleted successfully")
                 : Response.error("Failed to delete ingredient.");
         } catch (SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
@@ -277,6 +299,7 @@ public class IngredientController implements IOperatorsValidators<Ingredient> {
         if (ingredient.getReorderPoint() < 0) {
             return Response.error("Reorder point cannot be negative.");
         }
+
         return Response.success("Validation successful", ingredient);
     }
 

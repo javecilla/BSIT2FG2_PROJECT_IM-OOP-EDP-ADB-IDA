@@ -10,17 +10,20 @@ import java.util.List;
 import models.Food;
 import models.Category;
 import config.MSACCESSConnection;
+import config.MSSQLConnection;
 import interfaces.IDatabaseOperators;
+import java.util.Arrays;
 
 public class FoodService implements IDatabaseOperators<Food> {
     @Override
     public boolean create(Food food) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
-        boolean success = false;
+        ResultSet rs = null;
         
         try {
-            conn = MSACCESSConnection.getConnection();
+            //conn = MSACCESSConnection.getConnection();
+            conn = MSSQLConnection.getConnection();
             conn.setAutoCommit(false);
               
             String query = """
@@ -31,24 +34,23 @@ public class FoodService implements IDatabaseOperators<Food> {
             pst.setDouble(2, food.getPrice());
             pst.setInt(3, food.getCategoryId());
             
-            success = pst.executeUpdate() > 0;
-            
-            if (success) {
-                conn.commit();
-            } else {
-                conn.rollback();
+            boolean created = pst.executeUpdate() > 0;
+            if(!created) {
+                throw new SQLException("An error occured during food creation.");
             }
             
-            return success;
-        } catch (SQLException e) {
+            conn.commit();
+            return true;  
+        } catch(SQLException e) {
             if (conn != null) conn.rollback();
-            //System.err.println("Error creating ingredient: " + e.getMessage());
-            //JOptionPane.showMessageDialog(null, "Error creating ingredient: " + e.getMessage(),"MOMMY'S VARIETY STORE", JOptionPane.ERROR_MESSAGE);
-            throw e;
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to registered an error occured in our end.");
         } finally {
             if (conn != null) conn.setAutoCommit(true);
-            MSACCESSConnection.closeResources(null, pst);
             //if (conn != null) conn.close();
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
         }
     }
     
@@ -59,13 +61,18 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            conn = MSACCESSConnection.getConnection();
+            //conn = MSACCESSConnection.getConnection();
+            conn = MSSQLConnection.getConnection();
+//            String query = """
+//               SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
+//               FROM FOOD 
+//               INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
+//               WHERE FOOD.Food_ID = ?
+//            """;            
+
             String query = """
-               SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
-               FROM FOOD 
-               INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
-               WHERE FOOD.Food_ID = ?
-            """;            
+               SELECT TOP 1 * FROM FOOD_DETAILS WHERE Food_ID = ?; 
+            """;
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             rs = pst.executeQuery();
@@ -82,10 +89,14 @@ public class FoodService implements IDatabaseOperators<Food> {
                 );
             }
             return null;
+        } catch(SQLException e) {
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to retrieved food an error occured in our end.");
         } finally {
-            MSACCESSConnection.closeResources(rs, pst);
-            //if (conn != null) conn.close();
-        }
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
+        } 
     }
     
     @Override
@@ -96,11 +107,15 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            conn = MSACCESSConnection.getConnection();  
+            //conn = MSACCESSConnection.getConnection();
+            conn = MSSQLConnection.getConnection();
+//            String query = """
+//                SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
+//                FROM FOOD 
+//                INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
+//            """;
             String query = """
-                SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
-                FROM FOOD 
-                INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
+               SELECT * FROM FOOD_DETAILS ORDER BY Food_ID DESC; 
             """;
 
             pst = conn.prepareStatement(query);
@@ -120,10 +135,14 @@ public class FoodService implements IDatabaseOperators<Food> {
                 foods.add(food);
             }
             return foods;
+        } catch(SQLException e) {
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to retrieved foods an error occured in our end.");
         } finally {
-            MSACCESSConnection.closeResources(rs, pst);
-            //if (conn != null) conn.close();
-        }
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
+        } 
     }
     
     public List<Food> getByCategory(int categoryId) throws SQLException { 
@@ -133,14 +152,18 @@ public class FoodService implements IDatabaseOperators<Food> {
         ResultSet rs = null;
         
         try {
-            conn = MSACCESSConnection.getConnection();
+            //conn = MSACCESSConnection.getConnection();
+            conn = MSSQLConnection.getConnection();
+//            String query = """
+//               SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
+//               FROM FOOD 
+//               INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
+//               WHERE CATEGORY.Category_ID = ?
+//            """;
+
             String query = """
-               SELECT FOOD.Food_ID, FOOD.Food_Name, FOOD.Price, CATEGORY.Category_ID, CATEGORY.Category_Name
-               FROM FOOD 
-               INNER JOIN CATEGORY ON FOOD.Category_ID = CATEGORY.Category_ID 
-               WHERE CATEGORY.Category_ID = ?
+               SELECT * FROM FOOD_DETAILS WHERE Category_ID = ?
             """;
-            
             pst = conn.prepareStatement(query);
             pst.setInt(1, categoryId);
             rs = pst.executeQuery();
@@ -159,19 +182,25 @@ public class FoodService implements IDatabaseOperators<Food> {
                 foods.add(food);
             }
             return foods;
+        } catch(SQLException e) {
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to retrieved foods an error occured in our end.");
         } finally {
-            MSACCESSConnection.closeResources(rs, pst);
-            //if (conn != null) conn.close();
-        }
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
+        } 
     }
     
     @Override
     public boolean update(Food food) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
+        ResultSet rs = null;
         
         try {
-            conn = MSACCESSConnection.getConnection();
+            //conn = MSACCESSConnection.getConnection();
+            conn = MSSQLConnection.getConnection();
             String query = """
                 UPDATE FOOD SET Food_Name = ?, Price = ?, Category_ID = ? WHERE Food_ID = ?
             """;
@@ -182,10 +211,23 @@ public class FoodService implements IDatabaseOperators<Food> {
             pst.setInt(3, food.getCategoryId());
             pst.setInt(4, food.getFoodId());
             
-            return pst.executeUpdate() > 0;
+            boolean updated = pst.executeUpdate() > 0;
+            if(!updated) {
+                throw new SQLException("An error occured during food updation.");
+            }
+            
+            conn.commit();
+            return true;
+        } catch(SQLException e) {
+            if (conn != null) conn.rollback();
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to update food an error occured in our end.");
         } finally {
-            MSACCESSConnection.closeResources(null, pst);
+            if (conn != null) conn.setAutoCommit(true);
             //if (conn != null) conn.close();
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
         }
     }
     
@@ -193,37 +235,58 @@ public class FoodService implements IDatabaseOperators<Food> {
     public boolean delete(int id) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
+        ResultSet rs = null;
         
         try {
-            conn = MSACCESSConnection.getConnection();
+            //conn = MSACCESSConnection.getConnection();
+            conn = MSSQLConnection.getConnection();
             String query = """
                 DELETE FROM FOOD WHERE Food_ID = ?
             """;
             pst = conn.prepareStatement(query);
             pst.setInt(1, id);
             
-            return pst.executeUpdate() > 0;
+            boolean deleted = pst.executeUpdate() > 0;
+            if(!deleted) {
+                throw new SQLException("An error occured during food deletion.");
+            }
+            
+            conn.commit();
+            return true;
+        } catch(SQLException e) {
+            if (conn != null) conn.rollback();
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to delete food an error occured in our end.");
         } finally {
-            MSACCESSConnection.closeResources(null, pst);
+            if (conn != null) conn.setAutoCommit(true);
             //if (conn != null) conn.close();
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
         }
     }
     
-    public boolean isFoodExists(String foodName) throws SQLException {
+    public boolean isFoodNameExist(String foodName) throws SQLException {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         
         try {
+            conn = MSSQLConnection.getConnection();
             String query = """
-                SELECT COUNT(*) FROM FOOD WHERE UPPER(Food_Name) = UPPER(?)
+                SELECT TOP 1 Food_Name FROM FOOD WHERE UPPER(Food_Name) = UPPER(?);
             """;
             pst = conn.prepareStatement(query);
             pst.setString(1, foodName);
             rs = pst.executeQuery();
-            return rs.next() && rs.getInt(1) > 0;
+            return rs.next();
+        } catch(SQLException e) {
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to checked food name availability an error occured in our end.");
         } finally {
-            MSACCESSConnection.closeResources(rs, pst);
-        }
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
+        } 
     }
 }
