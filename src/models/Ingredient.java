@@ -11,10 +11,10 @@ public class Ingredient {
     private int quantity;
     private int reorderPoint;
     
-    private Supplier supplier;      // Associated supplier for the ingredient.
-    private Admin admin;            // Admin associated with the ingredient.
+    private Supplier supplier;          // Associated supplier for the ingredient.
+    //private Admin admin;            
+    private User admin;                 // Admin associated with the ingredient.
     
-    // Constructors 
     public Ingredient() {}
     
     public Ingredient(int id, String name, int quantity, int reorderPoint) {
@@ -24,7 +24,6 @@ public class Ingredient {
         this.reorderPoint = reorderPoint;
     }
     
-    // Getters and setters
     public int getIngredientId() {
         return id;
     }
@@ -57,11 +56,11 @@ public class Ingredient {
         this.reorderPoint = reorderPoint;
     }
     
-    public Admin getAdmin() {
+    public User getUserAdmin() {
         return this.admin;
     }
     
-    public void setAdmin(Admin admin) {
+    public void setUserAdmin(User admin) {
         this.admin = admin;
     }
     

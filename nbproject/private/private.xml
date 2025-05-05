@@ -3,6 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/C:/Users/HomePC/Jerome%20-%20Bulacan%20State%20University/OneDrive%20-%20Bulacan%20State%20University/NetBeansProjects/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/LoginForm.java</file>
+            <file>file:/C:/Users/HomePC/Jerome%20-%20Bulacan%20State%20University/OneDrive%20-%20Bulacan%20State%20University/NetBeansProjects/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/controllers/UserController.java</file>
+            <file>file:/C:/Users/HomePC/Jerome%20-%20Bulacan%20State%20University/OneDrive%20-%20Bulacan%20State%20University/NetBeansProjects/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/services/UserService.java</file>
+=======
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/MenuFrame.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/MSACCESSConnection.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/EventController.java</file>
@@ -22,6 +27,7 @@
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/RegisterForm2.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Cart.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Payment.java</file>
+>>>>>>> 2405b07bc41a496219b970a4e74bc51153b11c7a
         </group>
     </open-files>
 </project-private>

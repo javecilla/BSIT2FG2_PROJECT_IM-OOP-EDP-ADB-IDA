@@ -1,5 +1,6 @@
 package controllers;
 
+import enums.CourierStatus;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import models.Courier;
 import services.CourierService;
 import helpers.Response;
+import helpers.Text;
 import interfaces.IOperatorsValidators;
 
 public class CourierController implements IOperatorsValidators<Courier> {
@@ -17,7 +19,14 @@ public class CourierController implements IOperatorsValidators<Courier> {
     }
     
     // Create a new courier
-    public Response<Courier> addCourier(Courier courier) {     
+    public Response<Courier> addCourier(String firstName, String LastName, String company, String contact) {     
+        Courier courier = new Courier();
+        courier.setFirstName(firstName);
+        courier.setLastName(LastName);
+        courier.setCompany(company);
+        courier.setContactNumber(contact);
+        courier.setStatus(Text.capitalizeFirstLetterInString(CourierStatus.AVAILABLE.name()));
+        
         Response<Courier> validationResponse = validateCreate(courier);
         if (!validationResponse.isSuccess()) {
             return validationResponse;
@@ -81,22 +90,24 @@ public class CourierController implements IOperatorsValidators<Courier> {
         }
     }
     
-    public Response<Courier> updateCourier(Courier courier) {
+    public Response<Courier> updateCourier(int courierId, String firstName, String LastName, String company, String contact) {     
+        Courier courier = new Courier();
+        courier.setRiderId(courierId);
+        courier.setFirstName(firstName);
+        courier.setLastName(LastName);
+        courier.setCompany(company);
+        courier.setContactNumber(contact);
+        
         Response<Courier> validationResponse = validateUpdate(courier);
         if (!validationResponse.isSuccess()) {
-            return validationResponse;  // Return validation error if fails
+            return validationResponse; 
         }
 
         try {
-            // Check if the courier exists
             Courier existingCourier = courierService.getById(courier.getRiderId());
-            if (existingCourier == null) {
-                return Response.error("Courier not found with ID: " + courier.getRiderId());
-            }
-
-            // Update courier details
+            if (existingCourier == null) return Response.error("Courier not found with ID: " + courier.getRiderId());
+            
             boolean isUpdated = courierService.update(courier);
-
             return (isUpdated)
                     ? Response.success("Courier updated successfully", courier)
                     : Response.error("Failed to update courier");

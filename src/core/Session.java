@@ -1,7 +1,7 @@
 package core;
 
-import models.Admin;
-import models.Customer;
+//import models.Admin;
+//import models.Customer;
 import models.User;
 
 /**
@@ -10,9 +10,9 @@ import models.User;
  */
 public class Session {
     // Static references to store the logged-in entities
-    private static User loggedInUser;           // Common to all roles
-    private static Customer loggedInCustomer;   // For clients
-    private static Admin loggedInAdmin;         // For admins
+    private static User loggedInUser;           
+//    private static Customer loggedInCustomer;   
+//    private static Admin loggedInAdmin;         
 
 
     public static void setLoggedInUser(User user) {
@@ -23,37 +23,37 @@ public class Session {
         return loggedInUser;
     }
 
-    public static void setLoggedInCustomer(Customer customer) {
-        loggedInCustomer = customer;
-    }
+//    public static void setLoggedInCustomer(Customer customer) {
+//        loggedInCustomer = customer;
+//    }
+//
+//    public static Customer getLoggedInCustomer() {
+//        return loggedInCustomer;
+//    }
 
-    public static Customer getLoggedInCustomer() {
-        return loggedInCustomer;
-    }
-
-    public static void setLoggedInAdmin(Admin admin) {
-        loggedInAdmin = admin;
-    }
-
-    public static Admin getLoggedInAdmin() {
-        return loggedInAdmin;
-    }
+//    public static void setLoggedInAdmin(Admin admin) {
+//        loggedInAdmin = admin;
+//    }
+//
+//    public static Admin getLoggedInAdmin() {
+//        return loggedInAdmin;
+//    }
 
     public static void clearSession() {
         loggedInUser = null;
-        loggedInCustomer = null;
-        loggedInAdmin = null;
+//        loggedInCustomer = null;
+//        loggedInAdmin = null;
     }
 
     public static boolean isUserLoggedIn() {
         return loggedInUser != null;
     }
 
-    public static boolean isAdminLoggedIn() {
-        return loggedInAdmin != null;
-    }
-    
-    public static boolean isCustomerLoggedIn() {
-        return loggedInCustomer != null;
-    }
+//    public static boolean isAdminLoggedIn() {
+//        return loggedInAdmin != null;
+//    }
+//    
+//    public static boolean isCustomerLoggedIn() {
+//        return loggedInCustomer != null;
+//    }
 }

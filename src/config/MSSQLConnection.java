@@ -6,23 +6,23 @@ public class MSSQLConnection extends DatabaseConnection {
     private static final String HOSTNAME = "localhost";
     private static final String INSTANCE_NAME = "JAVECILLA\\SQLEXPRESS01";
     private static final String PORT = "1433";
-    private static final String DATABASE_NAME = "_2FG2";
+    private static final String DATABASE_NAME = "Project_Database";
     private static final String USERNAME = "sa";
     private static final String PASSWORD = "4545";
 
-//    private static final String URL = "jdbc:sqlserver://" + HOSTNAME 
-//            + ":" + PORT
-//            + ";instanceName=" + INSTANCE_NAME
-//            + ";databaseName=" + DATABASE_NAME
-//            + ";encrypt=true"
-//            + ";trustServerCertificate=true";
+    private static final String URL = "jdbc:sqlserver://" + HOSTNAME 
+            + ":" + PORT
+            + ";instanceName=" + INSTANCE_NAME
+            + ";databaseName=" + DATABASE_NAME
+            + ";encrypt=true"
+            + ";trustServerCertificate=true";
     
-    private static final String URL =
-            "jdbc:sqlserver://localhost:1433;"
-            + "databaseName=Project_Database;"
-            + "integratedSecurity=true;"
-            + "encrypt=true;"
-            + "trustServerCertificate=true;";
+//    private static final String URL =
+//            "jdbc:sqlserver://localhost:1433;"
+//            + "databaseName=Project_Database;"
+//            + "integratedSecurity=true;"
+//            + "encrypt=true;"
+//            + "trustServerCertificate=true;";
 
 
     private static Connection connection = null;

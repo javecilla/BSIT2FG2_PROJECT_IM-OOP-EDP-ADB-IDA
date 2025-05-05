@@ -1,5 +1,6 @@
 package controllers;
 
+import core.Session;
 import java.sql.SQLException;
 
 import models.User;
@@ -7,6 +8,8 @@ import services.UserService;
 import enums.UserRoles;
 import helpers.Input;
 import helpers.Response;
+import java.util.Collections;
+import java.util.List;
 
 public class UserController {
     protected final UserService userService;
@@ -14,29 +17,47 @@ public class UserController {
     public UserController() {
         this.userService = new UserService();
     }
-    
-    // Create a new food item
+   
     public Response<User> loginUser(String username, String password) { 
         User user = new User(username, password);
         
-        //validate login input
         Response<User> validationResponse = validateLogin(user);
         if (!validationResponse.isSuccess()) {
             return validationResponse;
         }
-        
-        // Proceed with login if validation passes
+
         try { 
             boolean isLoggedIn = userService.login(user);
             
             return (isLoggedIn) 
-                ? Response.success("Login successfully!", user)
+                ? Response.success("Login successfully!", Session.getLoggedInUser()) //user
                 : Response.error("Failed to login! Invalid credentials");
 
         } catch(SQLException e) {
             return Response.error("Something went wrong: " + e.getMessage());
         }    
     } 
+    
+    protected Response<User> validateLogin(User user) {
+        if(user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            return Response.error("Username cannot be empty!");
+        }
+        
+        if(user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            return Response.error("Password cannot be empty!");
+        }
+
+        return Response.success("Validation passed", user);
+    }
+    public Response<User> logoutUser() {
+        User user = Session.getLoggedInUser();
+        if(user == null) {
+            return Response.error("Failed to logout, No session active found.");
+        }
+        
+        Session.clearSession();
+        return Response.success("Logout Successfuly", null);
+    }
     
     public Response<User> registerUser(User user) { 
         Response<User> validationResponse = validateRegistration(user);
@@ -137,15 +158,30 @@ public class UserController {
     }
     
     
-    protected Response<User> validateLogin(User user) {
-        if(user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-            return Response.error("Username cannot be empty!");
-        }
-        
-        if(user.getPassword() == null || user.getPassword().trim().isEmpty()) {
-            return Response.error("Password cannot be empty!");
-        }
+    public Response<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAll();
 
-        return Response.success("Validation passed", user);
+            if (users == null || users.isEmpty()) {
+                return Response.success("No users found", Collections.emptyList());
+            }
+
+            return Response.success("Users retrieved successfully", users);
+        } catch (SQLException e) {
+            return Response.error("Something went wrong: " + e.getMessage());
+        }
+    }
+    
+    public Response<User> getUserById(int id) {
+        try {
+            User user = userService.getById(id);
+            if (user == null) {
+                return Response.error("User not found with ID: " + id);
+            }
+
+            return Response.success("User retrieved successfully", user);
+        } catch (SQLException e) {
+            return Response.error("Something went wrong: " + e.getMessage());
+        }
     }
 }
