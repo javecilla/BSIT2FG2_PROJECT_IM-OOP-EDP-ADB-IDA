@@ -55,9 +55,11 @@ public class RegisterForm2 extends JFrame implements ActionListener{
     RoundedTextField regionField = new RoundedTextField(20, fieldIcon);
     RoundedTextField provinceField = new RoundedTextField(20, fieldIcon);
     RoundedTextField cityField = new RoundedTextField(20, fieldIcon);
+    RoundedTextField barangayField = new RoundedTextField(20, fieldIcon);
     
     JLabel houseNumberLabel = new JLabel("Houser No.:");
     JLabel streetLabel = new JLabel("Street:");
+    JLabel barangayLabel = new JLabel("Barangay:");
     JLabel regionLabel = new JLabel("Region");
     JLabel provinceLabel = new JLabel("Province:");
     JLabel cityLabel = new JLabel("City/Municipality:");
@@ -82,6 +84,7 @@ public void registerFrame2() {
     
     setupField(houseNumberField);
     setupField(streetField);
+    setupField(barangayField);
     setupField(regionField);
     setupField(provinceField);
     setupField(cityField);
@@ -94,12 +97,14 @@ public void registerFrame2() {
     // Add form components
     houseNumberLabel.setForeground(new Color(93, 48, 140));
     streetLabel.setForeground(new Color(93, 48, 140));
+    barangayLabel.setForeground(new Color(93, 48, 140));
     regionLabel.setForeground(new Color(93, 48, 140));
     provinceLabel.setForeground(new Color(93, 48, 140));
     cityLabel.setForeground(new Color(93, 48, 140));
     
     houseNumberLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     streetLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+    barangayLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     regionLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     provinceLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     cityLabel.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -127,37 +132,47 @@ public void registerFrame2() {
 
     gbc.gridx = 0;
     gbc.gridy = 4;
+    gbc.anchor = GridBagConstraints.WEST; // Align password label to the left
+    formPanel.add(barangayLabel, gbc);
+
+    gbc.gridx = 0;
+    gbc.gridy = 5;
+    gbc.anchor = GridBagConstraints.CENTER; // Center password field
+    formPanel.add(barangayField, gbc);
+
+    gbc.gridx = 0;
+    gbc.gridy = 6;
     gbc.anchor = GridBagConstraints.WEST; 
     formPanel.add(regionLabel, gbc);
 
     gbc.gridx = 0;
-    gbc.gridy = 5;
+    gbc.gridy = 7;
     gbc.anchor = GridBagConstraints.CENTER; 
     formPanel.add(regionField, gbc);
     
     gbc.gridx = 0;
-    gbc.gridy = 6;
+    gbc.gridy = 8;
     gbc.anchor = GridBagConstraints.WEST; 
     formPanel.add(provinceLabel, gbc);
     
     gbc.gridx = 0;
-    gbc.gridy = 7;
+    gbc.gridy = 9;
     gbc.anchor = GridBagConstraints.CENTER; 
     formPanel.add(provinceField, gbc);
     
     gbc.gridx = 0;
-    gbc.gridy = 8;
+    gbc.gridy = 10;
     gbc.anchor = GridBagConstraints.WEST; 
     formPanel.add(cityLabel, gbc);
     
     gbc.gridx = 0;
-    gbc.gridy = 9;
+    gbc.gridy = 11;
     gbc.anchor = GridBagConstraints.CENTER; 
     formPanel.add(cityField, gbc);
     
     // Add buttons in the center
     gbc.gridx = 0;
-    gbc.gridy = 11;
+    gbc.gridy = 12;
     gbc.gridwidth = 2; // Make the buttons span across both columns
     gbc.anchor = GridBagConstraints.CENTER; // Center the buttons
     formPanel.add(registerButton, gbc);
@@ -165,7 +180,7 @@ public void registerFrame2() {
     // Center form panel in content panel
     gbc.gridx = 0;
     gbc.gridy = 0;
-    gbc.insets = new Insets(100, 0, 0, 0); // Move it down by 80 pixels
+    gbc.insets = new Insets(120, 0, 0, 0); // Move it down by pixels
     contentPanel.add(formPanel, gbc);
 
     registerButton.setEnabled(false);
@@ -176,6 +191,11 @@ public void registerFrame2() {
         }
     });
     streetField.addFocusListener(new FocusAdapter(){
+        public void focusLost(FocusEvent e) {
+            checkAllFieldsValid();
+        }
+    });
+    barangayField.addFocusListener(new FocusAdapter(){
         public void focusLost(FocusEvent e) {
             checkAllFieldsValid();
         }
@@ -206,7 +226,7 @@ public void registerFrame2() {
     
     // Frame config
     this.setContentPane(contentPanel);
-    this.setSize(backgroundIcon2.getIconWidth(), backgroundIcon2.getIconHeight());
+    this.setSize(backgroundIcon2.getIconWidth(), backgroundIcon2.getIconHeight()+100);
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setLocationRelativeTo(null);
     this.setVisible(false);

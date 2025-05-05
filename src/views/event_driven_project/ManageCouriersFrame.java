@@ -260,7 +260,7 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
             addCourierFrame.setVisible(true);
         } else if (e.getSource() == backButton) {
             // Add navigation back to main menu or previous screen
-            controller.showAdminNavFrame(this);
+            controller.showDashboardFrame(this);
         }
     }
     
