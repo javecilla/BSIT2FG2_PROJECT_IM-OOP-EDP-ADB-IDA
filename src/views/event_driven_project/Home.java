@@ -4,12 +4,16 @@
  */
 package views.event_driven_project;
 
+import controllers.UserController;
+import core.Session;
+import helpers.Response;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import javax.swing.*;
 import javax.swing.border.*;
+import models.User;
 /**
  *
  * @author Admin
@@ -21,7 +25,6 @@ public class Home extends JFrame implements ActionListener{
         homeFrameConfig();
     }
     //INITIALIZATION OF COMPONENTS
-    
     //Frames
     
     //Image Icon
@@ -30,7 +33,7 @@ public class Home extends JFrame implements ActionListener{
     ImageIcon homeIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/landing.png"));
     ImageIcon homeGif = new ImageIcon(getClass().getResource("/views/Images/homepage/Landing_gif.gif"));
     ImageIcon orderNowIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/order.png"));
-    ImageIcon adminIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/admin.png"));
+    ImageIcon logoutIcon = new ImageIcon(getClass().getResource("/views/Images/logout.png"));
     ImageIcon homeButtonIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/home button.png"));
     ImageIcon browseButtonIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/browse button.png"));
     ImageIcon loginButtonIcon = new ImageIcon(getClass().getResource("/views/Images/homepage/big-login.png"));
@@ -41,10 +44,10 @@ public class Home extends JFrame implements ActionListener{
 
     //Buttons
     JButton orderNow = new JButton();
-    JButton admin = new JButton();
     JButton browseMenu = new JButton();
     JButton home = new JButton();
     JButton login = new JButton();
+    JButton logout = new JButton();
     
     //TextField
     
@@ -62,23 +65,24 @@ public class Home extends JFrame implements ActionListener{
         
         //buttonconfiguration
         setupButton(orderNow, orderNowIcon);
-        setupButton(admin, adminIcon);
         setupButton(login, loginButtonIcon);
+        setupButton(logout, logoutIcon);
         setupButton(browseMenu, browseButtonIcon);
         
         orderNow.setBounds(110, 600, orderNowIcon.getIconWidth(), orderNowIcon.getIconHeight());
         
-        admin.setBounds(1000, 80, adminIcon.getIconWidth(),adminIcon.getIconHeight() );
+        login.setBounds(840, 80, loginButtonIcon.getIconWidth(),loginButtonIcon.getIconHeight() );
+        logout.setBounds(840, 80, logoutIcon.getIconWidth(),logoutIcon.getIconHeight() );
         
-        login.setBounds(680, 80, loginButtonIcon.getIconWidth(),loginButtonIcon.getIconHeight() );
+        browseMenu.setBounds(1000, 80, browseButtonIcon.getIconWidth(),browseButtonIcon.getIconHeight() );
         
-        browseMenu.setBounds(840, 80, browseButtonIcon.getIconWidth(),browseButtonIcon.getIconHeight() );
+        logout.setVisible(false);
         
         //adding to the panel
         homePanel.add(orderNow);
-        homePanel.add(admin);
         homePanel.add(browseMenu);
         homePanel.add(login);
+        homePanel.add(logout);
         homePanel.add(homeLabel2);startAnimation();
         homePanel.add(homeLabel);
         
@@ -118,16 +122,16 @@ public class Home extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == orderNow || e.getSource() == browseMenu){
-            controller.showMenuFrame(this);
+            User user = Session.getLoggedInUser();
+            if(user == null){
+                controller.showLoginFrame(this);
+            }else{
+                controller.showMenuFrame(this);
+            }
         }
         
         if(e.getSource() == login){
             controller.showLoginFrame(this);
-        }
-        
-        if(e.getSource() == admin){
-            controller.showDashboardFrame(this);
-            //controller.showAdminNavFrame(this);
         }
     }
     

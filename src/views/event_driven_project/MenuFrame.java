@@ -5,6 +5,9 @@
 package views.event_driven_project;
 
 import config.MSSQLConnection;
+import controllers.UserController;
+import core.Session;
+import helpers.Response;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -12,6 +15,7 @@ import java.awt.image.RescaleOp;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.sql.*;
+import models.User;
 /**
  *
  * @author Admin
@@ -25,7 +29,7 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
         setCartItemCount();
     }
     //INITIALIZATION OF COMPONENTS
-    
+    protected static final UserController USER_CONTROLLER = new UserController();
     //String
     String address;
     String firstname;
@@ -213,8 +217,15 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
         }
         
         if(e.getSource() == changeAddressButton){
-            address = "454, Sitio Uli-Uli, Pinalagdan, Paombong, Bulacan";
-            ChangeAddressFrame.showDialog(this, address, this);
+            User user = controller.getUser();
+            address = user.getHouseNumber() + ", " + 
+                    user.getStreet() + ", " + 
+                    user.getBarangay() + ", " + 
+                    user.getMunicipality() + ", " +
+                    user.getProvince() + ", " +
+                    user.getRegion();
+            
+            ChangeAddressFrame.showDialog(this, user.getUserId(),address, this);
         }
         
         if(e.getSource() == changeInfoButton){
@@ -289,7 +300,14 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
     @Override
     public void onAddressChanged(String newAddress) {
         address = newAddress;
-        System.out.println(address);
+        String parts[] = parseAddressParts(address);
+        
+        controller.getUser().setHouseNumber(parts[0]);
+        controller.getUser().setStreet(parts[1]);
+        controller.getUser().setBarangay(parts[2]);
+        controller.getUser().setMunicipality(parts[3]);
+        controller.getUser().setProvince(parts[4]);
+        controller.getUser().setRegion(parts[5]);
     }
 
     @Override
@@ -315,5 +333,25 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
     public void onPasswordChanged(String newPassword) {
         password = newPassword;
         System.out.println(password);
+    }
+    
+        private String[] parseAddressParts(String address) {
+        String[] parts = new String[6];
+        
+        // Initialize with empty strings
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = "";
+        }
+        
+        if (address != null && !address.isEmpty()) {
+            String[] splitAddress = address.split(",");
+            
+            // Copy available parts
+            for (int i = 0; i < Math.min(splitAddress.length, parts.length); i++) {
+                parts[i] = splitAddress[i].trim();
+            }
+        }
+        
+        return parts;
     }
 }

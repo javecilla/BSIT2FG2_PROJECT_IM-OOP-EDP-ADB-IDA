@@ -1,11 +1,14 @@
 package views.event_driven_project;
 
 import config.MSSQLConnection;
+import helpers.Response;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import models.User;
+import static views.event_driven_project.EventController.USER_CONTROLLER;
 
 /**
  * Reusable component for changing a user's address
