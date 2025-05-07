@@ -52,6 +52,38 @@ public class CartService implements IDatabaseOperators<Cart>{
             MSSQLConnection.closeResources(rs, pst);
         }  
     }
+    
+    public Cart getByUserId(int userId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = MSSQLConnection.getConnection();
+            String query = """
+                SELECT TOP 1 * FROM CART WHERE UserID = ?
+            """;
+            pst = conn.prepareStatement(query);
+            pst.setInt(1, userId);
+            rs = pst.executeQuery();
+
+            if(rs.next()) {
+                Cart cart = new Cart();
+                cart.setUserId(rs.getInt("UserID"));
+                cart.setCartId(rs.getInt("Cart_ID"));
+                return cart;
+            }
+
+            return null;
+        } catch(SQLException e) {
+            System.out.println("Error: " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Message: " + e.getMessage());
+            throw new SQLException("Failed to retrieved ingredient an error occured in our end.");
+        } finally {
+            //MSACCESSConnection.closeResources(rs, pst);
+            MSSQLConnection.closeResources(rs, pst);
+        }  
+    }
 
     @Override
     public List<Cart> getAll() throws SQLException {

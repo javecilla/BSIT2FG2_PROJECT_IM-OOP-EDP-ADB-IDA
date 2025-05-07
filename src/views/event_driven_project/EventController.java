@@ -17,7 +17,7 @@ public class EventController{
     private RegisterForm registerFrame;
     private RegisterForm2 registerFrame2;
     private OrderFrame orderFrame;
-    private Cart cartFrame;
+    private CartFrame cartFrame;
     private Payment paymentFrame;
     private AdminNavigationFrame adminNavFrame;
     private ManageStocksFrame manageStockFrame;
@@ -38,7 +38,7 @@ public class EventController{
         loginFrame = new LoginForm(this);
         registerFrame = new RegisterForm(this);
         registerFrame2 = new RegisterForm2(this);
-        cartFrame = new Cart(this);
+        cartFrame = new CartFrame(this);
         paymentFrame = new Payment(this);
         adminNavFrame = new AdminNavigationFrame(this);
         manageStockFrame = new ManageStocksFrame(this);

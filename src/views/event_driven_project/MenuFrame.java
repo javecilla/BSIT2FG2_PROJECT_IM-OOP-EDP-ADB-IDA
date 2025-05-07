@@ -229,13 +229,8 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
         }
         
         if(e.getSource() == changeInfoButton){
-            firstname = "jerson";
-            lastname = "valdez";
-            phone = "09091805447";
-            username = "jerson";
-            password = "123";
-            int userId = 1;
-            ChangeInfoFrame.showDialog(this, userId, firstname, lastname, phone, username, this);
+            User user = controller.getUser();
+            ChangeInfoFrame.showDialog(this, user.getUserId(), user.getFirstName(), user.getLastName(), user.getContactNumber(), user.getUsername(), this);
         }
     }
     
@@ -312,27 +307,23 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
 
     @Override
     public void onNameChanged(String firstName, String lastName) {
-        firstname = firstName;
-        lastname = lastName;
-        System.out.println(firstname+lastname);
+        controller.getUser().setFirstName(firstName);
+        controller.getUser().setLastName(lastName);
     }
 
     @Override
     public void onPhoneChanged(String newPhone) {
-        phone = newPhone;
-        System.out.println(phone);
+        controller.getUser().setContactNumber(newPhone);
     }
 
     @Override
     public void onUsernameChanged(String newUsername) {
-        username= newUsername;
-        System.out.println(username);
+        controller.getUser().setUsername(newUsername);
     }
 
     @Override
     public void onPasswordChanged(String newPassword) {
-        password = newPassword;
-        System.out.println(password);
+        controller.getUser().setPassword(newPassword);
     }
     
         private String[] parseAddressParts(String address) {

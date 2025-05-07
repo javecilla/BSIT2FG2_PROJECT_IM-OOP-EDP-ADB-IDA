@@ -5,6 +5,7 @@
 package views.event_driven_project;
 
 import controllers.UserController;
+import core.Session;
 import helpers.Response;
 import java.awt.*;
 import java.awt.event.*;
@@ -136,7 +137,7 @@ public class LoginForm extends JFrame implements ActionListener{
             Response<User> loginResponse = USER_CONTROLLER.loginUser(usernameField.getText(), password);
             
             if (loginResponse.isSuccess()) {
-                User user = loginResponse.getData();
+                User user = Session.getLoggedInUser();//loginResponse.getData();
                 controller.setUser(user);
                 
                 JOptionPane.showMessageDialog(null, loginResponse.getMessage() + "\n" + "Welcome Back, " + user.getFullName(), "Login Suceessful", JOptionPane.INFORMATION_MESSAGE);

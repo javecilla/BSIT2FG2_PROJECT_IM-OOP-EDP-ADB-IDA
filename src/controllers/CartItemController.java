@@ -158,6 +158,23 @@ public class CartItemController implements IOperatorsValidators<CartItem> {
         }
     }
     
+    public Response<Cart> getCartByUserId(int userId) {
+        try {
+            Cart cart = cartService.getByUserId(userId);
+            if (cart == null) {
+                return Response.error("Item not found with ID: " + userId);
+            }
+            
+//            Cart data = new Cart();
+//            data.setCartId(cart.getCartId());
+//            data.set
+
+            return Response.success("Item retrieved successfully", cart);
+        } catch (SQLException e) {
+            return Response.error("Something went wrong: " + e.getMessage());
+        }
+    }
+    
     
     public Response<Boolean> checkoutCartItem(int userId, int riderId) {
         try {
