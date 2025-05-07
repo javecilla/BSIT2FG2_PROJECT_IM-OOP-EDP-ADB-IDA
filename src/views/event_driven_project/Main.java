@@ -4,6 +4,9 @@
  */
 package views.event_driven_project;
 
+import core.Session;
+import models.User;
+
 /**
  *
  * @author Admin

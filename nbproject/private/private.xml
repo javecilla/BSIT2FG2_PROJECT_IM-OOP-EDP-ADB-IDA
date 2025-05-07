@@ -3,30 +3,45 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/HomePC/Jerome%20-%20Bulacan%20State%20University/OneDrive%20-%20Bulacan%20State%20University/NetBeansProjects/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/LoginForm.java</file>
-            <file>file:/C:/Users/HomePC/Jerome%20-%20Bulacan%20State%20University/OneDrive%20-%20Bulacan%20State%20University/NetBeansProjects/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/controllers/UserController.java</file>
-            <file>file:/C:/Users/HomePC/Jerome%20-%20Bulacan%20State%20University/OneDrive%20-%20Bulacan%20State%20University/NetBeansProjects/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/services/UserService.java</file>
-=======
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/MenuFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/test/Login.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/controllers/FoodController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/AdminNavigationFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/models/Food.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/models/Ingredient.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/test/GetUser.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/ManageStocksFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/AdminDashboardFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Main.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/TestConnection.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/ChangeAddressFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/RegisterForm2.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/controllers/CartController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/test/GetUsers.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/MSACCESSConnection.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/EventController.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/AdminNavigationFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/controllers/UserController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/test/DeleteUser.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/MommyVarietyStoreMain.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/MSSQLConnection.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Home.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/DatabaseConnection.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/OtwFrame.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/ChangeInfoFrame.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/ManageStocksFrame.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/AdminDashboardFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/ManageCouriersFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/core/Session.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/core/CartItem.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/core/Cart.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/services/CategoryService.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/test/UpdateUser.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/LoginForm.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Main.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/ChangeAddressFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/config/test.sql</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/test/Logout.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/AddCourierFrame.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/RegisterForm2.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/services/CourierService.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Cart.java</file>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/views/event_driven_project/Payment.java</file>
->>>>>>> 2405b07bc41a496219b970a4e74bc51153b11c7a
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/EVENT_DRIVEN_PROJECT_SECOND_SEM/BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/src/models/Category.java</file>
         </group>
     </open-files>
 </project-private>

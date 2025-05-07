@@ -1,10 +1,13 @@
 // Controller Class
 package views.event_driven_project;
 
+import controllers.UserController;
+import core.Session;
 import javax.swing.JFrame;
+import models.User;
 
 public class EventController{
-    private Home homeFrame;
+    public Home homeFrame;
     private MenuFrame menuFrame;
     private MenuRiceMeals riceMealsFrame;
     private MenuSandwiches sandwichesFrame;
@@ -21,6 +24,9 @@ public class EventController{
     private ManageCouriersFrame manageCourierFrame;
     private OtwFrame otwFrame;
     private AdminDashboardFrame dashboardFrame;
+    
+    protected static final UserController USER_CONTROLLER = new UserController();
+    private User user;
 
     public EventController() {
         homeFrame = new Home(this);
@@ -120,5 +126,14 @@ public class EventController{
         currentFrame.setVisible(false);
         dashboardFrame.setVisible(true);
     }
+    
+    public void setUser(User user){
+        this.user = user;
+    }
+    
+    public User getUser(){
+        return user;
+    }
+    
     
 }

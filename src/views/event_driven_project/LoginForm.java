@@ -4,12 +4,15 @@
  */
 package views.event_driven_project;
 
+import controllers.UserController;
+import helpers.Response;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import javax.swing.*;
 import javax.swing.border.*;
+import models.User;
 /**
  *
  * @author Admin
@@ -21,7 +24,8 @@ public class LoginForm extends JFrame implements ActionListener{
         loginFrame();
     }
     //INITIALIZATION OF COMPONENTS
-    
+    protected static final UserController USER_CONTROLLER = new UserController();
+    Main main = new Main();
     
     //Image Icon
     ImageIcon logo = new ImageIcon(getClass().getResource("/views/Images/logo.png"));
@@ -37,7 +41,7 @@ public class LoginForm extends JFrame implements ActionListener{
 
     
     //Labels
-    JLabel usernameLabel = new JLabel("Email Address:");
+    JLabel usernameLabel = new JLabel("Username:");
     JLabel passwordLabel = new JLabel("Password:");
     
     //Buttons
@@ -125,6 +129,31 @@ public class LoginForm extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == registerButton){
             controller.showRegisterFrame(this);
+        }
+        if(e.getSource() == loginButton){
+            char[] passwordChars = passwordField.getPassword();
+            String password = new String(passwordChars);
+            Response<User> loginResponse = USER_CONTROLLER.loginUser(usernameField.getText(), password);
+            
+            if (loginResponse.isSuccess()) {
+                User user = loginResponse.getData();
+                controller.setUser(user);
+                
+                JOptionPane.showMessageDialog(null, loginResponse.getMessage() + "\n" + "Welcome Back, " + user.getFullName(), "Login Suceessful", JOptionPane.INFORMATION_MESSAGE);
+                controller.homeFrame.setVisible(false);
+                controller.homeFrame.login.setVisible(false);
+                controller.homeFrame.logout.setVisible(true);
+                
+                if(user.getUserRole().equalsIgnoreCase("admin")){
+                    controller.showDashboardFrame(controller.homeFrame);
+                }else{
+                    controller.homeFrame.setVisible(true);
+                }
+                this.dispose();
+                //navigateToDashboard(user);
+            } else {
+                JOptionPane.showMessageDialog(null, loginResponse.getMessage(), "Login Failed", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
     
