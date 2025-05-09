@@ -291,7 +291,8 @@ public class AddCourierFrame extends JFrame {
             try {
                 connection.close();
             } catch (SQLException ex) {
-                System.err.println("Error closing connection: " + ex.getMessage());
+                //System.err.println("Error closing connection: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         super.dispose();

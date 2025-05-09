@@ -1,6 +1,7 @@
 package views.event_driven_project;
 
 import config.MSSQLConnection;
+import helpers.Response;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -27,6 +28,8 @@ import javax.swing.border.MatteBorder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import models.User;
+import static views.event_driven_project.LoginForm.USER_CONTROLLER;
 
 public class AdminDashboardFrame extends JFrame implements ActionListener {
     private EventController controller;
@@ -646,7 +649,19 @@ public class AdminDashboardFrame extends JFrame implements ActionListener {
             controller.showManageCourierFrame(this);
         } else if (e.getSource() == logoutButton) {
             timer.stop(); // Stop the timer when logging out
-            controller.showHomeFrame(this);
+            Response<User> logoutResponse = USER_CONTROLLER.logoutUser();
+                if (logoutResponse.isSuccess()) {
+                    controller.setUser(null);
+                    controller.setCartID(-1);
+                    controller.setOrderCount(-1);
+                    controller.homeFrame.logout.setVisible(false);
+                    controller.homeFrame.login.setVisible(true);
+                    controller.showHomeFrame(this);
+                    JOptionPane.showMessageDialog(this, logoutResponse.getMessage(), "logging out...", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    //System.out.println(logoutResponse.getMessage());
+                    JOptionPane.showMessageDialog(this, logoutResponse.getMessage(), "logging out...", JOptionPane.ERROR_MESSAGE);
+                }
         }
     }
 }

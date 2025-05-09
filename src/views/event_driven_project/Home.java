@@ -13,7 +13,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import javax.swing.*;
 import javax.swing.border.*;
-import models.User;
+import models.User; 
+import static views.event_driven_project.LoginForm.USER_CONTROLLER;
+
 /**
  *
  * @author Admin
@@ -127,11 +129,28 @@ public class Home extends JFrame implements ActionListener{
                 controller.showLoginFrame(this);
             }else{
                 controller.showMenuFrame(this);
+                controller.menuFrame.setButtonVisibility();
             }
         }
         
         if(e.getSource() == login){
             controller.showLoginFrame(this);
+        }
+        
+        if(e.getSource() == logout){
+            Response<User> logoutResponse = USER_CONTROLLER.logoutUser();
+                if (logoutResponse.isSuccess()) {
+                    controller.setUser(null);
+                    controller.setCartID(-1);
+                    controller.setOrderCount(-1);
+                    controller.homeFrame.logout.setVisible(false);
+                    controller.homeFrame.login.setVisible(true);
+                    controller.showHomeFrame(this);
+                    JOptionPane.showMessageDialog(this, logoutResponse.getMessage(), "logging out...", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    //System.out.println(logoutResponse.getMessage());
+                    JOptionPane.showMessageDialog(this, logoutResponse.getMessage(), "logging out...", JOptionPane.ERROR_MESSAGE);
+                }
         }
     }
     

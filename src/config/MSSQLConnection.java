@@ -10,19 +10,19 @@ public class MSSQLConnection extends DatabaseConnection {
     private static final String USERNAME = "sa";
     private static final String PASSWORD = "4545";
 
-    private static final String URL = "jdbc:sqlserver://" + HOSTNAME 
-            + ":" + PORT
-            + ";instanceName=" + INSTANCE_NAME
-            + ";databaseName=" + DATABASE_NAME
-            + ";encrypt=true"
-            + ";trustServerCertificate=true";
+//    private static final String URL = "jdbc:sqlserver://" + HOSTNAME 
+//            + ":" + PORT
+//            + ";instanceName=" + INSTANCE_NAME
+//            + ";databaseName=" + DATABASE_NAME
+//            + ";encrypt=true"
+//            + ";trustServerCertificate=true";
     
-//    private static final String URL =
-//            "jdbc:sqlserver://localhost:1433;"
-//            + "databaseName=Project_Database;"
-//            + "integratedSecurity=true;"
-//            + "encrypt=true;"
-//            + "trustServerCertificate=true;";
+    private static final String URL =
+            "jdbc:sqlserver://localhost:1433;"
+            + "databaseName=Project_Database;"
+            + "integratedSecurity=true;"
+            + "encrypt=true;"
+            + "trustServerCertificate=true;";
 
 
     private static Connection connection = null;

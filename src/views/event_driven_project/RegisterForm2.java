@@ -4,6 +4,8 @@
  */
 package views.event_driven_project;
 
+import controllers.UserController;
+import helpers.Response;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -34,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import models.User;
 
 /**
  *
@@ -41,8 +44,22 @@ import javax.swing.border.EmptyBorder;
  */
 public class RegisterForm2 extends JFrame implements ActionListener{
     private EventController controller;
-    public RegisterForm2(EventController eventController){
-        this.controller = eventController;
+    private String firstname;
+    private String lastname;
+    private String username;
+    private String contact;
+    private String password;
+    private String email;
+    protected static final UserController USER_CONTROLLER = new UserController();
+    public RegisterForm2(String firstname, String lastname, String username, String contact, String password, String email, EventController controller){
+        //this.controller = eventController;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.username = username;
+        this.contact = contact;
+        this.password = password;
+        this.email = email;
+        this.controller = controller;
         registerFrame2();
     }
     
@@ -235,9 +252,30 @@ public void registerFrame2() {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == registerButton){
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setUserRole("customer");
+            user.setEmail(email);
+            user.setContactNumber(contact);
+            user.setFirstName(firstname);
+            user.setLastName(lastname);
+            user.setBarangay(barangayField.getText());
+            user.setStreet(streetField.getText());
+            user.setHouseNumber(houseNumberField.getText());
+            user.setRegion(regionField.getText());
+            user.setProvince(provinceField.getText());
+            user.setMunicipality(cityField.getText());
+
+            Response<User> signUpResponse = USER_CONTROLLER.registerUser(user);
+            if (signUpResponse.isSuccess()) {
+                JOptionPane.showMessageDialog(this, signUpResponse.getMessage(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, signUpResponse.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
             controller.showHomeFrame(this);
         }
-    }
     
     private void checkAllFieldsValid() {
         boolean allFilled = !houseNumberField.getText().trim().isEmpty() &&
