@@ -1,6 +1,7 @@
 package views.event_driven_project;
 
 import config.MSSQLConnection;
+import helpers.Response;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -9,6 +10,13 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
+import models.CartItem;
+import models.User;
+import controllers.CartItemController;
+import helpers.Response;
+import java.util.List;
+import models.CartItem;
+import controllers.CartItemController;
 
 public class Payment extends JFrame implements ActionListener, ChangeAddressFrame.AddressChangeListener {
 
@@ -19,9 +27,10 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
     private JButton placeOrderBtn, changeAddressBtn;
     private JLabel nameLabel, addressLabel, totalLabel;
     private JPanel userInfoPanel;
-    
-    // User ID for database operations
-    private int userId = 1; // Default to user ID 1 for demonstration, should be set dynamically
+    private String address;
+    private int cartID;
+    protected static final CartItemController CART_ITEM_CONTROLLER = new CartItemController();
+    private double total = 0;
 
     private ImageIcon paymentIcon = new ImageIcon(getClass().getResource("/views/Images/payment option.png"));
     private ImageIcon changeAddressIcon = new ImageIcon(getClass().getResource("/views/Images/change-address.png"));
@@ -29,7 +38,6 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
     public Payment(EventController controller) {
         this.controller = controller;
         paymentFrameConfig();
-        loadUserInfo(); // Load user info from database when frame is created
     }
 
     private void paymentFrameConfig() {
@@ -66,10 +74,10 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
         userInfoPanel.setBounds(getWidth() / 3, 10, getWidth() * 2 / 3 - 30, 50);
         
         // Name and address on the semi-transparent panel
-        nameLabel = new JLabel("Juan Dela Cruz");
-        addressLabel = new JLabel("123, Lorem Ipsum Street, pinalagdan, Dolor Sit Amet, Bulacan, Region III");
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        addressLabel.setFont(new Font("Arial", Font.ITALIC, 13));
+        nameLabel = new JLabel(controller.getUser().getFirstName() + " " + controller.getUser().getLastName());
+        addressLabel = new JLabel(getAddress(controller.getUser()));
+        nameLabel.setFont(new Font("Poppins", Font.BOLD, 16));
+        addressLabel.setFont(new Font("Poppins", Font.ITALIC, 13));
         
         userInfoPanel.add(nameLabel);
         userInfoPanel.add(addressLabel);
@@ -101,7 +109,7 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
 
         JLabel paymentLabel = new JLabel("Payment Method:");
         paymentLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        paymentComboBox = new JComboBox<>(new String[]{"Cash on Delivery", "Online Payment"});
+        paymentComboBox = new JComboBox<>(new String[]{"Cash on Delivery"});
         paymentComboBox.setPreferredSize(new Dimension(180, 30));
         
         paymentPanel.add(paymentLabel);
@@ -109,7 +117,7 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
         backgroundPanel.add(paymentPanel);
 
         // Table for cart with transparent background
-        String[] columnNames = {"Food Name", "Quantity", "Price (₱)"};
+        String[] columnNames = {"Food Name", "Quantity", "Price (Php)"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -191,43 +199,116 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
         setVisible(false);
     }
 
-    private double calculateTotal() {
-        double total = 0;
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            total += Double.parseDouble(tableModel.getValueAt(i, 2).toString());
-        }
-        return total;
-    }
-
+    /**
+     * Loads cart items specifically for the current user from the database
+     * Using direct SQL query approach similar to CartFrame
+     */
     private void loadCartItems() {
-        tableModel.setRowCount(0); // clear old rows
-        String query = "SELECT CartItem_ID, Food_ID, Item_Quantity FROM CART_ITEM";
-        try (Connection conn = MSSQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                String name = rs.getString("CartItem_ID");
-                int qty = rs.getInt("Food_ID");
-                double price = rs.getDouble("Item_Quantity");
-                tableModel.addRow(new Object[]{name, qty, price});
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Failed to load cart items:\n" + e.getMessage());
+        // Clear the existing table data and reset total
+        tableModel.setRowCount(0);
+        total = 0.0;
+        
+        //System.out.println("Loading cart items for payment view...");
+        
+        // Check if there's a logged-in user from controller
+        User currentUser = controller.getUser();
+        if (currentUser == null) {
+            //System.out.println("No user is currently logged in.");
+            JOptionPane.showMessageDialog(this, 
+                "Please log in to view your cart items.", 
+                "Authentication Required", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
         
-        // Update total after loading items
-        totalLabel.setText("Total: ₱ " + calculateTotal());
-    }
-    
-    /**
-     * Load user information from database
-     * You can use this method to refresh user data if needed
-     */
-    private void loadUserInfo() {
-        // This method can be filled in with actual database queries
-        // For now we'll keep the hardcoded values from your original code
+        int userId = currentUser.getUserId();
+        //System.out.println("Loading cart for user ID: " + userId);
+        
+        // SQL query to filter by the current user's ID
+        String sql = "SELECT c.Cart_ID, ci.Food_ID, f.Food_Name, ci.Item_Quantity, " +
+                     "f.Price, (ci.Item_Quantity * f.Price) as SubTotal " +
+                     "FROM USER_ u JOIN CART c " +
+                     "ON u.UserID = c.UserID " +
+                     "JOIN CART_ITEM ci " +
+                     "ON c.Cart_ID = ci.Cart_ID " +
+                     "JOIN FOOD f " +
+                     "ON ci.Food_ID = f.Food_ID " +
+                     "WHERE u.UserID = ?";
+        
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            // Establish database connection
+            conn = MSSQLConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);  // Set the user ID parameter
+            rs = pstmt.executeQuery();
+            
+            // Process the result set
+            while (rs.next()) {
+                int cartId = rs.getInt("Cart_ID");
+                String foodName = rs.getString("Food_Name");
+                int quantity = rs.getInt("Item_Quantity");
+                double price = rs.getDouble("Price");
+                double subtotal = rs.getDouble("SubTotal");
+                
+                // Store the cart ID for later use
+                this.cartID = cartId;
+                
+             // Print debug info
+//                System.out.println("Adding to payment table - Food: " + foodName + 
+//                                  ", Quantity: " + quantity + 
+//                                  ", Price: " + price + 
+//                                  ", Subtotal: " + subtotal);
+                
+                // Add to table model (without subtotal column as per requirements)
+                tableModel.addRow(new Object[] {
+                    foodName,                       // Food Name
+                    quantity,                       // Quantity
+                    String.format("%.2f", price)    // Price (formatted)
+                });
+                
+                // Add to total
+                total += subtotal;
+            }
+            
+            // Update the total display
+            totalLabel.setText(String.format("Total: Php %.2f", total));
+            
+            //System.out.println("Loaded items with total: " + total + " for user ID: " + userId);
+            
+            if (tableModel.getRowCount() == 0) {
+                //System.out.println("No items in cart for user ID: " + userId);
+                JOptionPane.showMessageDialog(this, "No items in cart for user ID: " + userId, "No Items", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        } catch (SQLException e) {
+            //System.err.println("Database error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, 
+                "Error loading cart items: " + e.getMessage(), 
+                "Database Error", 
+                JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Close database resources
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                //System.err.println("Error closing database resources: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, 
+                "Error closing database resources: " + e.getMessage(), 
+                "Database Error", 
+                JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        // Refresh the table UI
+        tableModel.fireTableDataChanged();
+        cartTable.revalidate();
+        cartTable.repaint();
     }
 
     @Override
@@ -235,79 +316,17 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
         if (e.getSource() == placeOrderBtn) {
             String selectedPayment = (String) paymentComboBox.getSelectedItem();
 
-            if ("Online Payment".equals(selectedPayment)) {
-                showOnlinePaymentPrompt();
-            } else if ("Cash on Delivery".equals(selectedPayment)) {
-                controller.showOtwFrame(this);
+            if ("Cash on Delivery".equals(selectedPayment)) {
+                OtwFrame otw = new OtwFrame(controller);
+                otw.setVisible(true);
+                this.dispose();
             }
 
         } else if (e.getSource() == changeAddressBtn) {
-            // Use our new reusable address dialog
-            ChangeAddressFrame.showDialog(this, addressLabel.getText(), this);
+            address = getAddress(controller.getUser());
+            
+            ChangeAddressFrame.showDialog(this, controller.getUser().getUserId(),address, this);
         }
-    }
-
-    private void showOnlinePaymentPrompt() {
-        // Using standard JDialog with default styling
-        JDialog dialog = new JDialog(this, "Online Payment", true);
-        dialog.setSize(350, 220);
-        dialog.setLocationRelativeTo(this);
-        dialog.setLayout(new BorderLayout());
-
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
-
-        JLabel totalAmountLabel = new JLabel("Total Amount: ₱ " + calculateTotal());
-        totalAmountLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        totalAmountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        JLabel paymentLabel = new JLabel("Enter Payment Amount:");
-        paymentLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        paymentLabel.setBorder(new EmptyBorder(15, 0, 5, 0));
-        
-        JTextField amountField = new JTextField(10);
-        amountField.setMaximumSize(new Dimension(150, 30));
-        amountField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        JButton submitBtn = new JButton("Submit Payment");
-        submitBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        submitBtn.setBorder(BorderFactory.createRaisedBevelBorder());
-
-        submitBtn.addActionListener(evt -> {
-            String amount = amountField.getText();
-            if (amount.matches("\\d+(\\.\\d{1,2})?")) {
-                double paid = Double.parseDouble(amount);
-                double total = calculateTotal();
-                
-                if (paid == total) {
-                    // Using default JOptionPane
-                    JOptionPane.showMessageDialog(dialog, 
-                        String.format("Payment of ₱%.2f accepted.", paid));
-                    controller.showOtwFrame(this);
-                    dialog.dispose();
-                }else if(paid > total){
-                    JOptionPane.showMessageDialog(dialog, 
-                        "Over payment. Please enter exact amount to continue. Total: ₱" + total);
-                } else {
-                    // Using default JOptionPane
-                    JOptionPane.showMessageDialog(dialog, 
-                        "Insufficient payment. Please enter exactly ₱" + total);
-                }
-            } else {
-                // Using default JOptionPane
-                JOptionPane.showMessageDialog(dialog, "Invalid amount. Please enter numbers only.");
-            }
-        });
-
-        contentPanel.add(totalAmountLabel);
-        contentPanel.add(paymentLabel);
-        contentPanel.add(amountField);
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        contentPanel.add(submitBtn);
-        
-        dialog.add(contentPanel);
-        dialog.setVisible(true);
     }
 
     private void setupButton(JButton button) {
@@ -321,7 +340,47 @@ public class Payment extends JFrame implements ActionListener, ChangeAddressFram
      */
     @Override
     public void onAddressChanged(String newAddress) {
-        // Update the address label in this frame
-        addressLabel.setText(newAddress);
+        address = newAddress;
+        String parts[] = parseAddressParts(address);
+        
+        controller.getUser().setHouseNumber(parts[0]);
+        controller.getUser().setStreet(parts[1]);
+        controller.getUser().setBarangay(parts[2]);
+        controller.getUser().setMunicipality(parts[3]);
+        controller.getUser().setProvince(parts[4]);
+        controller.getUser().setRegion(parts[5]);
+        
+        addressLabel.setText(address);
+    }
+    
+    private String[] parseAddressParts(String address) {
+        String[] parts = new String[6];
+        
+        // Initialize with empty strings
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = "";
+        }
+        
+        if (address != null && !address.isEmpty()) {
+            String[] splitAddress = address.split(",");
+            
+            // Copy available parts
+            for (int i = 0; i < Math.min(splitAddress.length, parts.length); i++) {
+                parts[i] = splitAddress[i].trim();
+            }
+        }
+        
+        return parts;
+    }
+    
+    public String getAddress(User user){
+        address = user.getHouseNumber() + ", " + 
+                    user.getStreet() + ", " + 
+                    user.getBarangay() + ", " + 
+                    user.getMunicipality() + ", " +
+                    user.getProvince() + ", " +
+                    user.getRegion();
+                    
+        return address;
     }
 }

@@ -35,6 +35,7 @@ public class RegisterForm extends JFrame implements ActionListener{
     RoundedTextField firstNameField = new RoundedTextField(20, fieldIcon);
     RoundedTextField lastNameField = new RoundedTextField(20, fieldIcon);
     RoundedTextField contactField = new RoundedTextField(20, fieldIcon);
+    RoundedTextField emailField = new RoundedTextField(20, fieldIcon);
     
     //Labels
     JLabel usernameLabel = new JLabel("Username:");
@@ -42,7 +43,9 @@ public class RegisterForm extends JFrame implements ActionListener{
     JLabel firstNameLabel = new JLabel("First name:");
     JLabel lastNameLabel = new JLabel("Last name:");
     JLabel contactLabel = new JLabel("Contact number:");
+    JLabel emailLabel = new JLabel("Email:");
     JLabel contactErrorLabel = new JLabel("Invalid Contact Number. It must begin with 09 and 11 digits.");
+    JLabel emailErrorLabel = new JLabel("Invalid Email Address. Must have @ and like .com, etc...");
 
     //Buttons
     JButton loginButton = new JButton();
@@ -72,6 +75,7 @@ public class RegisterForm extends JFrame implements ActionListener{
     setupField(firstNameField);
     setupField(lastNameField);
     setupField(contactField);
+    setupField(emailField);
 
     // Transparent panel to hold components vertically
     JPanel formPanel = new JPanel();
@@ -84,12 +88,14 @@ public class RegisterForm extends JFrame implements ActionListener{
     firstNameLabel.setForeground(new Color(93, 48, 140));
     lastNameLabel.setForeground(new Color(93, 48, 140));
     contactLabel.setForeground(new Color(93, 48, 140));
+    emailLabel.setForeground(new Color(93, 48, 140));
     
     usernameLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     passwordLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     firstNameLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     lastNameLabel.setFont(new Font("Arial", Font.PLAIN, 12));
     contactLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+    emailLabel.setFont(new Font("Arial", Font.PLAIN, 12));
 
     // Set grid positions for labels (aligned left) and fields (centered)
     gbc.gridx = 0;
@@ -125,31 +131,46 @@ public class RegisterForm extends JFrame implements ActionListener{
     gbc.gridx = 0;
     gbc.gridy = 6;
     gbc.anchor = GridBagConstraints.WEST; 
-    formPanel.add(contactLabel, gbc);
-    
+    formPanel.add(emailLabel, gbc);
+
     gbc.gridx = 0;
     gbc.gridy = 7;
     gbc.anchor = GridBagConstraints.CENTER; 
-    formPanel.add(contactField, gbc);
+    formPanel.add(emailField, gbc);
     
     gbc.gridx = 0;
     gbc.gridy = 8;
     gbc.anchor = GridBagConstraints.CENTER; 
-    formPanel.add(contactErrorLabel, gbc);
+    formPanel.add(emailErrorLabel, gbc);
     
     gbc.gridx = 0;
     gbc.gridy = 9;
     gbc.anchor = GridBagConstraints.WEST; 
-    formPanel.add(passwordLabel, gbc);
+    formPanel.add(contactLabel, gbc);
     
     gbc.gridx = 0;
     gbc.gridy = 10;
+    gbc.anchor = GridBagConstraints.CENTER; 
+    formPanel.add(contactField, gbc);
+    
+    gbc.gridx = 0;
+    gbc.gridy = 11;
+    gbc.anchor = GridBagConstraints.CENTER; 
+    formPanel.add(contactErrorLabel, gbc);
+    
+    gbc.gridx = 0;
+    gbc.gridy = 12;
+    gbc.anchor = GridBagConstraints.WEST; 
+    formPanel.add(passwordLabel, gbc);
+    
+    gbc.gridx = 0;
+    gbc.gridy = 13;
     gbc.anchor = GridBagConstraints.CENTER; 
     formPanel.add(passwordField, gbc);
     
     // Add buttons in the center
     gbc.gridx = 0;
-    gbc.gridy = 11;
+    gbc.gridy = 14;
     gbc.gridwidth = 2; // Make the buttons span across both columns
     gbc.anchor = GridBagConstraints.CENTER; // Center the buttons
     formPanel.add(nextButton, gbc);
@@ -157,11 +178,12 @@ public class RegisterForm extends JFrame implements ActionListener{
     // Center form panel in content panel
     gbc.gridx = 0;
     gbc.gridy = 0;
-    gbc.insets = new Insets(100, 0, 0, 0); // Move it down by 80 pixels
+    gbc.insets = new Insets(135, 0, 0, 0); // Move it down by 80 pixels
     contentPanel.add(formPanel, gbc);
 
     nextButton.setEnabled(false);
     contactErrorLabel.setVisible(false);
+    emailErrorLabel.setVisible(false);
     
     firstNameField.addFocusListener(new FocusAdapter(){
         public void focusLost(FocusEvent e) {
@@ -201,6 +223,21 @@ public class RegisterForm extends JFrame implements ActionListener{
         }
         }
     });
+    
+    emailField.addFocusListener(new FocusAdapter() {
+    @Override
+    public void focusLost(FocusEvent e) {
+        String contact = emailField.getText();
+        if (!contact.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+            emailErrorLabel.setForeground(Color.red);
+            emailErrorLabel.setVisible(true);
+            nextButton.setEnabled(false);
+        } else {
+            emailErrorLabel.setVisible(false);
+            checkAllFieldsValid(); // enable button if all fields are valid
+        }
+        }
+    });
 
     nextButton.addMouseListener(new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
@@ -212,7 +249,7 @@ public class RegisterForm extends JFrame implements ActionListener{
     
     // Frame config
     this.setContentPane(contentPanel);
-    this.setSize(backgroundIcon1.getIconWidth(), backgroundIcon1.getIconHeight());
+    this.setSize(backgroundIcon1.getIconWidth(), backgroundIcon1.getIconHeight() + 50);
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setLocationRelativeTo(null);
     this.setVisible(false);
@@ -221,7 +258,17 @@ public class RegisterForm extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == nextButton){
-            controller.showRegisterFrame2(this);
+            //controller.showRegisterFrame2(this);
+            String password = new String(passwordField.getPassword());
+            RegisterForm2 regForm2 = new RegisterForm2(firstNameField.getText(),
+                                                        lastNameField.getText(),
+                                                        usernameField.getText(),
+                                                        contactField.getText(),
+                                                        password, 
+                                                        emailField.getText(),
+                                                        controller);
+            regForm2.setVisible(true);
+            this.setVisible(false);
         }
     }
 
@@ -230,7 +277,8 @@ public class RegisterForm extends JFrame implements ActionListener{
                         !lastNameField.getText().trim().isEmpty() &&
                         !usernameField.getText().trim().isEmpty() &&
                         !String.valueOf(passwordField.getPassword()).trim().isEmpty() &&
-                        contactField.getText().matches("^09\\d{9}$");
+                        contactField.getText().matches("^09\\d{9}$") &&
+                        emailField.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
 
     nextButton.setEnabled(allFilled);
 }

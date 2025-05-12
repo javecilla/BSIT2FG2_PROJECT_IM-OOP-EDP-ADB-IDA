@@ -72,6 +72,7 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
     JButton cartButton = new JButton();
     JButton changeInfoButton = new JButton();
     JButton changeAddressButton = new JButton();
+    JButton orderReceivedButton = new JButton("Order Receive");
     
     //TextField
     
@@ -106,9 +107,11 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
         setupButton(cartButton, cartButtonIcon);
         setupButton(changeInfoButton, changeInfoIcon);
         setupButton(changeAddressButton, changeAddressIcon);
+        setupButton1(orderReceivedButton);
         
         cartButton.add(cartLabel);
         
+        navPanel.add(orderReceivedButton);
         navPanel.add(homeButton);
         navPanel.add(changeInfoButton);
         navPanel.add(changeAddressButton);
@@ -213,7 +216,9 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
         }
         
         if(e.getSource() == cartButton){
-            controller.showCartFrame(this);
+            //controller.showCartFrame(this);
+            CartFrame cart = new CartFrame(controller);
+            cart.setVisible(true);
         }
         
         if(e.getSource() == changeAddressButton){
@@ -232,30 +237,27 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
             User user = controller.getUser();
             ChangeInfoFrame.showDialog(this, user.getUserId(), user.getFirstName(), user.getLastName(), user.getContactNumber(), user.getUsername(), this);
         }
+        
+        if(e.getSource() == orderReceivedButton){
+            OrderReceivedFrame received = new OrderReceivedFrame(controller);
+            received.setVisible(true);
+            this.dispose();
+        }
     }
     
     public void setCartItemCount(){
-        cartLabel.setText(getCartItemCount() + "");
-    }
-    
-    public int getCartItemCount() {
-        String sql = "SELECT COUNT(*) AS total FROM CART_ITEM";
-        int count = 0;
-
-        try (Connection conn = MSSQLConnection.getConnection();
-             PreparedStatement pst = conn.prepareStatement(sql);
-             ResultSet rs = pst.executeQuery()) {
-
-            if (rs.next()) {
-                count = rs.getInt("total"); // or rs.getInt(1);
+        if(controller.getUser() != null){
+            CartFrame cart = new CartFrame(controller);
+            int itemCount = cart.getCartItemCount();
+            if(itemCount == 0){
+                cartLabel.setVisible(false);
+            }else{
+                cartLabel.setVisible(true);
+                cartLabel.setText(itemCount + "");
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace(); // or log the error
         }
-        return count;
     }
-    
+
     private void setupButton(JButton button, ImageIcon icon) {
         button.setIcon(icon);                      // Set the icon for the button
         button.setBorder(new EmptyBorder(0, 0, 0, 0));  // Remove the button's default border
@@ -276,6 +278,15 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
                 button.setIcon(icon);  // Restore the original image when not hovered
             }
         });
+    }
+    
+   private void setupButton1(JButton button) {                     
+        button.setBorder(new EmptyBorder(0, 0, 0, 0));  
+        button.setBackground(new Color(95, 71, 214));
+        button.setForeground(Color.WHITE);
+        button.addActionListener(this);           
+        button.setPreferredSize(new Dimension(homeButtonIcon.getIconWidth(), homeButtonIcon.getIconHeight()));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
         
         private ImageIcon darkenImageIcon(ImageIcon icon) {
@@ -326,7 +337,7 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
         controller.getUser().setPassword(newPassword);
     }
     
-        private String[] parseAddressParts(String address) {
+    private String[] parseAddressParts(String address) {
         String[] parts = new String[6];
         
         // Initialize with empty strings
@@ -344,5 +355,34 @@ public class MenuFrame extends JFrame implements ActionListener, ChangeAddressFr
         }
         
         return parts;
+    }
+    
+    public int countUserOrders(int userID) {
+        int orderCount = -1;
+        try (Connection connection = MSSQLConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(
+                 "SELECT COUNT(*) FROM SALE WHERE Customer_ID = ? AND Order_Status = 'Pending'")) {
+            stmt.setInt(1, userID); // Bind the userID parameter
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    orderCount = rs.getInt(1); // Get the count from the first column
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error counting orders: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+            // Optionally log the error for debugging
+            //System.err.println("Error counting orders for userID " + userID + ": " + e.getMessage());
+        }
+        return orderCount;
+    }
+    
+    public void setButtonVisibility(){
+        if(controller.getOrderCount() <= 0){
+            orderReceivedButton.setVisible(false);
+        }else{
+            orderReceivedButton.setVisible(true);
+        }
     }
 }

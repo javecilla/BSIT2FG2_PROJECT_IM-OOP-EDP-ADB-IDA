@@ -171,54 +171,47 @@ public class MenuDrinks extends JFrame implements ActionListener {
             controller.showMenuFrame(this);
         }
         if (e.getSource() == macchiatoButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(36, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == miloButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(32, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == mixedBerriesButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(34, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == oreoButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(35, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == spanishButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(37, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == strawberryBombButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(33, controller);
             orderFrame.setVisible(true);
         }
         if(e.getSource() == cartButton){
-            controller.showCartFrame(this);
+            //controller.showCartFrame(this);
+            CartFrame cart = new CartFrame(controller);
+            cart.setVisible(true);
         }
     }
     
     public void setCartItemCount(){
-        cartLabel.setText(getCartItemCount() + "");
-    }
-    
-    public int getCartItemCount() {
-        String sql = "SELECT COUNT(*) AS total FROM CART_ITEM";
-        int count = 0;
-
-        try (Connection conn = MSSQLConnection.getConnection();
-             PreparedStatement pst = conn.prepareStatement(sql);
-             ResultSet rs = pst.executeQuery()) {
-
-            if (rs.next()) {
-                count = rs.getInt("total"); // or rs.getInt(1);
+        if(controller.getUser() != null){
+            CartFrame cart = new CartFrame(controller);
+            int itemCount = cart.getCartItemCount();
+            if(itemCount == 0){
+                cartLabel.setVisible(false);
+            }else{
+                cartLabel.setVisible(true);
+                cartLabel.setText(itemCount + "");
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace(); // or log the error
         }
-        return count;
     }
 
     private void setupButton(JButton button, ImageIcon icon) {

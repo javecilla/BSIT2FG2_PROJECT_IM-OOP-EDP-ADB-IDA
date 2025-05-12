@@ -8,10 +8,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class FriesFlavorChoices extends JFrame implements ActionListener {
+    private String size;
     private int itemId;
+    private EventController controller;
 
-    public FriesFlavorChoices(int id) {
-        this.itemId = id;
+    public FriesFlavorChoices(String size, EventController controller) {
+        this.controller = controller;
+        this.size = size;
         orderFrameConfig();
     }
 
@@ -23,7 +26,7 @@ public class FriesFlavorChoices extends JFrame implements ActionListener {
 
     // ComboBox for flavor choices
     JComboBox<String> flavorComboBox = new JComboBox<>(new String[] {
-        "Plain", "Cheese", "Barbecue", "Sour Cream", "Salted"
+        "Plain", "Cheese", "Barbecue", "Sour Cream", "Chili Barbecue", "Honey Butter", "Butter Cheese"
     });
 
     // Button
@@ -77,8 +80,8 @@ public class FriesFlavorChoices extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == confirmButton) {
             String selectedFlavor = (String) flavorComboBox.getSelectedItem();
-            this.dispose(); // Close the frame
-            OrderFrame orderFrame = new OrderFrame(itemId);
+            itemId = getFoodId(size, selectedFlavor);
+            OrderFrame orderFrame = new OrderFrame(itemId, controller);
             orderFrame.setVisible(true);
         }
     }
@@ -116,5 +119,93 @@ public class FriesFlavorChoices extends JFrame implements ActionListener {
 
         g2d.dispose();
         return new ImageIcon(bufferedImage);
+    }
+    
+    public int getFoodId(String size, String flavor){
+        int foodId = 0;
+        
+        switch(flavor){
+            case "Plain":
+                if(size.equalsIgnoreCase("large")){
+                    foodId = 40;
+                }else if(size.equalsIgnoreCase("medium")){
+                    foodId = 39;
+                }else if(size.equalsIgnoreCase("small")){
+                    foodId = 38;
+                }else{
+                    foodId = 0;
+                }
+                break;
+            case "Cheese":
+                if(size.equalsIgnoreCase("large")){
+                    foodId = 26;
+                }else if(size.equalsIgnoreCase("medium")){
+                    foodId = 20;
+                }else if(size.equalsIgnoreCase("small")){
+                    foodId = 14;
+                }else{
+                    foodId = 0;
+                }
+                break;
+            case "Barbecue":
+                if(size.equalsIgnoreCase("large")){
+                    foodId = 27;
+                }else if(size.equalsIgnoreCase("medium")){
+                    foodId = 21;
+                }else if(size.equalsIgnoreCase("small")){
+                    foodId = 15;
+                }else{
+                    foodId = 0;
+                }
+                break;
+            case "Sour Cream":
+                if(size.equalsIgnoreCase("large")){
+                    foodId = 28;
+                }else if(size.equalsIgnoreCase("medium")){
+                    foodId = 22;
+                }else if(size.equalsIgnoreCase("small")){
+                    foodId = 16;
+                }else{
+                    foodId = 0;
+                }
+                break;
+            case "Chili Barbecue":
+                if(size.equalsIgnoreCase("large")){
+                    foodId = 29;
+                }else if(size.equalsIgnoreCase("medium")){
+                    foodId = 23;
+                }else if(size.equalsIgnoreCase("small")){
+                    foodId = 17;
+                }else{
+                    foodId = 0;
+                }
+                break;
+            case "Honey Butter":
+                if(size.equalsIgnoreCase("large")){
+                    foodId = 30;
+                }else if(size.equalsIgnoreCase("medium")){
+                    foodId = 24;
+                }else if(size.equalsIgnoreCase("small")){
+                    foodId = 18;
+                }else{
+                    foodId = 0;
+                }
+                break;
+            case "Butter Cheese":
+                if(size.equalsIgnoreCase("large")){
+                    foodId = 31;
+                }else if(size.equalsIgnoreCase("medium")){
+                    foodId = 25;
+                }else if(size.equalsIgnoreCase("small")){
+                    foodId = 19;
+                }else{
+                    foodId = 0;
+                }
+                break;
+            default:
+                break;
+        }
+        
+        return foodId;
     }
 }

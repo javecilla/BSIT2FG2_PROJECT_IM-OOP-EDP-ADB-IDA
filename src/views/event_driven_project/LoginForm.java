@@ -13,7 +13,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import javax.swing.*;
 import javax.swing.border.*;
+import models.CartItem;
 import models.User;
+import static views.event_driven_project.CartFrame.CART_ITEM_CONTROLLER;
 /**
  *
  * @author Admin
@@ -139,14 +141,25 @@ public class LoginForm extends JFrame implements ActionListener{
             if (loginResponse.isSuccess()) {
                 User user = Session.getLoggedInUser();//loginResponse.getData();
                 controller.setUser(user);
+                controller.menuFrame.setCartItemCount();
+                controller.friesFrame.setCartItemCount();
+                controller.drinksFrame.setCartItemCount();
+                controller.riceMealsFrame.setCartItemCount();
+                controller.sandwichesFrame.setCartItemCount();
+                int count = controller.menuFrame.countUserOrders(user.getUserId());
+                controller.setOrderCount(count);
                 
                 JOptionPane.showMessageDialog(null, loginResponse.getMessage() + "\n" + "Welcome Back, " + user.getFullName(), "Login Suceessful", JOptionPane.INFORMATION_MESSAGE);
                 controller.homeFrame.setVisible(false);
                 controller.homeFrame.login.setVisible(false);
                 controller.homeFrame.logout.setVisible(true);
+                //CartFrame cart = new CartFrame(controller);
+                //cart.initialFrameSetup();
                 
                 if(user.getUserRole().equalsIgnoreCase("admin")){
-                    controller.showDashboardFrame(controller.homeFrame);
+                    //controller.showDashboardFrame(controller.homeFrame);
+                    AdminDashboardFrame adFrame = new AdminDashboardFrame(controller);
+                    adFrame.setVisible(true);
                 }else{
                     controller.homeFrame.setVisible(true);
                 }

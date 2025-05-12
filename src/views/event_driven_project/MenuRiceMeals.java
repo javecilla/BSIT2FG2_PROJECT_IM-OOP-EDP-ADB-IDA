@@ -169,58 +169,51 @@ public class MenuRiceMeals extends JFrame implements ActionListener {
             controller.showMenuFrame(this);
         }
         if (e.getSource() == oneSteakButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(2, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == twoSteakButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(3, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == baconEggButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(6, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == hamEggButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(7, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == hotdogEggButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(5, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == nuggetsButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(4, controller);
             orderFrame.setVisible(true);
         }
         if (e.getSource() == samgyupButton) {
-            OrderFrame orderFrame = new OrderFrame(0);
+            OrderFrame orderFrame = new OrderFrame(1, controller);
             orderFrame.setVisible(true);
         }
         if(e.getSource() == cartButton){
-            controller.showCartFrame(this);
+            //controller.showCartFrame(this);
+            CartFrame cart = new CartFrame(controller);
+            cart.setVisible(true);
         }
     }
     
     public void setCartItemCount(){
-        cartLabel.setText(getCartItemCount() + "");
-    }
-    
-    public int getCartItemCount() {
-        String sql = "SELECT COUNT(*) AS total FROM CART_ITEM";
-        int count = 0;
-
-        try (Connection conn = MSSQLConnection.getConnection();
-             PreparedStatement pst = conn.prepareStatement(sql);
-             ResultSet rs = pst.executeQuery()) {
-
-            if (rs.next()) {
-                count = rs.getInt("total"); // or rs.getInt(1);
+        if(controller.getUser() != null){
+            CartFrame cart = new CartFrame(controller);
+            int itemCount = cart.getCartItemCount();
+            if(itemCount == 0){
+                cartLabel.setVisible(false);
+            }else{
+                cartLabel.setVisible(true);
+                cartLabel.setText(itemCount + "");
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace(); // or log the error
         }
-        return count;
     }
 
     private void setupButton(JButton button, ImageIcon icon) {

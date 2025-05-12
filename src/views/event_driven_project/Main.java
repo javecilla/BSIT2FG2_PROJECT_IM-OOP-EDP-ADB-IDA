@@ -13,6 +13,10 @@ import models.User;
  */
 public class Main {
     public static void main(String[] args) {
+        // Create the controller
         EventController controller = new EventController();
+        
+        // Make the home frame visible to start the application
+        controller.homeFrame.setVisible(true);
     }
 }
