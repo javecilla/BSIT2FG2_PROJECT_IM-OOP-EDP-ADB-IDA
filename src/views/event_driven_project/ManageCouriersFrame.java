@@ -6,7 +6,9 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -15,12 +17,17 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
     public ManageCouriersFrame(EventController controller) {
         this.controller = controller;
         couriersFrameConfig();
+        loadCompanies(); // Load company names into the dropdown
         loadCouriersData("all"); // Initially load all couriers
     }
     private Connection connection;
     private JTable couriersTable;
     private DefaultTableModel tableModel;
     private HashMap<Integer, String> riderIdMap = new HashMap<>(); // Map row index to rider ID
+    
+    // New components for company filter
+    private JComboBox<String> companyComboBox = new JComboBox<>();
+    private JLabel companyFilterLabel = new JLabel("Filter by Company:");
     
     // Icons
     private ImageIcon couriersIcon = new ImageIcon(getClass().getResource("/views/Images/plain.png"));
@@ -33,6 +40,7 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
     private JButton showAvailableButton = new JButton("Show Available");
     private JButton showUnavailableButton = new JButton("Show Unavailable");
     private JButton backButton = new JButton("Back");
+    private JButton applyFilterButton = new JButton("Apply Filter");
     
     // Add Courier Button
     private JButton addCourierButton = new JButton("Add Courier");
@@ -88,6 +96,27 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backButton.addActionListener(this);
         
+        // Setup company filter components
+        companyFilterLabel.setFont(new Font("Poppins", Font.BOLD, 14));
+        companyFilterLabel.setForeground(new Color(95, 71, 214));
+        
+        companyComboBox.setFont(new Font("Poppins", Font.PLAIN, 14));
+        companyComboBox.setBackground(Color.WHITE);
+        companyComboBox.setForeground(new Color(95, 71, 214));
+        companyComboBox.setBorder(BorderFactory.createLineBorder(new Color(95, 71, 214), 1, true));
+        ((JLabel)companyComboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+        
+        applyFilterButton.setFont(new Font("Poppins", Font.BOLD, 14));
+        applyFilterButton.setForeground(new Color(95, 71, 214));
+        applyFilterButton.setBackground(new Color(245, 245, 245));
+        applyFilterButton.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(95, 71, 214), 1, true),
+            BorderFactory.createEmptyBorder(5, 15, 5, 15)
+        ));
+        applyFilterButton.setFocusPainted(false);
+        applyFilterButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        applyFilterButton.addActionListener(this);
+        
         // Add courier button
         addCourierButton.setFont(new Font("Poppins", Font.BOLD, 14));
         addCourierButton.setForeground(Color.WHITE);
@@ -100,17 +129,27 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
         addCourierButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addCourierButton.addActionListener(this);
         
-        // Position filter buttons
+        // Position filter buttons and company filter
         int buttonY = 20;
+        int companyFilterY = buttonY + 45; // Position below the first row of buttons
+        
         showAllButton.setBounds(50, buttonY, 120, 35);
         showAvailableButton.setBounds(190, buttonY, 150, 35);
         showUnavailableButton.setBounds(360, buttonY, 170, 35);
         backButton.setBounds(1000, buttonY, 100, 35);
         
+        companyFilterLabel.setBounds(50, companyFilterY, 150, 35);
+        companyComboBox.setBounds(200, companyFilterY, 250, 35);
+        applyFilterButton.setBounds(470, companyFilterY, 120, 35);
+        
         background.add(showAllButton);
         background.add(showAvailableButton);
         background.add(showUnavailableButton);
         background.add(backButton);
+        
+        background.add(companyFilterLabel);
+        background.add(companyComboBox);
+        background.add(applyFilterButton);
         
         // Create table
         String[] columns = {"Courier ID", "Name", "Company", "Contact No.", "Status", "Action"};
@@ -150,7 +189,7 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
         }
         
         // Status column with colored status
-            couriersTable.getColumnModel().getColumn(4).setCellRenderer(new StatusRenderer());
+        couriersTable.getColumnModel().getColumn(4).setCellRenderer(new StatusRenderer());
         
         // Custom header styling
         JTableHeader header = couriersTable.getTableHeader();
@@ -184,10 +223,11 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
+        // Adjust position for table to account for new filter row
         int width = couriersIcon != null ? (int) (couriersIcon.getIconWidth() * 0.9) : 800;
-        int height = couriersIcon != null ? couriersIcon.getIconHeight() - 220 : 500; // Make room for Add button
+        int height = couriersIcon != null ? couriersIcon.getIconHeight() - 270 : 450; // Make room for Add button and company filter
         int x = couriersIcon != null ? ((couriersIcon.getIconWidth() - width) / 2) - 5 : 50;
-        int y = buttonY + 50; // Position below the filter buttons
+        int y = companyFilterY + 50; // Position below the company filter
         
         scrollPane.setBounds(x, y, width, height);
         background.add(scrollPane);
@@ -205,6 +245,38 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setLayout(null);
+    }
+    
+    // Method to load available companies into the dropdown
+    private void loadCompanies() {
+        try {
+            connection = MSSQLConnection.getConnection();
+            String query = "SELECT DISTINCT Courier_Company FROM COURIER ORDER BY Courier_Company";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            
+            // Clear the existing items
+            companyComboBox.removeAllItems();
+            
+            // Add default option
+            companyComboBox.addItem("-- Select Company --");
+            
+            // Add companies from the database
+            while (rs.next()) {
+                String company = rs.getString("Courier_Company");
+                if (company != null && !company.trim().isEmpty()) {
+                    companyComboBox.addItem(company);
+                }
+            }
+            
+            rs.close();
+            stmt.close();
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error loading company data: " + e.getMessage(),
+                "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public void refreshCourierList() {
@@ -237,6 +309,9 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
                 
             resultSet.close();
             statement.close();
+            
+            // Reload companies list in case there are changes
+            loadCompanies();
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null,
@@ -254,6 +329,8 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
             loadCouriersData("available");
         } else if (e.getSource() == showUnavailableButton) {
             loadCouriersData("unavailable");
+        } else if (e.getSource() == applyFilterButton) {
+            applyCompanyFilter();
         } else if (e.getSource() == addCourierButton) {
             // Open AddCourierFrame instead of a dialog
             AddCourierFrame addCourierFrame = new AddCourierFrame(this);
@@ -264,7 +341,28 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
         }
     }
     
+    // Method to handle filtering by company
+    private void applyCompanyFilter() {
+        int selectedIndex = companyComboBox.getSelectedIndex();
+        
+        if (selectedIndex == 0) {
+            // Default option selected, show message
+            JOptionPane.showMessageDialog(this, 
+                "Please select a company to filter by.",
+                "Filter Information", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        String selectedCompany = (String) companyComboBox.getSelectedItem();
+        loadCouriersData("company", selectedCompany);
+    }
+    
+    // Modified to handle company filter
     public void loadCouriersData(String filter) {
+        loadCouriersData(filter, null);
+    }
+    
+    public void loadCouriersData(String filter, String companyName) {
         // Clear existing data
         tableModel.setRowCount(0);
         riderIdMap.clear();
@@ -272,19 +370,27 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
         try {
             connection = MSSQLConnection.getConnection();
             String query;
+            PreparedStatement stmt;
             
             if (filter.equals("available")) {
                 query = "SELECT Rider_ID, First_Name, Last_Name, Courier_Company, Courier_Contact, Rider_Status " +
                         "FROM COURIER WHERE Rider_Status = 'Available' ORDER BY First_Name, Last_Name";
+                stmt = connection.prepareStatement(query);
             } else if (filter.equals("unavailable")) {
                 query = "SELECT Rider_ID, First_Name, Last_Name, Courier_Company, Courier_Contact, Rider_Status " +
                         "FROM COURIER WHERE Rider_Status = 'Unavailable' ORDER BY First_Name, Last_Name";
+                stmt = connection.prepareStatement(query);
+            } else if (filter.equals("company")) {
+                query = "SELECT Rider_ID, First_Name, Last_Name, Courier_Company, Courier_Contact, Rider_Status " +
+                        "FROM COURIER WHERE Courier_Company = ? ORDER BY First_Name, Last_Name";
+                stmt = connection.prepareStatement(query);
+                stmt.setString(1, companyName);
             } else {
                 query = "SELECT Rider_ID, First_Name, Last_Name, Courier_Company, Courier_Contact, Rider_Status " +
                         "FROM COURIER ORDER BY First_Name, Last_Name";
+                stmt = connection.prepareStatement(query);
             }
             
-            PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             
             int rowIndex = 0;
@@ -307,6 +413,29 @@ public class ManageCouriersFrame extends JFrame implements ActionListener {
             
             rs.close();
             stmt.close();
+            
+            // Update status bar or header with filter information
+            String filterInfo = "";
+            if (filter.equals("available")) {
+                filterInfo = "Showing available couriers";
+                this.setTitle("Manage Couriers - Available");
+            } else if (filter.equals("unavailable")) {
+                filterInfo = "Showing unavailable couriers";
+                this.setTitle("Manage Couriers - Unavailable");
+            } else if (filter.equals("company")) {
+                filterInfo = "Showing couriers from " + companyName;
+                this.setTitle("Manage Couriers - " + companyName);
+            } else {
+                filterInfo = "Showing all couriers";
+                this.setTitle("Manage Couriers");
+            }
+            
+            // Show filter information
+            if (tableModel.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, 
+                    "No couriers found with the selected filter.",
+                    "Filter Results", JOptionPane.INFORMATION_MESSAGE);
+            }
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, 
