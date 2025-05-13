@@ -279,11 +279,11 @@ public class ManageStocksFrame extends JFrame implements ActionListener {
             updateMenu = new JPopupMenu();
             JMenuItem updateStocksItem = new JMenuItem("Update Stocks");
             JMenuItem updateReorderItem = new JMenuItem("Update Reorder Point");
-            JMenuItem updateSupplierItem = new JMenuItem("Update Supplier");
+            //JMenuItem updateSupplierItem = new JMenuItem("Update Supplier");
             
             updateMenu.add(updateStocksItem);
             updateMenu.add(updateReorderItem);
-            updateMenu.add(updateSupplierItem);
+            //updateMenu.add(updateSupplierItem);
             
             // Style menu items
             for (Component item : updateMenu.getComponents()) {
@@ -340,13 +340,13 @@ public class ManageStocksFrame extends JFrame implements ActionListener {
                 fireEditingStopped();
             });
             
-            updateSupplierItem.addActionListener(e -> {
-                // Currently empty as requested
-                JOptionPane.showMessageDialog(panel, 
-                    "Supplier update functionality will be implemented in future updates.",
-                    "Feature Coming Soon", JOptionPane.INFORMATION_MESSAGE);
-                fireEditingStopped();
-            });
+//            updateSupplierItem.addActionListener(e -> {
+//                // Currently empty as requested
+//                JOptionPane.showMessageDialog(panel, 
+//                    "Supplier update functionality will be implemented in future updates.",
+//                    "Feature Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+//                fireEditingStopped();
+//            });
             
             // Handle reorder button
             reorderButton.addActionListener(e -> {
