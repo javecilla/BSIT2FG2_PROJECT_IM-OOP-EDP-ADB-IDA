@@ -32,12 +32,18 @@ The **E-commerce Store** system is designed to provide an online platform for cu
 ## Features and Functionalities
 The developed E-Commerce system includes several features and functionalities that ensure a smooth experience for the users:
 
-- **Login System**: A secure login system prevents unauthorized and unregistered users from accessing the platform.  
-- **Courier Management System**: Allows administrators to add, edit, or delete riders, and filter based on availability.  
+- **Login System**: A secure login system prevents unauthorized and unregistered users from accessing the platform.
+  ![SSImage](https://avecilla-project-multipurpose.infinityfreeapp.com/assets/images/bulsu/zlogin1.png)  
+- **Courier Management System**: Allows administrators to add, edit, or delete riders, and filter based on availability. 
+  ![SSImage](https://avecilla-project-multipurpose.infinityfreeapp.com/assets/images/bulsu/zcourier2.png)   
 - **Stock Management System**: Enables administrators to adjust stock quantities and reorder items as needed. It also highlights low-stock items.  
+  ![SSImage](https://avecilla-project-multipurpose.infinityfreeapp.com/assets/images/bulsu/zstock5.png)  
 - **Cart Management**: Users can manage their shopping cart and retain cart contents even after logging out.  
+  ![SSImage](https://avecilla-project-multipurpose.infinityfreeapp.com/assets/images/bulsu/zcourier6.png)  
 - **Improved UI/UX Experience**: Enhanced user interface design to ensure ease of use and a seamless shopping experience.  
+  ![SSImage](https://avecilla-project-multipurpose.infinityfreeapp.com/assets/images/bulsu/zpanel4.png)  
 - **Administrator Dashboard**: Real-time statistics and data visualization for administrators, including user count, total revenue, and sales metrics.
+  ![SSImage](https://avecilla-project-multipurpose.infinityfreeapp.com/assets/images/bulsu/zadmin3.png)  
 
 ## Challenges and Solutions
 During the development of the E-commerce Store application, several challenges were encountered and resolved to ensure a robust and scalable system. Migrating from MS Access to SQL Server is a challenge especially connecting it to the system. Migrating from MS Access to SQL Server was addressed by manually migrating the database and adding optimized SQL codes to ensure a smooth transaction between the system and database. On the hand, connecting the database to the system required the utilization of JDBC library. Maintaining code consistency in a collaborative environment was addressed by enforcing a centralized coding standards document and using peer reviews with frequent Git commits. Implementing the MVC pattern effectively required restructuring to separate concerns clearly, ensuring controllers handled workflows, models managed data logic, and views focused on UI presentation.  
