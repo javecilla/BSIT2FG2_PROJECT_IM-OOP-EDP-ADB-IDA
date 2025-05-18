@@ -6,14 +6,6 @@ The application is designed to manage inventory, categories, and other store-rel
 It also supports a legacy connection to Microsoft Access for backward compatibility with earlier database versions. 
 This project is developed as part of a BSIT (Bachelor of Science in Information Technology) course requirement.
 
-This project combines foundational features from its initial development with new enhancements. Below is an overview of both:
-- [Old features from 2nd Year-1st Semester](./docs/README-IM-OOP.md)
-  - Core functionality developed during the Information Management (IM) and Object-Oriented Programming (OOP) phases.
-  - Refer to the linked documentation for a detailed list.
-- [Old features from 2nd Year-2nd Semester](./docs/README-EDP-ADB-IDA.md)
-  - Advanced features introduced in the Enterprise Data Processing (EDP), Advanced Database (ADB), and Integrated Data Analytics (IDA) phases.
-  - Includes support for MS SQL Server, improved GUI, and more—see the linked documentation for specifics.
-
 ## Introduction
 The **E-commerce Store** system is designed to provide an online platform for customers to browse, select, and purchase products conveniently. It addresses the traditional challenges of in-person shopping, such as limited accessibility, restricted operating hours, and geographical barriers. 
 
@@ -749,6 +741,14 @@ BSIT2FG2_PROJECT_IM-OOP-EDP-ADB-IDA/
 
 **System Report:** For a detailed report, refer to the documentation: [OOP-Project-Documentation](https://bulsumain-my.sharepoint.com/:w:/r/personal/2023100300_ms_bulsu_edu_ph/_layouts/15/Doc.aspx?sourcedoc=%7B99CADDA3-A216-4E13-9B3A-59EEA76BE35E%7D&file=Document%201.docx&action=default&mobileredirect=true).  
 **UML Class Diagram:** Explore object relationships through the UML Class Diagram: [UML Diagram](https://lucid.app/lucidchart/52f8ebd5-3998-4227-bdbc-c2304db243d2/edit?viewport_loc=-1636%2C141%2C3371%2C1346%2C0_0&invitationId=inv_c9475dd8-c346-4a94-b439-b54470b0287a).
+
+This project combines foundational features from its initial development with new enhancements. Below is an overview of both:
+- [Old features from 2nd Year-1st Semester](./docs/README-IM-OOP.md)
+  - Core functionality developed during the Information Management (IM) and Object-Oriented Programming (OOP) phases.
+  - Refer to the linked documentation for a detailed list.
+- [Old features from 2nd Year-2nd Semester](./docs/README-EDP-ADB-IDA.md)
+  - Advanced features introduced in the Enterprise Data Processing (EDP), Advanced Database (ADB), and Integrated Data Analytics (IDA) phases.
+  - Includes support for MS SQL Server, improved GUI, and more—see the linked documentation for specifics.
 
 ## Rules
 Adherence to consistent coding practices is crucial. Please review the repository’s coding standards: [README.STANDARDS.md](./docs/README.STANDARDS.md)
