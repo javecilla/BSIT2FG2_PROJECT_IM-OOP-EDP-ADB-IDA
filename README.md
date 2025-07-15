@@ -766,4 +766,8 @@ Adherence to consistent coding practices is crucial. Please review the repositor
 - **Francis Palma** Researcher and Documentation 
 
 ## License
-This project is for educational purposes and does not include a formal license.
+
+This project is licensed under the [MIT License](LICENSE).  
+You are free to use, modify, and distribute this project **with proper credit to original author** shown in the contributors.  
+This work was developed as part of my BSIT academic journey, and I appreciate proper attribution when reused or referenced.
+
